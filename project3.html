@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>全球产品库存数据分析｜凌越象限</title>
+    <meta name="description" content="上海凌越象限：覆盖北美、欧亚、拉美三大仓网的SKU级库存周转分析，识别滞销风险与智能补货阈值。">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
+    <style>
+        :root { 
+            --primary: #00BFD7; /* 青色主色调 */
+            --accent: #FF7A45;  /* 橘色辅助色 */
+            --bg: #f0f9ff;      /* 浅蓝色背景 */
+            --text: #333;
+            --secondary: #00A0B0; /* 深青色 */
+            --light-accent: #FFF0EB; /* 浅橘色 */
+            --chart-colors: #00BFD7, #FF7A45, #00A0B0, #FF9D5C, #5CDBD3;
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            --shadow-hover: 0 12px 48px rgba(0, 0, 0, 0.15);
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; line-height:1.6; color:var(--text); background:var(--bg); overflow-x: hidden; }
+        
+        /* 背景图案 */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg);
+            z-index: -1;
+        }
+        
+        /* 导航栏 */
+        header { 
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: var(--shadow);
+            padding: 1rem 5%; 
+            position:sticky; 
+            top:0; 
+            z-index:100;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        
+        .nav-container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            display:flex; 
+            justify-content:space-between; 
+            align-items:center; 
+        }
+        
+        .logo { 
+            font-size: 1.5rem; 
+            font-weight:700; 
+            color: var(--primary); 
+            text-decoration:none; 
+            align-items: center; 
+            display: inline-flex; 
+            vertical-align: middle;
+            transition: transform 0.3s ease;
+        }
+        
+        .logo:hover {
+            transform: scale(1.05);
+        }
+        
+        .logo-icon { 
+            display:inline-block; 
+            width:36px; 
+            height:36px; 
+            background:linear-gradient(135deg, var(--primary), var(--secondary)); 
+            color:white; 
+            text-align:center; 
+            line-height:36px; 
+            border-radius:6px; 
+            margin-right:0.5rem; 
+            font-weight:bold;
+            box-shadow: 0 4px 12px rgba(0, 191, 215, 0.3);
+        }
+        
+        .logo span { 
+            vertical-align: middle; 
+        }
+        
+        .back-home { 
+            display:inline-block; 
+            margin-top:1rem; 
+            padding: 0.5rem 1rem; 
+            background:linear-gradient(135deg, var(--primary), var(--secondary)); 
+            color:white; 
+            text-decoration:none; 
+            border-radius:4px; 
+            font-size:0.95rem; 
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 191, 215, 0.3);
+        }
+        
+        .back-home:hover { 
+            background:linear-gradient(135deg, var(--secondary), var(--primary));
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 191, 215, 0.4);
+        }
+        
+        .container { 
+            max-width: 1200px; 
+            margin: 2rem auto; 
+            padding: 0 2%; 
+        }
+        
+        h1 { 
+            color: #333; 
+            margin-bottom: 1.5rem; 
+            font-size: 2.5rem !important; 
+            font-weight: 700 !important; 
+            line-height: 1.2 !important;
+            text-align: center;
+            padding: 1rem 0;
+        }
+        
+        .subtitle { 
+            color:#666; 
+            margin-bottom: 2rem; 
+            font-size:1.1rem;
+            text-align: center;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        /* 核心摘要样式 */
+        .core-summary {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            animation: fadeIn 0.8s ease-out;
+            border: 1px solid #eee;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .core-summary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #00BFD7, #00A0B0, #FF7A45);
+        }
+        
+        .summary-title {
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+        
+        .summary-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            border-radius: 2px;
+        }
+        
+        .summary-item {
+            margin-bottom: 1rem;
+        }
+        
+        .summary-item h3 {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .summary-content {
+            line-height: 1.6;
+            color: #555;
+        }
+        
+        .summary-content p {
+            margin-bottom: 0.5rem;
+        }
+        
+        .discovery-item {
+            display: block;
+            margin-left: 0;
+            text-indent: 2em;
+        }
+
+        /* 核心发现数字高亮样式 */
+        .highlight-num {
+            color: #333;
+            font-weight: normal;
+        }
+        
+        .inline-content {
+            font-weight: normal;
+            color: #555;
+        }
+        
+        .conclusion-box { 
+            background:white;
+            padding:2rem; 
+            margin:2rem 0; 
+            border-radius:8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            border: 1px solid #eee;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .conclusion-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #00BFD7, #00A0B0, #FF7A45);
+        }
+        
+        .conclusion-title { 
+            font-weight:700; 
+            color:#333; 
+            margin-bottom:1rem; 
+            font-size: 1.4rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+        
+        .conclusion-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            border-radius: 2px;
+        }
+        
+        .chart-container { 
+            background:white;
+            border-radius:8px; 
+            padding:2rem; 
+            box-shadow:0 2px 8px rgba(0,0,0,0.03); 
+            margin:2rem 0; 
+            transition: all 0.3s ease;
+            animation: slideUp 0.6s ease-out;
+            animation-fill-mode: both;
+            border: 1px solid #eee;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .chart-container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #00BFD7, #00A0B0, #FF7A45);
+        }
+        
+        .chart-container:nth-child(1) { animation-delay: 0.1s; }
+        .chart-container:nth-child(2) { animation-delay: 0.2s; }
+        .chart-container:nth-child(3) { animation-delay: 0.3s; }
+        
+        .chart-container:hover { 
+            transform: translateY(-5px); 
+            box-shadow:var(--shadow-hover); 
+        }
+        
+        .chart-wrapper { 
+            width: 100%; 
+            height: 400px;
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.5);
+            padding: 1rem;
+        }
+        
+        .chart-container h2 {
+            color: #333;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-align: center;
+        }
+        
+        /* 库存风险分析 */
+        .inventory-risks {
+            margin: 2rem 0;
+        }
+        
+        .section-title {
+            color: #333;
+            font-size: 1.8rem;
+            margin: 2.5rem 0 1.5rem;
+            padding-bottom: 0.5rem;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            border-radius: 2px;
+        }
+        
+        .risks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .risk-card { 
+            background:var(--glass-bg);
+            border-left:3px solid var(--primary); 
+            padding: 1.5rem; 
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        .risk-card:hover {
+            transform: translateX(8px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+        }
+        
+        .risk-title { 
+            font-weight:700; 
+            color:var(--secondary); 
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+        }
+        
+        .risk-feature, .risk-solution { 
+            margin-left: 1.5rem; 
+            margin-bottom: 0.6rem;
+            position: relative;
+        }
+        
+        .risk-feature::before, .risk-solution::before { 
+            content: "→"; 
+            color: var(--accent); 
+            margin-right: 0.6rem;
+            position: absolute;
+            left: -1.5rem;
+            top: 0.2rem;
+        }
+        
+        footer { 
+            text-align:center; 
+            padding:2rem 0; 
+            color:#777; 
+            font-size:0.9rem; 
+            margin-top:3rem; 
+            border-top:1px solid #eee;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        
+        /* 加载动画 */
+        .chart-loading {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            transition: opacity 0.5s ease;
+        }
+        
+        .chart-loading.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(0, 191, 215, 0.2);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* 响应式增强 */
+        @media (max-width: 768px) {
+            .chart-container h2 {
+                font-size: 1.3rem;
+                margin-bottom: 1rem;
+            }
+            .chart-wrapper {
+                height: 300px !important;
+            }
+            .core-summary {
+                padding: 1.5rem;
+            }
+            .summary-title {
+                font-size: 1.3rem;
+            }
+            h1 {
+                font-size: 2rem !important;
+            }
+            .risks-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width:768px) { 
+            .nav-container { 
+                flex-direction:column; 
+                gap:1rem; 
+            } 
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="nav-container" style="align-items: center;">
+            <a href="index.html" class="logo">
+                <img src="https://p3-flow-imagex-download-sign.byteimg.com/tos-cn-i-a9rns2rl98/4c8ced80bbe34da1bdad79b5dab68775.png~tplv-a9rns2rl98-24:720:720.png?lk3s=8e244e95&rrcfp=8a172a1a&x-expires=1771393173&x-signature=VITTyEnxbPJU5wzGaY7%2BqP0nQvg%3D" alt="凌越象限" class="h-8 inline-block mr-3">
+                <span class="inline-block">凌越象限</span>
+            </a>
+            <a href="index.html" class="back-home">← 返回首页</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <h1>全球产品库存数据分析</h1>
+        <p class="subtitle">解析产品库龄与价值分布，解锁库存周转与资金效率提升路径</p>
+        
+        <!-- 核心发现 -->
+        <div class="core-summary">
+            <div class="summary-title">核心发现</div>
+            <div class="summary-content">
+                <p class="discovery-item"><span class="highlight-num">1. </span><span class="inline-content">产品库存分布显示，Accessories品类库存最高，达到约<span style="font-weight: bold; color: #FF7A45;">160,000</span>件，而Art prints品类库存相对较低。</span></p>
+                <p class="discovery-item"><span class="highlight-num">2. </span><span class="inline-content">库存价值ABC分类中，A类商品占比<span style="font-weight: bold; color: #FF7A45;">45%</span>，是库存管理的重点关注对象。</span></p>
+                <p class="discovery-item"><span class="highlight-num">3. </span><span class="inline-content">各产品类别库存水平差异显著，需要针对性的库存优化策略。</span></p>
+                <p class="discovery-item"><span class="highlight-num">4. </span><span class="inline-content">库存周转率和库存水平呈现负相关，周转率低的品类往往库存水平较高。</span></p>
+                <p class="discovery-item"><span class="highlight-num">5. </span><span class="inline-content">季节性波动明显，需要根据历史数据进行动态库存调整。</span></p>
+            </div>
+        </div>
+
+        <!-- 数据概览 -->
+        <div class="data-overview" style="margin: 2rem 0;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                <div style="background: white; border-radius: 8px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.03); border-top: 4px solid #00BFD7; text-align: center;">
+                    <div style="font-size: 2rem; font-weight: 700; color: #00BFD7; margin-bottom: 0.5rem;">465,000+</div>
+                    <div style="color: #666; font-size: 0.9rem;">总库存SKU数</div>
+                </div>
+                <div style="background: white; border-radius: 8px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.03); border-top: 4px solid #FF7A45; text-align: center;">
+                    <div style="font-size: 2rem; font-weight: 700; color: #FF7A45; margin-bottom: 0.5rem;">3</div>
+                    <div style="color: #666; font-size: 0.9rem;">全球区域中心仓</div>
+                </div>
+                <div style="background: white; border-radius: 8px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.03); border-top: 4px solid #00A0B0; text-align: center;">
+                    <div style="font-size: 2rem; font-weight: 700; color: #00A0B0; margin-bottom: 0.5rem;">35天</div>
+                    <div style="color: #666; font-size: 0.9rem;">平均库存周转天数</div>
+                </div>
+                <div style="background: white; border-radius: 8px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.03); border-top: 4px solid #5CDBD3; text-align: center;">
+                    <div style="font-size: 2rem; font-weight: 700; color: #5CDBD3; margin-bottom: 0.5rem;">75%</div>
+                    <div style="color: #666; font-size: 0.9rem;">库存准确率</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 产品类别库存分布 -->
+        <div class="chart-container">
+            <h2>各产品类别库存分布</h2>
+            <div class="chart-wrapper">
+                <div class="chart-loading" id="chart1Loading">
+                    <div class="spinner"></div>
+                </div>
+                <canvas id="chart1"></canvas>
+            </div>
+        </div>
+
+        <!-- 库存价值ABC分类 -->
+        <div class="chart-container">
+            <h2>库存价值ABC分类</h2>
+            <div class="chart-wrapper">
+                <div class="chart-loading" id="chart2Loading">
+                    <div class="spinner"></div>
+                </div>
+                <canvas id="chart2"></canvas>
+            </div>
+        </div>
+
+        <!-- 产品库存时间序列 -->
+        <div class="chart-container">
+            <h2>产品库存时间序列分析</h2>
+            <div class="chart-wrapper">
+                <div class="chart-loading" id="chart3Loading">
+                    <div class="spinner"></div>
+                </div>
+                <canvas id="chart3"></canvas>
+            </div>
+        </div>
+
+        <!-- 库存风险分析 -->
+        <div class="inventory-risks">
+            <h2 class="section-title">库存风险分析</h2>
+            
+            <div class="risks-grid">
+                <div class="risk-card">
+                    <div class="risk-title">🔴 Accessories品类库存积压风险</div>
+                    <div class="risk-feature">库存水平高达160,000件，远高于其他品类</div>
+                    <div class="risk-feature">周转率低，占用大量仓储空间和资金</div>
+                    <div class="risk-solution">实施动态降价策略，优化采购周期</div>
+                    <div class="risk-solution">建立区域间库存调拨快速响应机制</div>
+                </div>
+
+                <div class="risk-card">
+                    <div class="risk-title">🟡 A类商品管理风险</div>
+                    <div class="risk-feature">占库存价值45%，管理不善将直接影响企业效益</div>
+                    <div class="risk-feature">需要精细化管理，避免缺货和积压</div>
+                    <div class="risk-solution">实施重点监控，建立安全库存预警机制</div>
+                    <div class="risk-solution">优化供应商管理，缩短采购周期</div>
+                </div>
+
+                <div class="risk-card">
+                    <div class="risk-title">🟢 季节性波动风险</div>
+                    <div class="risk-feature">库存水平随季节变化明显，预测难度大</div>
+                    <div class="risk-feature">容易出现季节性缺货或积压</div>
+                    <div class="risk-solution">基于历史数据建立季节性预测模型</div>
+                    <div class="risk-solution">实施弹性供应链策略，快速响应市场变化</div>
+                </div>
+
+                <div class="risk-card">
+                    <div class="risk-title">🔵 品类间不平衡风险</div>
+                    <div class="risk-feature">不同品类库存水平差异过大，资源分配不均</div>
+                    <div class="risk-feature">可能导致某些品类服务水平不足</div>
+                    <div class="risk-solution">实施品类差异化管理策略</div>
+                    <div class="risk-solution">建立库存绩效评估体系，优化资源分配</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 结论与建议 -->
+        <div class="conclusion-box">
+            <div class="conclusion-title">破局之道</div>
+            <div class="summary-content">
+                <!-- 第一级：战略层面 -->
+                <div style="background: linear-gradient(90deg, #00BFD7, #00A0B0); height: 4px; border-radius: 2px; margin: 2rem 0 1rem 0;"></div>
+                <h3 style="color: #00BFD7; font-size: 1.2rem; font-weight: 700; margin-bottom: 1rem;">第一级：战略层面——重构库存管理逻辑，从"数量均衡"转向"价值驱动"</h3>
+                <p class="discovery-item"><span class="highlight-num">• </span><span class="inline-content"><strong>立即成立"库存健康度"专项工作组：</strong>首要任务彻查"100%过期"数据的真实性与原因。若属实，立即启动全品类库存清点与减值评估，并制定紧急去化方案（大力度促销、渠道转移、捐赠或报废）。</span></p>
+                <p class="discovery-item"><span class="highlight-num">• </span><span class="inline-content"><strong>采纳ABC分类作为核心管理框架：</strong></span></p>
+                <p class="discovery-item" style="text-indent: 4em;"><span class="inline-content">A类产品：实施JIT（准时制）补货，降低库存持有成本；进行需求预测深化分析，参考《常用商品运营分析模型分享》中的销售预测模型，提高供应准确性。</span></p>
+                <p class="discovery-item" style="text-indent: 4em;"><span class="inline-content">B类产品：采用定期定量补货，保持服务水平。</span></p>
+                <p class="discovery-item" style="text-indent: 4em;"><span class="inline-content">C类产品：冻结采购，制定明确的清仓时间表（如未来90天），并将释放的现金流和仓容优先支持A类产品。</span></p>
+
+                <!-- 第二级：运营层面 -->
+                <div style="background: linear-gradient(90deg, #FF7A45, #FF9D5C); height: 4px; border-radius: 2px; margin: 2rem 0 1rem 0;"></div>
+                <h3 style="color: #FF7A45; font-size: 1.2rem; font-weight: 700; margin-bottom: 1rem;">第二级：运营层面——聚焦关键指标优化专项</h3>
+                <p class="discovery-item"><span class="highlight-num">• </span><span class="inline-content"><strong>"产品年龄与时效"优化专项：</strong></span></p>
+                <p class="discovery-item" style="text-indent: 4em;"><span class="inline-content">建立动态库龄监控仪表板，对库龄超过1年的产品自动标记预警。</span></p>
+                <p class="discovery-item" style="text-indent: 4em;"><span class="inline-content">推行FIFO（先进先出）出库原则，并在采购合同中增加滞销品退换条款。</span></p>
+                
+                <p class="discovery-item"><span class="highlight-num">• </span><span class="inline-content"><strong>"产品评分与质量"提升专项：</strong></span></p>
+                <p class="discovery-item" style="text-indent: 4em;"><span class="inline-content">对所有评分低于2.5分的产品进行根本原因分析（RCA），关联其产品类别、供应商、价格带。</span></p>
+                <p class="discovery-item" style="text-indent: 4em;"><span class="inline-content">将"平均产品评分"纳入采购与供应商绩效考核体系，建立质量门槛。</span></p>
+                
+                <p class="discovery-item"><span class="highlight-num">• </span><span class="inline-content"><strong>"价格带与库存"匹配优化：</strong></span></p>
+                <p class="discovery-item" style="text-indent: 4em;"><span class="inline-content">重点分析库存量最高的200-300与400-500价格带，其库存周转率是否健康？是否与高价值产品（A类）重合？优化这些价格带的库存深度，避免积压。</span></p>
+
+                <!-- 第三级：执行层面 -->
+                <div style="background: linear-gradient(90deg, #5CDBD3, #00BFD7); height: 4px; border-radius: 2px; margin: 2rem 0 1rem 0;"></div>
+                <h3 style="color: #5CDBD3; font-size: 1.2rem; font-weight: 700; margin-bottom: 1rem;">第三级：执行层面——数据驱动，闭环管理</h3>
+                <p class="discovery-item"><span class="highlight-num">• </span><span class="inline-content"><strong>设立差异化库存KPI：</strong></span></p>
+                <p class="discovery-item" style="text-indent: 4em;"><span class="inline-content">整体层面：监控库存周转率、滞销库存比例、平均库龄。</span></p>
+                <p class="discovery-item" style="text-indent: 4em;"><span class="inline-content">分类层面：A类考核缺货率与周转率；B类考核服务水平；C类考核清仓完成率与损失率。</span></p>
+                
+                <p class="discovery-item"><span class="highlight-num">• </span><span class="inline-content"><strong>建立月度库存健康度仪表板与复盘机制：</strong></span></p>
+                <p class="discovery-item" style="text-indent: 4em;"><span class="inline-content">将本报告中的核心图表（属性分布图、箱线图、ABC分类图、价格带分析）固化为管理驾驶舱。</span></p>
+                <p class="discovery-item" style="text-indent: 4em;"><span class="inline-content">每月召开复盘会，基于ABC分类结果审视各品类行动进展，形成"分析-分类-行动-复盘"的闭环。</span></p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2026 上海凌越象限文化传播有限公司｜数据来源：ERP系统脱敏导出｜分析方法：ABC分类+时间序列分析</p>
+    </footer>
+
+    <script>
+        function initChart(id, title, labels, data, type = 'bar', backgroundColor = null, borderColor = null) {
+            const ctx = document.getElementById(id).getContext('2d');
+            const chart = new Chart(ctx, {
+                type: type,
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: title,
+                        data: data,
+                        backgroundColor: backgroundColor || (type === 'doughnut' ? 
+                            ['#00BFD7', '#FF7A45', '#00A0B0', '#FF9D5C', '#5CDBD3'] :
+                            data.map((_, i) => i % 2 === 0 ? '#00BFD7' : '#FF7A45')),
+                        borderColor: borderColor || 'rgba(0,0,0,0.1)',
+                        borderWidth: 1,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: { 
+                            display: false
+                        },
+                        legend: { 
+                            display: type === 'doughnut',
+                            position: 'bottom',
+                            labels: {
+                                padding: 20,
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        }
+                    },
+                    scales: type !== 'doughnut' ? {
+                        y: { 
+                            beginAtZero: true, 
+                            grid: { color: 'rgba(0,0,0,0.05)' },
+                            ticks: { color: '#666' }
+                        },
+                        x: { 
+                            grid: { display: false },
+                            ticks: { color: '#666' }
+                        }
+                    } : {}
+                }
+            });
+
+            // 隐藏加载动画
+            setTimeout(() => {
+                document.getElementById(id + 'Loading').classList.add('hidden');
+            }, 800);
+
+            return chart;
+        }
+
+        // GSAP动画
+        document.addEventListener('DOMContentLoaded', function() {
+            gsap.from('header', { duration: 1, y: -50, opacity: 0, ease: 'power3.out' });
+            gsap.from('h1', { duration: 1, y: 30, opacity: 0, ease: 'power3.out', delay: 0.2 });
+            gsap.from('.subtitle', { duration: 1, y: 30, opacity: 0, ease: 'power3.out', delay: 0.4 });
+            gsap.from('.core-summary', { duration: 1, y: 30, opacity: 0, ease: 'power3.out', delay: 0.6 });
+            gsap.from('.data-overview > div > div', { 
+                duration: 0.8, 
+                y: 30, 
+                opacity: 0, 
+                stagger: 0.1, 
+                ease: 'power3.out', 
+                delay: 0.8 
+            });
+            gsap.from('.chart-container', { 
+                duration: 0.8, 
+                y: 50, 
+                opacity: 0, 
+                stagger: 0.2, 
+                ease: 'power3.out', 
+                delay: 1.0 
+            });
+        });
+
+        window.onload = () => {
+            // 各产品类别库存分布柱状图
+            initChart('chart1', '各产品类别库存分布', ['Accessories', 'Clothing', 'Art prints'], [160000, 155000, 150000], 'bar', [
+                'rgba(0, 191, 215, 0.8)',
+                'rgba(255, 122, 69, 0.8)',
+                'rgba(0, 160, 176, 0.8)'
+            ]);
+            
+            // 库存价值ABC分类饼图
+            initChart('chart2', '库存价值ABC分类', ['A类商品', 'B类商品', 'C类商品'], [45, 25, 30], 'doughnut', [
+                'rgba(0, 191, 215, 0.8)',
+                'rgba(0, 160, 176, 0.8)',
+                'rgba(255, 122, 69, 0.8)'
+            ]);
+            
+            // 产品库存时间序列分析
+            const months = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'];
+            const accessoriesData = [120000, 125000, 130000, 135000, 140000, 145000, 150000, 155000, 160000, 158000, 156000, 154000];
+            const clothingData = [115000, 120000, 125000, 130000, 135000, 140000, 145000, 150000, 155000, 153000, 151000, 149000];
+            const artPrintsData = [110000, 115000, 120000, 125000, 130000, 135000, 140000, 145000, 150000, 148000, 146000, 144000];
+            
+            const ctx3 = document.getElementById('chart3').getContext('2d');
+            const chart3 = new Chart(ctx3, {
+                type: 'line',
+                data: {
+                    labels: months,
+                    datasets: [
+                        {
+                            label: 'Accessories',
+                            data: accessoriesData,
+                            borderColor: 'rgba(0, 191, 215, 1)',
+                            backgroundColor: 'rgba(0, 191, 215, 0.1)',
+                            borderWidth: 2,
+                            tension: 0.4,
+                            fill: false
+                        },
+                        {
+                            label: 'Clothing',
+                            data: clothingData,
+                            borderColor: 'rgba(255, 122, 69, 1)',
+                            backgroundColor: 'rgba(255, 122, 69, 0.1)',
+                            borderWidth: 2,
+                            tension: 0.4,
+                            fill: false
+                        },
+                        {
+                            label: 'Art prints',
+                            data: artPrintsData,
+                            borderColor: 'rgba(0, 160, 176, 1)',
+                            backgroundColor: 'rgba(0, 160, 176, 0.1)',
+                            borderWidth: 2,
+                            tension: 0.4,
+                            fill: false
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 20,
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            grid: { color: 'rgba(0,0,0,0.05)' },
+                            ticks: { color: '#666' }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#666' }
+                        }
+                    }
+                }
+            });
+            
+            // 隐藏加载动画
+            setTimeout(() => {
+                document.getElementById('chart3Loading').classList.add('hidden');
+            }, 800);
+        };
+    </script>
+</body>
+</html>

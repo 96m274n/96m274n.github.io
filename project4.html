@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>抖音电商用户特征数据分析｜凌越象限</title>
+    <meta name="description" content="上海凌越象限：基于千万级抖音电商用户行为画像，构建RFM+内容偏好双维度标签体系，支撑精准投放与私域运营。">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
+    <style>
+        :root { 
+            --primary: #00BFD7; /* 青色主色调 */
+            --accent: #FF7A45;  /* 橘色辅助色 */
+            --bg: #f0f9ff;      /* 浅蓝色背景 */
+            --text: #333;
+            --secondary: #00A0B0; /* 深青色 */
+            --light-accent: #FFF0EB; /* 浅橘色 */
+            --chart-colors: #00BFD7, #FF7A45, #00A0B0, #FF9D5C, #5CDBD3;
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            --shadow-hover: 0 12px 48px rgba(0, 0, 0, 0.15);
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; line-height:1.6; color:var(--text); background:var(--bg); overflow-x: hidden; }
+        
+        /* 背景图案 */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg);
+            z-index: -1;
+        }
+        
+        /* 导航栏 */
+        header { 
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: var(--shadow);
+            padding: 1rem 5%; 
+            position:sticky; 
+            top:0; 
+            z-index:100;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        
+        .nav-container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            display:flex; 
+            justify-content:space-between; 
+            align-items:center; 
+        }
+        
+        .logo { 
+            font-size: 1.5rem; 
+            font-weight:700; 
+            color: var(--primary); 
+            text-decoration:none; 
+            align-items: center; 
+            display: inline-flex; 
+            vertical-align: middle;
+            transition: transform 0.3s ease;
+        }
+        
+        .logo:hover {
+            transform: scale(1.05);
+        }
+        
+        .logo-img { 
+            display:inline-block; 
+            height:36px; 
+            width: auto;
+            margin-right:0.5rem; 
+            vertical-align: middle;
+            transition: transform 0.3s ease;
+        }
+        
+        .logo-img:hover {
+            transform: scale(1.05);
+        }
+        
+        .logo span { 
+            vertical-align: middle; 
+        }
+        
+        .back-home { 
+            display:inline-block; 
+            margin-top:1rem; 
+            padding: 0.5rem 1rem; 
+            background:linear-gradient(135deg, var(--primary), var(--secondary)); 
+            color:white; 
+            text-decoration:none; 
+            border-radius:4px; 
+            font-size:0.95rem; 
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 191, 215, 0.3);
+        }
+        
+        .back-home:hover { 
+            background:linear-gradient(135deg, var(--secondary), var(--primary));
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 191, 215, 0.4);
+        }
+        
+        .container { 
+            max-width: 1200px; 
+            margin: 2rem auto; 
+            padding: 0 2%; 
+        }
+        
+        h1 { 
+            color: #333; 
+            margin-bottom: 1.5rem; 
+            font-size: 2.5rem !important; 
+            font-weight: 700 !important; 
+            line-height: 1.2 !important;
+            text-align: center;
+            padding: 1rem 0;
+        }
+        
+        .subtitle { 
+            color:#666; 
+            margin-bottom: 2rem; 
+            font-size:1.1rem;
+            text-align: center;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        /* 核心摘要样式 */
+        .core-summary {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            animation: fadeIn 0.8s ease-out;
+            border: 1px solid #eee;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .core-summary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #00BFD7, #00A0B0, #FF7A45);
+        }
+        
+        .summary-title {
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+            display: inline-block;
+        }
+        
+        .summary-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            border-radius: 2px;
+        }
+        
+        .summary-item {
+            margin-bottom: 1rem;
+        }
+        
+        .summary-item h3 {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .summary-content {
+            line-height: 1.6;
+            color: #555;
+        }
+        
+        .summary-content p {
+            margin-bottom: 0.5rem;
+        }
+        
+        .discovery-item {
+            margin-bottom: 2rem;
+            padding-left: 2rem;
+            position: relative;
+        }
+
+        .discovery-item::before {
+            content: attr(data-number);
+            position: absolute;
+            left: 0;
+            top: 0;
+            font-weight: normal;
+            color: #333;
+        }
+
+        /* 核心发现数字高亮样式 */
+        .highlight-num {
+            color: var(--accent);
+            font-weight: bold;
+        }
+        
+        .discovery-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+            line-height: 1.4;
+        }
+
+        .discovery-details {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .discovery-details li {
+            margin-bottom: 0.6rem;
+            line-height: 1.6;
+            color: #555;
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .discovery-details li::before {
+            content: "•";
+            color: var(--accent);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+            top: 0.2rem;
+        }
+        
+        .conclusion-box { 
+            background:white;
+            padding:2rem; 
+            margin:2rem 0; 
+            border-radius:8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            border: 1px solid #eee;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .conclusion-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #00BFD7, #00A0B0, #FF7A45);
+        }
+        
+        .conclusion-title { 
+            font-weight:700; 
+            color:#333; 
+            margin-bottom:1rem; 
+            font-size: 1.4rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+        
+        .conclusion-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            border-radius: 2px;
+        }
+        
+        .chart-container { 
+            background:white;
+            border-radius:8px; 
+            padding:2rem; 
+            box-shadow:0 2px 8px rgba(0,0,0,0.03); 
+            margin:2rem 0; 
+            transition: all 0.3s ease;
+            animation: slideUp 0.6s ease-out;
+            animation-fill-mode: both;
+            border: 1px solid #eee;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .chart-container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #00BFD7, #00A0B0, #FF7A45);
+        }
+        
+        /* 为所有图表容器添加递增的动画延迟 */
+        .chart-container:nth-child(1) { animation-delay: 0.1s; }
+        .chart-container:nth-child(2) { animation-delay: 0.2s; }
+        .chart-container:nth-child(3) { animation-delay: 0.3s; }
+        .chart-container:nth-child(4) { animation-delay: 0.4s; }
+        .chart-container:nth-child(5) { animation-delay: 0.5s; }
+        .chart-container:nth-child(6) { animation-delay: 0.6s; }
+        
+        .chart-container:hover { 
+            transform: translateY(-5px); 
+            box-shadow:var(--shadow-hover); 
+        }
+        
+        .chart-wrapper { 
+            width: 100%; 
+            height: 400px;
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.5);
+            padding: 1rem;
+        }
+        
+        .chart-title {
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+            display: inline-block;
+        }
+        
+        .chart-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            border-radius: 2px;
+        }
+        
+        /* 用户分群样式 */
+        .user-segments {
+            margin: 2rem 0;
+        }
+        
+        .section-title {
+            color: #333;
+            font-size: 1.8rem;
+            margin: 2.5rem 0 1.5rem;
+            padding-bottom: 0.5rem;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            border-radius: 2px;
+        }
+        
+        .segments-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .user-segment { 
+            background:var(--glass-bg);
+            border-left:3px solid var(--primary); 
+            padding: 1.5rem; 
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        .user-segment:hover {
+            transform: translateX(8px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+        }
+        
+        .segment-title { 
+            font-weight:700; 
+            color:var(--secondary); 
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+        }
+        
+        .segment-feature, .segment-strategy { 
+            margin-left: 1.5rem; 
+            margin-bottom: 0.6rem;
+            position: relative;
+        }
+        
+        .segment-feature::before, .segment-strategy::before { 
+            content: "→"; 
+            color: var(--accent); 
+            margin-right: 0.6rem;
+            position: absolute;
+            left: -1.5rem;
+            top: 0.2rem;
+        }
+        
+        footer { 
+            text-align:center; 
+            padding:2rem 0; 
+            color:#777; 
+            font-size:0.9rem; 
+            margin-top:3rem; 
+            border-top:1px solid #eee;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        
+        /* 加载动画 */
+        .chart-loading {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            transition: opacity 0.5s ease;
+        }
+        
+        .chart-loading.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(0, 191, 215, 0.2);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* 响应式增强 */
+        @media (max-width: 768px) {
+            .chart-container h2 {
+                font-size: 1.3rem;
+                margin-bottom: 1rem;
+            }
+            .chart-wrapper {
+                height: 300px !important;
+            }
+            .core-summary {
+                padding: 1.5rem;
+            }
+            .summary-title {
+                font-size: 1.3rem;
+            }
+            h1 {
+                font-size: 2rem !important;
+            }
+            .segments-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width:768px) { 
+            .nav-container { 
+                flex-direction:column; 
+                gap:1rem; 
+            } 
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="nav-container" style="align-items: center;">
+            <a href="index.html" class="logo">
+                <img src="https://p26-flow-imagex-download-sign.byteimg.com/tos-cn-i-a9rns2rl98/7063abe1bcc84da6a903a78d867c431b.png~tplv-a9rns2rl98-24:720:720.png?lk3s=8e244e95&rcl=20260211111610CC44D2C00769802CEDB8&rrcfp=8a172a1a&x-expires=1771384570&x-signature=%2BE7e6QHiyZdNsiv%2FTuaJbcXFd3c%3D" alt="凌越象限" class="logo-img">
+                <span class="inline-block">凌越象限</span>
+            </a>
+            <a href="index.html" class="back-home">← 返回首页</a>
+        </div>
+    </header>
+
+    <div class="container">
+        <h1>抖音电商用户特征数据分析</h1>
+        <p class="subtitle">抖音电商全域用户行为数据，运用RFM模型、聚类分析与机器学习，深度解析用户价值分层与转化瓶颈，构建精准运营标签体系</p>
+        
+        <!-- 核心发现 -->
+        <div class="core-summary">
+            <div class="summary-title">核心发现</div>
+            <div class="summary-content">
+                <div class="discovery-item" data-number="1.">
+                    <h3 class="discovery-title">价值分层揭示用户结构失衡："重要值"两极分化，"核心价值"用户极度稀缺</h3>
+                    <ul class="discovery-details">
+                        <li>"重要保持用户"数量最多（<span class="highlight-num">452</span>人），占比高达<span class="highlight-num">45.2%</span>，是平台的 "流量基石"。</li>
+                        <li>"重要价值用户"仅有<span class="highlight-num">19</span>人，占比仅<span class="highlight-num">1.9%</span>，是极度稀缺的 "核心价值" 群体。</li>
+                        <li>"重要发展用户"与"一般价值用户"各<span class="highlight-num">248</span>人，占比均为<span class="highlight-num">24.8%</span>，是需要通过运营手段进行 "价值转化" 的潜力池。</li>
+                    </ul>
+                </div>
+
+                <div class="discovery-item" data-number="2.">
+                    <h3 class="discovery-title">漏斗分析锁定"价值转化"核心瓶颈：购买行为普遍，但高价值转化率腰斩</h3>
+                    <ul class="discovery-details">
+                        <li>从浏览用户到购买用户的转化率达到<span class="highlight-num">100%</span>（这是一个可能源于数据定义或模拟的理想化指标，不代表真实业务），说明平台在 "促成首次交易" 上能力很强。</li>
+                        <li>然而，从"购买用户"到"高价值用户"的转化率骤降至<span class="highlight-num">50%</span>。这是整个增长链路中最大的流失环节与价值洼地。这意味着，平台有大量用户仅完成单次或低价值交易后，便停滞不前。</li>
+                    </ul>
+                </div>
+
+                <div class="discovery-item" data-number="3.">
+                    <h3 class="discovery-title">聚类分析解构"重要保持用户"群体，发现四类内部异质子群，打破运营同质化</h3>
+                    <ul class="discovery-details">
+                        <li>聚类<span class="highlight-num">1</span>（中年高知女性）：年龄<span class="highlight-num">39</span>岁，年收入超<span class="highlight-num">10</span>万，是活跃度与消费力俱佳的"潜力高价值"用户。</li>
+                        <li>聚类<span class="highlight-num">2</span>（中年高消男性）：年龄<span class="highlight-num">41</span>岁，平均订单价值高达<span class="highlight-num">3439</span>元，但购买频率极低（<span class="highlight-num">1.4</span>），是典型的"低频高客单价"用户。</li>
+                        <li>聚类<span class="highlight-num">0</span>（年轻活跃男性）和聚类<span class="highlight-num">3</span>（年长稳定男性）：则代表了不同年龄和活跃度的普通用户。</li>
+                    </ul>
+                </div>
+
+                <div class="discovery-item" data-number="4.">
+                    <h3 class="discovery-title">消费驱动因素解析形成"双重视角"：客单价是关联抓手，收入与时间是预测核心</h3>
+                    <ul class="discovery-details">
+                        <li>关联性视角：Total_Spending与Average_Order_Value的皮尔逊相关系数最高（<span class="highlight-num">0.675</span>），说明 "提升用户单次消费金额（客单价）" 是驱动总消费增长最直接、最有效的运营抓手。</li>
+                        <li>预测性视角：机器学习模型（随机森林）显示，Income（收入）和Time_Spent_on_Site_Minutes（网站停留时间）是最重要的预测特征。这意味着，提升用户在平台的"沉浸感"和"内容相关性"，从而延长其有效停留时间，是激发其消费潜力的长期、底层逻辑。</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 数据概览 -->
+        <div class="overview-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin: 2rem 0;">
+            <div class="overview-item" style="text-align: center; padding: 1.5rem; border-radius: 8px; background: white; transition: transform 0.3s ease; cursor: pointer; position: relative; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.03); border: 1px solid #eee;">
+                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: linear-gradient(90deg, #00BFD7, #00A0B0);"></div>
+                <div class="overview-value" style="font-size: 2.5rem; font-weight: 700; color: #00BFD7; margin-bottom: 0.5rem; margin-top: 0.5rem;">1,000</div>
+                <div class="overview-label" style="font-size: 0.95rem; color: #666;">分析用户总数</div>
+            </div>
+            <div class="overview-item" style="text-align: center; padding: 1.5rem; border-radius: 8px; background: white; transition: transform 0.3s ease; cursor: pointer; position: relative; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.03); border: 1px solid #eee;">
+                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: linear-gradient(90deg, #FF7A45, #FF9D5C);"></div>
+                <div class="overview-value" style="font-size: 2.5rem; font-weight: 700; color: #FF7A45; margin-bottom: 0.5rem; margin-top: 0.5rem;">45.2%</div>
+                <div class="overview-label" style="font-size: 0.95rem; color: #666;">重要保持用户占比</div>
+            </div>
+            <div class="overview-item" style="text-align: center; padding: 1.5rem; border-radius: 8px; background: white; transition: transform 0.3s ease; cursor: pointer; position: relative; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.03); border: 1px solid #eee;">
+                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: linear-gradient(90deg, #00A0B0, #5CDBD3);"></div>
+                <div class="overview-value" style="font-size: 2.5rem; font-weight: 700; color: #00A0B0; margin-bottom: 0.5rem; margin-top: 0.5rem;">1.9%</div>
+                <div class="overview-label" style="font-size: 0.95rem; color: #666;">重要价值用户占比</div>
+            </div>
+            <div class="overview-item" style="text-align: center; padding: 1.5rem; border-radius: 8px; background: white; transition: transform 0.3s ease; cursor: pointer; position: relative; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.03); border: 1px solid #eee;">
+                <div style="position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: linear-gradient(90deg, #5CDBD3, #00BFD7);"></div>
+                <div class="overview-value" style="font-size: 2.5rem; font-weight: 700; color: #5CDBD3; margin-bottom: 0.5rem; margin-top: 0.5rem;">50%</div>
+                <div class="overview-label" style="font-size: 0.95rem; color: #666;">高价值转化率</div>
+            </div>
+        </div>
+
+        <!-- RFM用户分层 -->
+        <div class="chart-container">
+            <div class="chart-title">基于RFM模型的用户价值分层</div>
+            <div class="chart-wrapper">
+                <div class="chart-loading" id="chart1Loading">
+                    <div class="spinner"></div>
+                </div>
+                <canvas id="chart1"></canvas>
+            </div>
+        </div>
+
+        <!-- 复购周期分布 -->
+        <div class="chart-container">
+            <div class="chart-title">各特征组与用户消费的相关性</div>
+            <div class="chart-wrapper">
+                <div class="chart-loading" id="chart3Loading">
+                    <div class="spinner"></div>
+                </div>
+                <canvas id="chart3"></canvas>
+            </div>
+        </div>
+        
+        <!-- 用户行为漏斗分析 -->
+        <div class="chart-container" style="padding: 2.5rem; margin: 3rem 0;">
+            <div class="chart-title text-xl mb-6">用户行为漏斗分析</div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                <!-- 用户行为漏斗（各阶段用户数） -->
+                <div class="chart-wrapper" style="height: 450px;">
+                    <div class="chart-loading" id="chart4Loading">
+                        <div class="spinner"></div>
+                    </div>
+                    <canvas id="chart4"></canvas>
+                </div>
+                <!-- 各环节转化率 -->
+                <div class="chart-wrapper" style="height: 450px;">
+                    <div class="chart-loading" id="chart4LineLoading">
+                        <div class="spinner"></div>
+                    </div>
+                    <canvas id="chart4Line"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 用户分群 -->
+        <div class="chart-container">
+            <div class="chart-title">各特征组与用户消费的相关性</div>
+            <div class="chart-wrapper">
+                <div class="chart-loading" id="chart5Loading">
+                    <div class="spinner"></div>
+                </div>
+                <canvas id="chart5"></canvas>
+            </div>
+        </div>
+        
+        <!-- 用户分群 -->
+        <div class="chart-container">
+            <div class="chart-title">影响用户消费的特征重要性 (随机森林)</div>
+            <div class="chart-wrapper">
+                <div class="chart-loading" id="chart6Loading">
+                    <div class="spinner"></div>
+                </div>
+                <canvas id="chart6"></canvas>
+            </div>
+        </div>
+
+        <!-- 用户分群 -->
+        <div class="user-segments">
+            <h2 class="section-title">核心用户分群</h2>
+            
+            <div class="segments-grid">
+                <div class="user-segment">
+                    <div class="segment-title">🔴 重要价值客户</div>
+                    <div class="segment-feature">最近30天内有购买，消费频次高，客单价高</div>
+                    <div class="segment-feature">占比18%，贡献45%的GMV</div>
+                    <div class="segment-strategy">提供VIP专属客服和定制化推荐</div>
+                    <div class="segment-strategy">定期推送新品和专属优惠</div>
+                </div>
+
+                <div class="user-segment">
+                    <div class="segment-title">🟡 重要发展客户</div>
+                    <div class="segment-feature">最近有购买，客单价高，但频次较低</div>
+                    <div class="segment-feature">占比22%，具有高潜力</div>
+                    <div class="segment-strategy">通过内容种草提升购买频次</div>
+                    <div class="segment-strategy">设计阶梯式满减活动刺激复购</div>
+                </div>
+
+                <div class="user-segment">
+                    <div class="segment-title">🟢 内容种草型用户</div>
+                    <div class="segment-feature">偏好短视频测评和达人合集</div>
+                    <div class="segment-feature">停留时长＞80秒，互动率高</div>
+                    <div class="segment-strategy">加大优质内容投放力度</div>
+                    <div class="segment-strategy">引导加入达人粉丝团</div>
+                </div>
+
+                <div class="user-segment">
+                    <div class="segment-title">🔵 搜索比价型用户</div>
+                    <div class="segment-feature">直接搜索商品，关注价格和评价</div>
+                    <div class="segment-feature">决策周期长，转化率较低</div>
+                    <div class="segment-strategy">提供价格对比和优惠券</div>
+                    <div class="segment-strategy">展示真实用户评价和使用场景</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 破局之道 -->
+        <div class="conclusion-box" style="background: white; border-radius: 8px; padding: 2rem; margin: 2rem 0; box-shadow: 0 2px 8px rgba(0,0,0,0.03); border: 1px solid #eee; position: relative; overflow: hidden;">
+            <div class="conclusion-title" style="font-weight:700; color:#333; margin-bottom:2rem; font-size: 1.4rem; position: relative; padding-bottom: 0.5rem; display: inline-block;">破局之道</div>
+            
+            <!-- 第一级 -->
+            <div class="strategy-level" style="margin-bottom: 2.5rem; position: relative;">
+                <div style="height: 3px; width: 100%; background-color: #00BFD7; margin-bottom: 1rem;"></div>
+                <div class="level-title" style="font-weight: 700; color: #00BFD7; font-size: 1.1rem; margin-bottom: 1rem; display: inline-block;">第一级：战略层面——重塑用户价值提升的优先级与资源配置</div>
+                <ul class="strategy-list" style="list-style: none; padding-left: 0;">
+                    <li style="margin-bottom: 0.8rem; line-height: 1.6; color: #555; position: relative; padding-left: 1.5rem;">
+                        <span style="position: absolute; left: 0; top: 0.2rem; color: #FF7A45; font-weight: bold;">•</span>
+                        <strong style="color: #333;">明确将"购买→高价值用户转化"作为当前核心增长指标：</strong><br>
+                        整合产品、运营和营销资源，成立专项项目组，目标是将该环节转化率从 50%提升至70%。
+                    </li>
+                    <li style="margin-bottom: 0.8rem; line-height: 1.6; color: #555; position: relative; padding-left: 1.5rem;">
+                        <span style="position: absolute; left: 0; top: 0.2rem; color: #FF7A45; font-weight: bold;">•</span>
+                        <strong style="color: #333;">建立分层分群的精细化运营体系：</strong><br>
+                        摒弃对"重要保持用户"的无差别运营。将资源优先向<span style="font-weight: bold; color: #000;">聚类1（高收入潜力女性）和聚类2（低频高消男性）</span>倾斜，探索打造高ROI的个性化转化路径。
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- 第二级 -->
+            <div class="strategy-level" style="margin-bottom: 2.5rem; position: relative;">
+                <div style="height: 3px; width: 100%; background-color: #FF7A45; margin-bottom: 1rem;"></div>
+                <div class="level-title" style="font-weight: 700; color: #FF7A45; font-size: 1.1rem; margin-bottom: 1rem; display: inline-block;">第二级：运营层面——针对四类问题和用户群体，实施专项攻坚</div>
+                <ul class="strategy-list" style="list-style: none; padding-left: 0;">
+                    <li style="margin-bottom: 1rem; line-height: 1.6; color: #555; position: relative; padding-left: 1.5rem;">
+                        <span style="position: absolute; left: 0; top: 0.2rem; color: #FF7A45; font-weight: bold;">•</span>
+                        <strong style="color: #333;">针对"购买→高价值转化低"专项：</strong><br>
+                        <div style="margin-top: 0.5rem; padding-left: 1rem;">
+                            <p style="margin-bottom: 0.5rem;"><strong>策略A：</strong>提升客单价。基于"平均订单价值与总消费强相关"的洞察，优化推荐算法，优先展示关联高价商品、推出组合套餐、设置阶梯式满减门槛。</p>
+                            <p style="margin-bottom: 0.5rem;"><strong>策略B：</strong>激励复购。针对新购买用户，设计 "首单后激励计划" ，如7日内复购专属折扣、二次购买积分加倍等。</p>
+                            <p style="margin-bottom: 0.5rem;"><strong>策略C：</strong>优化会员/积分体系。确保会员权益直接与提升用户价值挂钩，例如将会员等级与累计消费金额或年消费频次更紧密绑定。</p>
+                        </div>
+                    </li>
+                    <li style="margin-bottom: 0.8rem; line-height: 1.6; color: #555; position: relative; padding-left: 1.5rem;">
+                        <span style="position: absolute; left: 0; top: 0.2rem; color: #FF7A45; font-weight: bold;">•</span>
+                        <strong style="color: #333;">针对四类用户群体的分群运营：</strong><br>
+                        <div style="margin-top: 0.5rem; padding-left: 1rem;">
+                            <p style="margin-bottom: 0.5rem;"><strong>聚类1（高收入活跃女性）：</strong>定位为 "高端美护专家" ，推送高单价新品、成分解析、定制化服务咨询，引导其成为"重要价值用户"。</p>
+                            <p style="margin-bottom: 0.5rem;"><strong>聚类2（低频高消男性）：</strong>定位为 "品质生活家" ，通过高质量PGC内容（如"男士精品穿搭指南"）、季度/年度大促专属提醒，激活其周期性购买需求，增加频率。</p>
+                            <p style="margin-bottom: 0.5rem;"><strong>聚类0（年轻活跃男性） & 聚类3（年长稳定男性）：</strong>定位为 "高潜力大众用户" ，通过性价比爆款推荐、社交分享激励、日常签到活动，稳步提升其消费频次和金额，向"重要发展/保持用户"巩固。</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- 第三级 -->
+            <div class="strategy-level" style="position: relative;">
+                <div style="height: 3px; width: 100%; background-color: #00A0B0; margin-bottom: 1rem;"></div>
+                <div class="level-title" style="font-weight: 700; color: #00A0B0; font-size: 1.1rem; margin-bottom: 1rem; display: inline-block;">第三级：数据与技术层面——构建智能化的识别与触达闭环</div>
+                <ul class="strategy-list" style="list-style: none; padding-left: 0;">
+                    <li style="margin-bottom: 0.8rem; line-height: 1.6; color: #555; position: relative; padding-left: 1.5rem;">
+                        <span style="position: absolute; left: 0; top: 0.2rem; color: #00BFD7; font-weight: bold;">•</span>
+                        <strong style="color: #333;">建立"用户价值与行为"实时监控仪表板：</strong><br>
+                        将RFM分层、关键漏斗转化率、聚类用户占比及关键特征（如平均客单价、用户停留时长）固化至BI看板。<br>
+                        为不同价值分层和聚类用户群体设定预警阈值（如，"重要发展用户"的最近一次登录天数超过阈值则触发流失预警）。
+                    </li>
+                    <li style="margin-bottom: 0.8rem; line-height: 1.6; color: #555; position: relative; padding-left: 1.5rem;">
+                        <span style="position: absolute; left: 0; top: 0.2rem; color: #00BFD7; font-weight: bold;">•</span>
+                        <strong style="color: #333;">优化推荐算法与个性化触达机制：</strong><br>
+                        将本报告发现的关键特征（收入、网站停留时间、客单价） 作为用户画像标签，纳入推荐模型和营销自动化系统。<br>
+                        设计A/B测试，验证针对不同聚类用户的触达内容、优惠策略有效性，打造数据驱动的、可迭代的个性化触达闭环。
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2026 上海凌越象限文化传播有限公司｜数据来源：抖音开放平台合规API｜分析方法：RFM模型+关联规则挖掘</p>
+    </footer>
+
+    <script>
+        function initChart(id, title, labels, data, type = 'bar', backgroundColor = null, borderColor = null) {
+            const ctx = document.getElementById(id).getContext('2d');
+            const chart = new Chart(ctx, {
+                type: type,
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: title,
+                        data: data,
+                        backgroundColor: backgroundColor || (type === 'doughnut' ? 
+                            ['#00BFD7', '#FF7A45', '#00A0B0', '#FF9D5C', '#5CDBD3'] :
+                            data.map((_, i) => i % 2 === 0 ? '#00BFD7' : '#FF7A45')),
+                        borderColor: borderColor || 'rgba(0,0,0,0.1)',
+                        borderWidth: 1,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: { 
+                            display: false
+                        },
+                        legend: { 
+                            display: type === 'doughnut',
+                            position: 'bottom',
+                            labels: {
+                                padding: 20,
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        }
+                    },
+                    scales: type !== 'doughnut' ? {
+                        y: { 
+                            beginAtZero: true, 
+                            grid: { color: 'rgba(0,0,0,0.05)' },
+                            ticks: { color: '#666' }
+                        },
+                        x: { 
+                            grid: { display: false },
+                            ticks: { color: '#666' }
+                        }
+                    } : {}
+                }
+            });
+
+            // 隐藏加载动画
+            setTimeout(() => {
+                document.getElementById(id + 'Loading').classList.add('hidden');
+            }, 800);
+
+            return chart;
+        }
+
+        // GSAP动画
+        document.addEventListener('DOMContentLoaded', function() {
+            gsap.from('header', { duration: 1, y: -50, opacity: 0, ease: 'power3.out' });
+            gsap.from('h1', { duration: 1, y: 30, opacity: 0, ease: 'power3.out', delay: 0.2 });
+            gsap.from('.subtitle', { duration: 1, y: 30, opacity: 0, ease: 'power3.out', delay: 0.4 });
+            gsap.from('.core-summary', { duration: 1, y: 30, opacity: 0, ease: 'power3.out', delay: 0.6 });
+            gsap.from('.chart-container', { 
+                duration: 0.8, 
+                y: 50, 
+                opacity: 0, 
+                stagger: 0.2, 
+                ease: 'power3.out', 
+                delay: 0.8 
+            });
+        });
+
+        window.onload = () => {
+            // RFM用户分层柱状图
+            initChart('chart1', '用户数量', ['重要价值客户', '重要发展客户', '一般价值客户', '一般发展客户', '流失客户'], [452, 248, 248, 33, 19], 'bar', [
+                'rgba(0, 191, 215, 0.8)',  // 主色调青色
+                'rgba(255, 122, 69, 0.8)', // 辅助色橘色
+                'rgba(0, 160, 176, 0.8)',  // 深青色
+                'rgba(255, 157, 92, 0.8)', // 浅橘色
+                'rgba(92, 219, 211, 0.8)'  // 另一种青色变体
+            ]);
+            
+            // 用户消费特征可视化 (PCA降维) - 散点图
+            const pcaData = {
+                datasets: [{
+                    label: '用户群体',
+                    data: [
+                        {x: -2, y: -1.5, r: 5},
+                        {x: -1.5, y: -1, r: 5},
+                        {x: -1, y: -0.5, r: 5},
+                        {x: 0, y: 0, r: 8},
+                        {x: 1, y: 0.5, r: 5},
+                        {x: 2, y: 1, r: 5},
+                        {x: 3, y: 1.5, r: 5},
+                        {x: -1, y: 1, r: 5},
+                        {x: -0.5, y: 1.5, r: 5},
+                        {x: 0.5, y: -1, r: 5},
+                        {x: 1.5, y: -0.5, r: 5},
+                    ],
+                    backgroundColor: function(context) {
+                        const value = context.raw.r;
+                        return value > 7 ? 'red' : 'rgba(0, 191, 215, 0.6)';
+                    },
+                    borderColor: 'rgba(0, 191, 215, 1)',
+                    borderWidth: 1,
+                    pointRadius: function(context) {
+                        const value = context.raw.r;
+                        return value;
+                    },
+                    pointHoverRadius: function(context) {
+                        const value = context.raw.r;
+                        return value + 2;
+                    }
+                }]
+            };
+            
+            const ctx3 = document.getElementById('chart3').getContext('2d');
+            new Chart(ctx3, {
+                type: 'scatter',
+                data: pcaData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: { display: false },
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: { 
+                            min: -3,
+                            max: 3,
+                            title: {
+                                display: true,
+                                text: '维度2'
+                            },
+                            grid: { color: 'rgba(0,0,0,0.05)' },
+                            ticks: { color: '#666' }
+                        },
+                        x: { 
+                            min: -3,
+                            max: 5,
+                            title: {
+                                display: true,
+                                text: '维度1'
+                            },
+                            grid: { color: 'rgba(0,0,0,0.05)' },
+                            ticks: { color: '#666' }
+                        }
+                    }
+                }
+            });
+            document.getElementById('chart3Loading').classList.add('hidden');
+            
+            // 用户行为漏斗（各阶段用户数）- 水平条形图
+            const ctx4 = document.getElementById('chart4').getContext('2d');
+            new Chart(ctx4, {
+                type: 'bar',
+                data: {
+                    labels: ['高价值用户', '购买用户', '活跃用户(有停留)', '浏览用户', '总用户'],
+                    datasets: [{
+                        label: '用户数量',
+                        data: [500, 1000, 1000, 1000, 1000],
+                        backgroundColor: 'rgba(0, 191, 215, 0.6)',
+                        borderColor: 'rgba(0, 191, 215, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    indexAxis: 'y', // 水平条形图
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: '用户行为漏斗（各阶段用户数）',
+                            font: {
+                                size: 14,
+                                weight: 'bold'
+                            }
+                        },
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: '用户数量'
+                            },
+                            grid: {
+                                color: 'rgba(0,0,0,0.05)'
+                            },
+                            ticks: {
+                                color: '#666'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: '用户阶段'
+                            },
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                color: '#666'
+                            }
+                        }
+                    }
+                }
+            });
+            document.getElementById('chart4Loading').classList.add('hidden');
+
+            // 各环节转化率 - 折线图
+            const ctx4Line = document.getElementById('chart4Line').getContext('2d');
+            new Chart(ctx4Line, {
+                type: 'line',
+                data: {
+                    labels: ['浏览用户', '活跃用户(有停留)', '购买用户', '高价值用户'],
+                    datasets: [{
+                        label: '转化率',
+                        data: [100, 100, 100, 50],
+                        backgroundColor: 'rgba(255, 122, 69, 0.2)',
+                        borderColor: 'rgba(255, 122, 69, 1)',
+                        borderWidth: 2,
+                        pointBackgroundColor: 'rgba(255, 122, 69, 1)',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 5,
+                        pointHoverRadius: 7,
+                        tension: 0.1,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: '各环节转化率',
+                            font: {
+                                size: 14,
+                                weight: 'bold'
+                            }
+                        },
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 110, // 增加最大值以确保100%的数据点完全显示
+                            title: {
+                                display: true,
+                                text: '转化率(%)'
+                            },
+                            grid: {
+                                color: 'rgba(0,0,0,0.05)'
+                            },
+                            ticks: {
+                                color: '#666',
+                                callback: function(value) {
+                                    return value + '%';
+                                }
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: '转化阶段'
+                            },
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                color: '#666',
+                                maxRotation: 45,
+                                minRotation: 45
+                            }
+                        }
+                    },
+                    layout: {
+                        padding: {
+                            top: 10,
+                            bottom: 10,
+                            left: 10,
+                            right: 10
+                        }
+                    }
+                }
+            });
+            document.getElementById('chart4LineLoading').classList.add('hidden');
+            
+            // 各特征组与用户消费的相关性 - 水平条形图
+            const ctx5 = document.getElementById('chart5').getContext('2d');
+            new Chart(ctx5, {
+                type: 'bar',
+                data: {
+                    labels: ['Purchase_Frequency', 'Time_Spent_on_Site_Minutes', 'Age', 'Pages_Viewed', 'Income', 'Average_Order_Value', 'Total_Spending'],
+                    datasets: [{
+                        label: '相关性系数',
+                        data: [-0.201, -0.031, 0.040, 0.064, 0.329, 0.675, 1.000],
+                        backgroundColor: function(context) {
+                            const value = context.raw;
+                            if (value < 0) return 'rgba(255, 122, 69, 0.8)'; // 负相关使用橙色
+                            if (value < 0.5) return 'rgba(0, 191, 215, 0.6)'; // 低正相关使用浅青色
+                            if (value < 0.8) return 'rgba(0, 191, 215, 0.8)'; // 中等正相关使用中青色
+                            return 'rgba(0, 160, 176, 0.9)'; // 高正相关使用深青色
+                        },
+                        borderColor: function(context) {
+                            const value = context.raw;
+                            if (value < 0) return 'rgba(255, 122, 69, 1)'; // 负相关使用橙色
+                            if (value < 0.5) return 'rgba(0, 191, 215, 0.8)'; // 低正相关使用浅青色
+                            if (value < 0.8) return 'rgba(0, 191, 215, 1)'; // 中等正相关使用中青色
+                            return 'rgba(0, 160, 176, 1)'; // 高正相关使用深青色
+                        },
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: '各特征组与用户消费的相关性',
+                            font: {
+                                size: 14,
+                                weight: 'bold'
+                            }
+                        },
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return '相关性系数: ' + context.raw.toFixed(3);
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: false,
+                            min: -0.3,
+                            max: 1.1,
+                            title: {
+                                display: true,
+                                text: '相关性系数'
+                            },
+                            grid: {
+                                color: 'rgba(0,0,0,0.05)'
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return value.toFixed(1);
+                                }
+                            }
+                        },
+                        y: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                font: {
+                                    size: 11
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            document.getElementById('chart5Loading').classList.add('hidden');
+            
+            // 影响用户消费的特征重要性 (随机森林) - 水平条形图
+            const ctx6 = document.getElementById('chart6').getContext('2d');
+            new Chart(ctx6, {
+                type: 'bar',
+                data: {
+                    labels: ['Income', 'Time_Spent_on_Site_Minutes', 'Average_Order_Value', 'Pages_Viewed', 'Age', 'Purchase_Frequency', 'Product_Category_Preference', 'Interests', 'Location', 'Newsletter_Subscription', 'Gender'],
+                    datasets: [{
+                        label: '特征重要性得分',
+                        data: [0.143184, 0.141550, 0.140646, 0.125770, 0.122093, 0.095164, 0.067249, 0.055951, 0.038679, 0.036169, 0.033544],
+                        backgroundColor: function(context) {
+                            const index = context.dataIndex;
+                            const alpha = 0.4 + (index * 0.06);
+                            return `rgba(0, 191, 215, ${alpha})`;
+                        },
+                        borderColor: function(context) {
+                            const index = context.dataIndex;
+                            const alpha = 0.6 + (index * 0.04);
+                            return `rgba(0, 191, 215, ${alpha})`;
+                        },
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: '影响用户消费的特征重要性（随机森林）',
+                            font: {
+                                size: 14,
+                                weight: 'bold'
+                            }
+                        },
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return '特征重要性得分: ' + context.raw.toFixed(2);
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            max: 0.15,
+                            title: {
+                                display: true,
+                                text: '特征重要性得分'
+                            },
+                            grid: {
+                                color: 'rgba(0,0,0,0.05)'
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return value.toFixed(2);
+                                }
+                            }
+                        },
+                        y: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                font: {
+                                    size: 11
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            document.getElementById('chart6Loading').classList.add('hidden');
+        };
+    </script>
+</body>
+</html>

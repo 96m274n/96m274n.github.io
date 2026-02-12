@@ -1,0 +1,2258 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>社交电商用户购买行为记录｜凌越象限</title>
+    <meta name="description" content="上海凌越象限：基于千万级用户行为日志的转化路径深度分析，识别关键流失节点与高价值触点。">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
+    <style>
+        :root { 
+            --primary: #00BFD7; /* 青色主色调 */
+            --accent: #FF7A45;  /* 橘色辅助色 */
+            --bg: #f0f9ff;      /* 浅蓝色背景 */
+            --text: #333;
+            --secondary: #00A0B0; /* 深青色 */
+            --light-accent: #FFF0EB; /* 浅橘色 */
+            --chart-colors: #00BFD7, #FF7A45, #00A0B0, #FF9D5C, #5CDBD3;
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            --shadow-hover: 0 12px 48px rgba(0, 0, 0, 0.15);
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; line-height:1.6; color:var(--text); background:var(--bg); overflow-x: hidden; }
+        
+        /* 背景图案 */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg);
+            z-index: -1;
+        }
+        
+        /* 导航栏 */
+        header { 
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: var(--shadow);
+            padding: 1rem 5%; 
+            position:sticky; 
+            top:0; 
+            z-index:100;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        
+        .nav-container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            display:flex; 
+            justify-content:space-between; 
+            align-items:center; 
+        }
+        
+        .logo { 
+            font-size: 1.5rem; 
+            font-weight:700; 
+            color: var(--primary); 
+            text-decoration:none; 
+            align-items: center; 
+            display: inline-flex; 
+            vertical-align: middle;
+            transition: transform 0.3s ease;
+        }
+        
+        .logo:hover {
+            transform: scale(1.05);
+        }
+        
+        .logo img { 
+            vertical-align: middle;
+            transition: transform 0.3s ease;
+        }
+        
+        .logo:hover img {
+            transform: rotate(5deg);
+        }
+        
+        .logo span { 
+            vertical-align: middle; 
+        }
+        
+        .logo-icon { 
+            display:inline-block; 
+            width:36px; 
+            height:36px; 
+            background:linear-gradient(135deg, var(--primary), var(--secondary)); 
+            color:white; 
+            text-align:center; 
+            line-height:36px; 
+            border-radius:6px; 
+            margin-right:0.5rem; 
+            font-weight:bold;
+            box-shadow: 0 4px 12px rgba(0, 191, 215, 0.3);
+        }
+        
+        .back-home { 
+            display:inline-block; 
+            margin-top:1rem; 
+            padding: 0.5rem 1rem; 
+            background:linear-gradient(135deg, var(--primary), var(--secondary)); 
+            color:white; 
+            text-decoration:none; 
+            border-radius:4px; 
+            font-size:0.95rem; 
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 191, 215, 0.3);
+        }
+        
+        .back-home:hover { 
+            background:linear-gradient(135deg, var(--secondary), var(--primary));
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 168, 150, 0.4);
+        }
+        
+        .container { 
+            max-width: 1200px; 
+            margin: 2rem auto; 
+            padding: 0 2%; 
+        }
+        
+        h1 { 
+            color: #333; 
+            margin-bottom: 1.5rem; 
+            font-size: 2.5rem !important; 
+            font-weight: 700 !important; 
+            line-height: 1.2 !important;
+            text-align: center;
+            padding: 1rem 0;
+        }
+        
+        .subtitle { 
+            color:#666; 
+            margin-bottom: 2rem; 
+            font-size:1.1rem;
+            text-align: center;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        /* 核心发现样式 */
+        .core-summary {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            animation: fadeIn 0.8s ease-out;
+            border: 1px solid #eee;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .core-summary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+        }
+        
+        .summary-title {
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 1.5rem;
+            font-size: 1.4rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+        
+        .summary-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            border-radius: 2px;
+        }
+        
+        .summary-content {
+            line-height: 1.6;
+            color: #555;
+        }
+        
+        .summary-content p {
+            margin-bottom: 0.5rem;
+        }
+        
+        .summary-item {
+            margin-bottom: 1.5rem;
+        }
+        
+        .summary-item h3 {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            line-height: 1.4;
+        }
+        
+        /* 核心发现数字高亮样式 */
+        .highlight-num {
+            color: var(--accent);
+            font-weight: bold;
+        }
+        
+        .inline-content {
+            font-weight: normal;
+            color: #555;
+        }
+        
+        .discovery-item {
+            display: block;
+            margin-bottom: 1rem;
+            padding-left: 2rem;
+            position: relative;
+            line-height: 1.6;
+        }
+        
+        .discovery-item::before {
+            content: "";
+            position: absolute;
+            left: 0.75rem;
+            top: 0.75rem;
+            width: 0.5rem;
+            height: 0.5rem;
+            background-color: var(--accent);
+            border-radius: 50%;
+        }
+        
+        .conclusion-box { 
+            background:white;
+            padding:2rem; 
+            margin:2rem 0; 
+            border-radius:8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            border: 1px solid #eee;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .conclusion-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+        }
+        
+        .conclusion-title { 
+            font-weight:700; 
+            color:#333; 
+            margin-bottom:1rem; 
+            font-size: 1.4rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+        
+        .conclusion-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            border-radius: 2px;
+        }
+        
+        .chart-container { 
+            background:white;
+            border-radius:8px; 
+            padding:1.5rem; /* 减少内边距 */
+            box-shadow:0 2px 8px rgba(0,0,0,0.03); 
+            margin:2rem 0; 
+            transition: all 0.3s ease;
+            animation: slideUp 0.6s ease-out;
+            animation-fill-mode: both;
+            border: 1px solid #eee;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .chart-container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+        }
+        
+        .chart-container:nth-child(1) { animation-delay: 0.1s; }
+        .chart-container:nth-child(2) { animation-delay: 0.2s; }
+        .chart-container:nth-child(3) { animation-delay: 0.3s; }
+        .chart-container:nth-child(4) { animation-delay: 0.4s; }
+        
+        .chart-container:hover { 
+            transform: translateY(-5px); 
+            box-shadow:var(--shadow-hover); 
+        }
+        
+        .chart-wrapper { 
+            width: 100%; 
+            height: 400px;
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.5);
+            padding: 0; /* 移除内边距，让图表完全填充容器 */
+            margin: 0; /* 移除外边距 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* 确保canvas元素完全填充其父容器 */
+        .chart-wrapper canvas {
+            width: 100% !important;
+            height: 100% !important;
+            display: block;
+        }
+        
+        .chart-container h2 {
+            position: relative;
+            padding-bottom: 0.8rem;
+            margin-bottom: 1rem; /* 减少标题与图表之间的间距 */
+            font-size: 1.5rem;
+            color: #333;
+            font-weight: 700;
+        }
+        
+        .chart-container h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            border-radius: 2px;
+        }
+        
+        footer { 
+            text-align:center; 
+            padding:2rem 0; 
+            color:#777; 
+            font-size:0.9rem; 
+            margin-top:3rem; 
+            border-top:1px solid #eee;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        
+        /* 响应式增强 */
+        @media (max-width: 768px) {
+            .chart-container h2 {
+                font-size: 1.3rem;
+                margin-bottom: 1rem;
+            }
+            .chart-wrapper {
+                height: 300px !important;
+            }
+            .core-summary {
+                padding: 1.5rem;
+            }
+            .summary-title {
+                font-size: 1.3rem;
+            }
+            h1 {
+                font-size: 2rem !important;
+            }
+        }
+        
+        @media (max-width:768px) { 
+            .nav-container { 
+                flex-direction:column; 
+                gap:1rem; 
+            } 
+        }
+        
+        /* 加载动画 */
+        .chart-loading {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            transition: opacity 0.5s ease;
+        }
+        
+        .chart-loading.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(0, 168, 150, 0.2);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* 数据卡片 */
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 4px;
+            padding: 1.25rem 1.5rem;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+            height: 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--primary);
+        }
+        
+        .stat-card:nth-child(2)::before {
+            background: var(--accent);
+        }
+        
+        .stat-card:nth-child(2) .stat-value {
+            color: var(--accent);
+        }
+        
+        .stat-card:nth-child(3)::before {
+            background: var(--secondary);
+        }
+        
+        .stat-card:nth-child(4)::before {
+            background: #5CDBD3;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        
+        .stat-value {
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.25rem;
+            line-height: 1;
+        }
+        
+        .stat-label {
+            font-size: 0.8rem;
+            color: #999;
+            font-weight: 400;
+        }
+        
+        /* 逻辑树样式 */
+        .logic-tree { 
+            margin:2rem 0; 
+        }
+        
+        .logic-tree dt { 
+            font-weight:700; 
+            margin:1.5rem 0 0.8rem;
+            padding-top: 0.75rem;
+            position: relative;
+            font-size: 1.2rem;
+        }
+        
+        .logic-tree dt::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+        }
+        
+        .logic-tree dt:nth-child(1) {
+            color: var(--primary);
+        }
+        
+        .logic-tree dt:nth-child(1)::before {
+            background-color: var(--primary);
+        }
+        
+        .logic-tree dt:nth-child(2) {
+            color: var(--accent);
+        }
+        
+        .logic-tree dt:nth-child(2)::before {
+            background-color: var(--accent);
+        }
+        
+        .logic-tree dt:nth-child(3) {
+            color: var(--secondary);
+        }
+        
+        .logic-tree dt:nth-child(3)::before {
+            background-color: var(--secondary);
+        }
+        
+        .logic-tree dd { 
+            margin-left: 1.5rem; 
+            margin-bottom: 1rem;
+            line-height: 1.8;
+        }
+        
+        .user-segment { 
+            background:var(--glass-bg);
+            border-left:3px solid var(--primary); 
+            padding: 1.5rem; 
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        .user-segment:hover {
+            transform: translateX(8px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+        }
+        
+        .segment-title { 
+            font-weight:700; 
+            color:var(--secondary); 
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+        }
+        
+        .segment-feature, .segment-strategy { 
+            margin-left: 1.5rem; 
+            margin-bottom: 0.6rem;
+            position: relative;
+        }
+        
+        .segment-feature::before, .segment-strategy::before { 
+            content: "→"; 
+            color: var(--accent); 
+            margin-right: 0.6rem;
+            position: absolute;
+            left: -1.5rem;
+            top: 0.2rem;
+        }
+        
+        /* 3D图表容器样式 */
+        #rfm3DContainer {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        /* 坐标轴标签样式 */
+        .axis-label {
+            position: absolute;
+            font-size: 14px;
+            color: #666;
+            font-weight: bold;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 4px 8px;
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .x-axis-label {
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .y-axis-label {
+            top: 50%;
+            left: 10px;
+            transform: translateY(-50%) rotate(-90deg);
+            transform-origin: left center;
+        }
+        
+        .z-axis-label {
+            top: 10px;
+            right: 10px;
+        }
+        
+        /* 图例样式 */
+        .legend-3d {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            margin-right: 8px;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+        }
+        
+        .legend-text {
+            font-size: 14px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        /* 修复3D图表容器的高度问题 */
+        .chart-wrapper:has(#rfm3DContainer) {
+            height: 500px !important;
+        }
+        
+        /* 修复热力图容器的高度问题 */
+        .chart-wrapper:has(#rfmHeatmapChart) {
+            height: 500px !important;
+        }
+        
+        /* 修复多图表网格布局 */
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            .chart-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* 策略部分样式增强 */
+        .strategy-content {
+            margin-bottom: 1.5rem;
+        }
+        
+        .strategy-content ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        
+        .strategy-content li {
+            position: relative;
+            padding-left: 2rem;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+        
+        .strategy-content li::before {
+            content: "•";
+            position: absolute;
+            left: 0.5rem;
+            color: var(--accent);
+            font-size: 1.5rem;
+            line-height: 1;
+        }
+        
+        /* 用户进阶路径样式增强 */
+        .user-path-container {
+            background: linear-gradient(135deg, rgba(240, 253, 250, 0.8), rgba(240, 249, 255, 0.8));
+            border-radius: 12px;
+            padding: 2rem;
+            margin-top: 1.5rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 191, 215, 0.2);
+        }
+        
+        .user-path-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--secondary);
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .user-path-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .user-path-step {
+            flex: 1;
+            min-width: 150px;
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .user-path-step:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        }
+        
+        .user-path-step::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+        }
+        
+        .user-path-step:nth-child(1)::before {
+            background: linear-gradient(90deg, #FF7A45, #FF9D5C);
+        }
+        
+        .user-path-step:nth-child(2)::before {
+            background: linear-gradient(90deg, #52C41A, #73D13D);
+        }
+        
+        .user-path-step:nth-child(3)::before {
+            background: linear-gradient(90deg, #1890FF, #40A9FF);
+        }
+        
+        .user-path-step:nth-child(4)::before {
+            background: linear-gradient(90deg, #722ED1, #9254DE);
+        }
+        
+        .step-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 1rem;
+        }
+        
+        .step-icon.new {
+            background: linear-gradient(135deg, #FF7A45, #FF9D5C);
+            border: 4px solid #FFF0EB;
+        }
+        
+        .step-icon.active {
+            background: linear-gradient(135deg, #52C41A, #73D13D);
+            border: 4px solid #F6FFED;
+        }
+        
+        .step-icon.loyal {
+            background: linear-gradient(135deg, #1890FF, #40A9FF);
+            border: 4px solid #E6F7FF;
+        }
+        
+        .step-icon.vip {
+            background: linear-gradient(135deg, #722ED1, #9254DE);
+            border: 4px solid #F9F0FF;
+        }
+        
+        .step-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+            color: #333;
+        }
+        
+        .step-desc {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+        
+        .step-benefits {
+            list-style-type: none;
+            padding: 0;
+            text-align: left;
+        }
+        
+        .step-benefits li {
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 0.3rem;
+            padding-left: 1.2rem;
+            position: relative;
+        }
+        
+        .step-benefits li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+        }
+        
+        .path-indicators {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2rem;
+            padding: 0 1rem;
+        }
+        
+        .path-indicator {
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+        }
+        
+        .path-indicator::before {
+            content: "";
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+            background: var(--primary);
+        }
+        
+        /* 破局之道分隔线样式 */
+        .conclusion-box .logic-tree dt {
+            position: relative;
+            padding-top: 2rem; /* 增加上方内边距为分隔线留出空间 */
+            margin-top: 2rem; /* 增加上方外边距 */
+        }
+        
+        .conclusion-box .logic-tree dt::before {
+            content: '';
+            position: absolute;
+            top: 1rem; /* 分隔线位于标题上方 */
+            left: 0;
+            width: 100%;
+            height: 2px;
+        }
+        
+        /* 策略一（紧急）：青色 */
+        .conclusion-box .logic-tree dt:nth-of-type(1) {
+            color: #00BFD7; /* 青色 */
+            padding-top: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .conclusion-box .logic-tree dt:nth-of-type(1)::before {
+            background-color: #00BFD7; /* 青色 */
+            display: block;
+        }
+        
+        /* 策略二（中期）：橙色 */
+        .conclusion-box .logic-tree dt:nth-of-type(2) {
+            color: #FF7A45; /* 橙色 */
+        }
+        
+        .conclusion-box .logic-tree dt:nth-of-type(2)::before {
+            background-color: #FF7A45; /* 橙色 */
+        }
+        
+        /* 策略三（长期）：深青色 */
+        .conclusion-box .logic-tree dt:nth-of-type(3) {
+            color: #00A0B0; /* 深青色 */
+        }
+        
+        .conclusion-box .logic-tree dt:nth-of-type(3)::before {
+            background-color: #00A0B0; /* 深青色 */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="nav-container" style="align-items: center;">
+            <a href="index.html" class="logo">
+                <img src="https://p26-flow-imagex-download-sign.byteimg.com/tos-cn-i-a9rns2rl98/7d581e9f8f3749358e3d4e04a979ca7a.png~tplv-a9rns2rl98-24:720:720.png?lk3s=8e244e95&rcl=20260211134609561C91939A30A8326A97&rrcfp=8a172a1a&x-expires=1771393569&x-signature=2aPGAmal6rzZR%2FubHhA4gzyv9OQ%3D" alt="凌越象限" class="h-8 inline-block mr-3">
+                <span class="inline-block">凌越象限</span>
+            </a>
+            <a href="index.html" class="back-home">← 返回首页</a>
+        </div>
+    </header>
+    
+    <div class="container">
+        <h1>电商购物用户行为分析</h1>
+        <p class="subtitle">驾驭RFM深度分析：驱动用户生命周期价值跃迁</p>
+        
+        <!-- 核心发现区域 -->
+        <div class="core-summary">
+            <div class="summary-title">核心发现</div>
+            <div class="summary-item">
+                <h3>1、用户活跃度危机</h3>
+                <div class="summary-content">
+                    <p><span class="discovery-item">平均复购次数仅为<span class="highlight-num">1.0次</span>，几乎所有用户（含高价值用户）仅为一次性购买。</span></p>
+                </div>
+            </div>
+            <div class="summary-item">
+                <h3>2、"高价值"用户误判</h3>
+                <div class="summary-content">
+                    <p><span class="discovery-item">当前<span class="highlight-num">33.0%</span>的"高价值用户"实为"高额沉睡客"，平均已<span class="highlight-num">666天</span>未复购，流失风险极高。</span></p>
+                </div>
+            </div>
+            <div class="summary-item">
+                <h3>3、增长模式不可持续</h3>
+                <div class="summary-content">
+                    <p><span class="discovery-item">业务增长完全依赖拉新，缺乏留存驱动的内生增长。</span></p>
+                </div>
+            </div>
+            <div class="summary-item">
+                <h3>4、建议行动总览</h3>
+                <div class="summary-content">
+                    <p><span class="discovery-item">立即调整用户价值评估体系，从"交易价值"转向"用户关系"，实施精细化分层运营。</span></p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 数据概览卡片 -->
+        <div class="stats-cards">
+            <div class="stat-card">
+                <div class="stat-value">99,457</div>
+                <div class="stat-label">总订单数</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">¥2.51亿</div>
+                <div class="stat-label">总销售额</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">¥2,528</div>
+                <div class="stat-label">平均客单价</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">1.0次</div>
+                <div class="stat-label">平均复购次数</div>
+            </div>
+        </div>
+        
+        <!-- K-Means聚类K值优化选择评估图 -->
+        <div class="chart-container">
+            <h2>K-Means聚类K值优化选择评估图</h2>
+            <div class="chart-wrapper">
+                <div class="chart-loading">
+                    <div class="spinner"></div>
+                </div>
+                <canvas id="kmeansChart"></canvas>
+            </div>
+            <p class="text-base text-gray-700 mt-4 italic font-medium">图表显示，当K=5时轮廓系数达到最高值0.58，同时SSE误差平方和仍保持在较低水平，表明5个用户群体是最优的聚类结果。</p>
+        </div>
+
+        <!-- 基于RFM的三维用户价值分群空间分布图 -->
+        <div class="chart-container">
+            <h2>基于RFM的三维用户价值分群空间分布图</h2>
+            <div class="chart-wrapper" style="height: 500px;">
+                <div class="chart-loading">
+                    <div class="spinner"></div>
+                </div>
+                <div id="rfm3DContainer">
+                    <!-- 坐标轴标签 -->
+                    <div class="axis-label x-axis-label">最近购买时间 (R)</div>
+                    <div class="axis-label y-axis-label">购买频率 (F)</div>
+                    <div class="axis-label z-axis-label">消费金额 (M)</div>
+                    
+                    <!-- 图例 -->
+                    <div class="legend-3d">
+                        <div class="legend-item">
+                            <div class="legend-color" style="background-color: rgba(0, 191, 215, 0.7);"></div>
+                            <div class="legend-text">高价值用户</div>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background-color: rgba(92, 219, 211, 0.7);"></div>
+                            <div class="legend-text">中价值用户</div>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background-color: rgba(255, 122, 69, 0.7);"></div>
+                            <div class="legend-text">低价值用户</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p class="text-base text-gray-700 mt-4 italic font-medium">可视化证明，无论消费金额高低，绝大多数用户都集中在低频、久未消费的区域，印证了普遍的活跃度低下。</p>
+        </div>
+
+        <!-- 核心业务指标多维度概览 -->
+        <div class="chart-container">
+            <h2>核心业务指标多维度概览</h2>
+            <div class="chart-grid">
+                <div class="chart-wrapper">
+                    <div class="chart-loading">
+                        <div class="spinner"></div>
+                    </div>
+                    <canvas id="categoryChart"></canvas>
+                </div>
+                <div class="chart-wrapper">
+                    <div class="chart-loading">
+                        <div class="spinner"></div>
+                    </div>
+                    <canvas id="paymentChart"></canvas>
+                </div>
+                <div class="chart-wrapper">
+                    <div class="chart-loading">
+                        <div class="spinner"></div>
+                    </div>
+                    <canvas id="ageChart"></canvas>
+                </div>
+                <div class="chart-wrapper">
+                    <div class="chart-loading">
+                        <div class="spinner"></div>
+                    </div>
+                    <canvas id="regionChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- RFM用户价值层级特征分布热图 -->
+        <div class="chart-container">
+            <h2>RFM用户价值层级特征分布热图</h2>
+            <div class="chart-wrapper" style="height: 500px;">
+                <div class="chart-loading">
+                    <div class="spinner"></div>
+                </div>
+                <canvas id="rfmHeatmapChart"></canvas>
+            </div>
+            <p class="text-base text-gray-700 mt-4 italic font-medium">图表证明，现有高价值用户定义严重依赖消费金额，忽视了用户活跃与忠诚，导致策略失效。</p>
+        </div>
+
+        <!-- 核心业务指标总结 -->
+        <div class="conclusion-box">
+            <div class="conclusion-title">核心业务指标总结</div>
+            <div class="logic-tree">
+                <dl>
+                    <dt>1. 销售核心指标</dt>
+                    <dd>总订单数: <strong>99,457</strong></dd>
+                    <dd>总销售额: <strong>￥251,505,794.25</strong></dd>
+                    <dd>平均客单价: <strong>￥2,528.79</strong></dd>
+                    <dd>唯一客户数: <strong>99,457</strong></dd>
+                    <dd>平均复购次数: <strong>1.0次</strong></dd>
+                    <dd>高价值用户占比: <strong>33.0%</strong></dd>
+                    <dd>低价值用户占比: <strong>33.8%</strong></dd>
+
+                    <dt>2. 用户分层策略（基于RFM分析）</dt>
+                    
+                    <div class="user-segment">
+                        <div class="segment-title">[高价值用户] (占比: 33.0%)</div>
+                        <div class="segment-feature">平均消费￥6,885</div>
+                        <div class="segment-feature">购买1.0次</div>
+                        <div class="segment-feature">最近购买666天前</div>
+                    </div>
+                    
+                    <div class="user-segment">
+                        <div class="segment-title">[中价值用户] (占比: 33.2%)</div>
+                        <div class="segment-feature">平均消费￥691</div>
+                        <div class="segment-feature">购买1.0次</div>
+                        <div class="segment-feature">最近购买663天前</div>
+                    </div>
+                    
+                    <div class="user-segment">
+                        <div class="segment-title">[低价值用户] (占比: 33.8%)</div>
+                        <div class="segment-feature">平均消费￥86</div>
+                        <div class="segment-feature">购买1.0次</div>
+                        <div class="segment-feature">最近购买664天前</div>
+                    </div>
+                </dl>
+            </div>
+        </div>
+
+        <!-- 破局之道：三层策略驱动用户复购与增长 -->
+        <div class="conclusion-box mt-6">
+            <div class="conclusion-title">破局之道：三层策略驱动用户复购与增长</div>
+            <div class="logic-tree">
+                <dl>
+                    <dt>策略一（紧急）：修正用户价值模型</dt>
+                    <dd>
+                        <div class="strategy-content">
+                            <div class="flex items-start space-x-4">
+                                <div class="flex-shrink-0 w-2 h-2 rounded-full bg-orange-500 mt-2"></div>
+                                <div class="flex-grow">
+                                    <p><strong>行动：</strong>提高RFM模型中 R（最近消费时间） 和 F（消费频率） 的权重，建立 五类用户画像。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </dd>
+
+                    <dt>策略二（中期）：分层精准触达</dt>
+                    <dd>
+                        <div class="strategy-content">
+                            <div class="flex items-start space-x-4">
+                                <div class="flex-shrink-0 w-2 h-2 rounded-full bg-orange-500 mt-2"></div>
+                                <div class="flex-grow">
+                                    <ul class="list-none space-y-3">
+                                        <li><strong>高额沉睡客（原高价值）：</strong>策略从"重点维系"转为"专项召回"，设计回归专属权益。</li>
+                                        <li><strong>中价值/高频低额客：</strong>通过购物篮分析推荐关联商品，提升客单价。</li>
+                                        <li><strong>低价值/新客：</strong>通过内容营销与低门槛任务，提升首次复购概率。</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </dd>
+
+                    <dt>策略三（长期）：构建用户成长体系</dt>
+                    <dd>
+                        <div class="strategy-content">
+                            <div class="flex items-start space-x-4">
+                                <div class="flex-shrink-0 w-2 h-2 rounded-full bg-orange-500 mt-2"></div>
+                                <div class="flex-grow">
+                                    <p class="mb-4">设计会员/积分成长路径，将复购、互动行为与权益挂钩，并建立"分析-策略-实验-监控"的闭环。</p>
+                                    
+                                    <!-- 用户进阶路径与权益体系 -->
+                                    <div class="user-path-container">
+                                        <div class="user-path-title">用户进阶路径与权益体系</div>
+                                        <div class="user-path-steps">
+                                            <div class="user-path-step">
+                                                <div class="step-icon new">新客</div>
+                                                <div class="step-title">首次购买</div>
+                                                <div class="step-desc">吸引用户完成首次交易</div>
+                                                <ul class="step-benefits">
+                                                    <li>新人专享折扣</li>
+                                                    <li>首单返现</li>
+                                                    <li>生日礼遇</li>
+                                                </ul>
+                                            </div>
+                                            
+                                            <div class="user-path-step">
+                                                <div class="step-icon active">活跃</div>
+                                                <div class="step-title">多次复购</div>
+                                                <div class="step-desc">培养用户购买习惯</div>
+                                                <ul class="step-benefits">
+                                                    <li>积分加速</li>
+                                                    <li>专属客服</li>
+                                                    <li>新品优先</li>
+                                                </ul>
+                                            </div>
+                                            
+                                            <div class="user-path-step">
+                                                <div class="step-icon loyal">忠诚</div>
+                                                <div class="step-title">高频消费</div>
+                                                <div class="step-desc">提升用户忠诚度</div>
+                                                <ul class="step-benefits">
+                                                    <li>专属价格</li>
+                                                    <li>免费配送</li>
+                                                    <li>专属活动</li>
+                                                </ul>
+                                            </div>
+                                            
+                                            <div class="user-path-step">
+                                                <div class="step-icon vip">VIP</div>
+                                                <div class="step-title">高价值贡献</div>
+                                                <div class="step-desc">打造核心用户群体</div>
+                                                <ul class="step-benefits">
+                                                    <li>私人定制</li>
+                                                    <li>专属顾问</li>
+                                                    <li>尊贵礼遇</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="path-indicators">
+                                            <div class="path-indicator">成长值累积</div>
+                                            <div class="path-indicator">等级晋升</div>
+                                            <div class="path-indicator">权益升级</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2026 上海凌越象限文化传播有限公司｜数据来源：阿里云天池公共数据集｜分析方法：归因模型+生存分析</p>
+    </footer>
+
+    <script>
+        // 图表配置和数据
+        const chartColors = {
+            primary: '#00BFD7', // 青色主色调
+            accent: '#FF7A45',  // 橘色辅助色
+            secondary: '#00A0B0', // 深青色
+            tertiary: '#FF9D5C', // 浅橘色
+            quaternary: '#5CDBD3', // 淡青色
+            background: 'rgba(0, 191, 215, 0.1)',
+            grid: 'rgba(0, 0, 0, 0.05)'
+        };
+
+        // 图表全局配置
+        Chart.defaults.font.family = '"Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif';
+        Chart.defaults.color = '#666';
+        Chart.defaults.borderColor = chartColors.grid;
+        Chart.defaults.responsive = true;
+        Chart.defaults.maintainAspectRatio = false;
+
+        // 全局图表实例
+        let charts = {
+            kmeansChart: null,
+            categoryChart: null,
+            paymentChart: null,
+            ageChart: null,
+            regionChart: null,
+            rfmHeatmapChart: null
+        };
+
+        // 模拟数据生成函数
+        function generateChartData() {
+            // 这里可以根据筛选条件生成不同的数据
+            // 实际应用中，这里应该是从API获取数据
+            return {
+                categoryData: {
+                    labels: ['Clothing', 'Books', 'Electronics', 'Home & Kitchen', 'Beauty', 'Sports', 'Toys'],
+                    datasets: [{
+                        label: '销售额',
+                        data: [65000000, 42000000, 58000000, 35000000, 28000000, 15000000, 9500000],
+                        backgroundColor: chartColors.primary,
+                        borderColor: chartColors.secondary,
+                        borderWidth: 1,
+                        borderRadius: 4
+                    }]
+                },
+                paymentData: {
+                    labels: ['Credit Card', 'Alipay', 'WeChat Pay', 'Debit Card'],
+                    datasets: [{
+                        data: [45, 28, 20, 7],
+                        backgroundColor: [
+                            chartColors.primary,
+                            chartColors.accent,
+                            chartColors.tertiary,
+                            chartColors.quaternary
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                ageData: {
+                    labels: ['<18', '18-24', '25-34', '35-44', '45-54', '55+'],
+                    datasets: [{
+                        label: '用户数',
+                        data: [5000, 18000, 35000, 22000, 12000, 7457],
+                        backgroundColor: chartColors.secondary,
+                        borderColor: chartColors.primary,
+                        borderWidth: 1,
+                        borderRadius: 4
+                    }]
+                },
+                regionData: {
+                    labels: ['East', 'South', 'North', 'West', 'Central'],
+                    datasets: [{
+                        label: '订单数',
+                        data: [32000, 28000, 18000, 12000, 9457],
+                        backgroundColor: chartColors.accent,
+                        borderColor: chartColors.tertiary,
+                        borderWidth: 1,
+                        borderRadius: 4
+                    }]
+                },
+                kmeansData: {
+                    labels: ['K=1', 'K=2', 'K=3', 'K=4', 'K=5', 'K=6', 'K=7', 'K=8', 'K=9', 'K=10'],
+                    datasets: [
+                        {
+                            label: '轮廓系数',
+                            data: [0.12, 0.35, 0.48, 0.52, 0.58, 0.56, 0.54, 0.51, 0.49, 0.47],
+                            borderColor: chartColors.primary,
+                            backgroundColor: 'rgba(0, 168, 150, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.3,
+                            pointBackgroundColor: chartColors.primary,
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            pointRadius: 5,
+                            pointHoverRadius: 7
+                        },
+                        {
+                            label: 'SSE误差平方和',
+                            data: [12500, 8200, 5400, 3800, 2900, 2400, 2100, 1900, 1750, 1650],
+                            borderColor: chartColors.accent,
+                            backgroundColor: 'rgba(255, 107, 53, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.3,
+                            pointBackgroundColor: chartColors.accent,
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            pointRadius: 5,
+                            pointHoverRadius: 7,
+                            yAxisID: 'y1'
+                        }
+                    ]
+                },
+                rfmHeatmapData: {
+                    metrics: ['Recency', 'Frequency', 'Monetary'],
+                    segments: ['低价值', '中价值', '高价值'],
+                    values: [
+                        [0.83, 0.66, 0.68], // 低价值用户的RFM
+                        [1.0, 1.0, 1.0],    // 中价值用户的RFM
+                        [0.85, 0.66, 0.98]  // 高价值用户的RFM
+                    ]
+                }
+            };
+        }
+
+        // 全局函数声明
+        window.hideLoading = function(chartId) {
+            const loadingElement = document.querySelector(`#${chartId}`).parentElement.querySelector('.chart-loading');
+            if (loadingElement) {
+                gsap.to(loadingElement, {
+                    opacity: 0,
+                    duration: 0.5,
+                    onComplete: function() {
+                        loadingElement.style.display = 'none';
+                    }
+                });
+            }
+        };
+
+        // 等待DOM加载完成
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM加载完成，开始初始化图表...');
+            
+            // 检查必要的库是否加载
+            if (typeof Chart === 'undefined') {
+                console.error('Chart.js 未加载');
+                alert('图表库加载失败，请刷新页面重试');
+                return;
+            }
+            
+            if (typeof THREE === 'undefined') {
+                console.error('Three.js 未加载');
+                alert('3D渲染库加载失败，请刷新页面重试');
+            }
+            
+            // 初始化所有图表
+            try {
+                initCharts();
+                console.log('图表初始化完成');
+            } catch (error) {
+                console.error('图表初始化失败:', error);
+                alert('图表初始化失败，请刷新页面重试');
+            }
+        });
+
+        // 初始化所有图表
+        function initCharts() {
+            console.log('开始初始化图表...');
+            
+            // 生成数据
+            const data = generateChartData();
+            console.log('数据生成完成');
+            
+            // 按顺序初始化图表，确保每个图表都有足够时间加载
+            setTimeout(() => {
+                console.log('初始化K-Means图表...');
+                initKmeansChart(data.kmeansData);
+                
+                setTimeout(() => {
+                    console.log('初始化3D散点图...');
+                    init3DScatterPlot();
+                    
+                    setTimeout(() => {
+                        console.log('初始化类别图表...');
+                        initCategoryChart(data.categoryData);
+                        
+                        setTimeout(() => {
+                            console.log('初始化支付方式图表...');
+                            initPaymentChart(data.paymentData);
+                            
+                            setTimeout(() => {
+                                console.log('初始化年龄分布图表...');
+                                initAgeChart(data.ageData);
+                                
+                                setTimeout(() => {
+                                    console.log('初始化地区分布图表...');
+                                    initRegionChart(data.regionData);
+                                    
+                                    setTimeout(() => {
+                                        console.log('初始化RFM热力图...');
+                                        initRfmHeatmapChart(data.rfmHeatmapData);
+                                        
+                                        console.log('所有图表初始化完成');
+                                    }, 300);
+                                }, 300);
+                            }, 300);
+                        }, 300);
+                    }, 300);
+                }, 300);
+            }, 300);
+        }
+
+        // K-Means聚类K值优化选择评估图
+        function initKmeansChart(data) {
+            try {
+                const kmeansCtx = document.getElementById('kmeansChart');
+                if (!kmeansCtx) {
+                    console.error('kmeansChart元素未找到');
+                    return;
+                }
+                
+                const ctx = kmeansCtx.getContext('2d');
+                if (!ctx) {
+                    console.error('无法获取canvas上下文');
+                    return;
+                }
+                
+                charts.kmeansChart = new Chart(ctx, {
+                    type: 'line',
+                    data: data,
+                    options: {
+                        interaction: {
+                            mode: 'index',
+                            intersect: false
+                        },
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'K-Means聚类K值优化选择',
+                                font: {
+                                    size: 16,
+                                    weight: 'bold'
+                                },
+                                color: '#333'
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                                titleColor: '#333',
+                                bodyColor: '#666',
+                                borderColor: chartColors.primary,
+                                borderWidth: 1,
+                                padding: 12,
+                                boxPadding: 6,
+                                usePointStyle: true,
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.parsed.y !== null) {
+                                            label += context.parsed.y.toFixed(3);
+                                        }
+                                        return label;
+                                    }
+                                }
+                            },
+                            legend: {
+                                position: 'top',
+                                labels: {
+                                    usePointStyle: true,
+                                    padding: 20,
+                                    font: {
+                                        size: 12
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                type: 'linear',
+                                display: true,
+                                position: 'left',
+                                title: {
+                                    display: true,
+                                    text: '轮廓系数',
+                                    color: chartColors.primary,
+                                    font: {
+                                        size: 12,
+                                        weight: 'bold'
+                                    }
+                                },
+                                min: 0,
+                                max: 1,
+                                grid: {
+                                    drawBorder: false
+                                }
+                            },
+                            y1: {
+                                type: 'linear',
+                                display: true,
+                                position: 'right',
+                                title: {
+                                    display: true,
+                                    text: 'SSE误差平方和',
+                                    color: chartColors.accent,
+                                    font: {
+                                        size: 12,
+                                        weight: 'bold'
+                                    }
+                                },
+                                min: 0,
+                                max: 13000,
+                                grid: {
+                                    drawOnChartArea: false
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'K值',
+                                    font: {
+                                        size: 12,
+                                        weight: 'bold'
+                                    }
+                                },
+                                grid: {
+                                    display: false
+                                }
+                            }
+                        },
+                        elements: {
+                            line: {
+                                tension: 0.3
+                            }
+                        },
+                        animation: {
+                            duration: 2000,
+                            easing: 'easeOutQuart'
+                        }
+                    }
+                });
+                
+                console.log('K-Means图表初始化成功');
+                window.hideLoading('kmeansChart');
+            } catch (error) {
+                console.error('K-Means图表初始化失败:', error);
+                window.hideLoading('kmeansChart');
+            }
+        }
+
+        // 基于RFM的三维用户价值分群空间分布图 - 使用Three.js实现3D散点图
+        function init3DScatterPlot() {
+            try {
+                console.log('开始初始化3D散点图...');
+                
+                // 获取容器尺寸
+                const container = document.getElementById('rfm3DContainer');
+                if (!container) {
+                    console.error('rfm3DContainer元素未找到');
+                    return;
+                }
+                
+                const width = container.clientWidth || 800;
+                const height = container.clientHeight || 500;
+                
+                console.log('3D容器尺寸:', width, 'x', height);
+
+                // 创建场景
+                const scene = new THREE.Scene();
+                scene.background = new THREE.Color(0xf8fbfa);
+
+                // 创建相机
+                const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
+                camera.position.set(35, 25, 35);
+                camera.lookAt(0, 0, 0);
+
+                // 创建渲染器
+                const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+                renderer.setSize(width, height);
+                renderer.setPixelRatio(window.devicePixelRatio || 1);
+                renderer.setClearColor(0xf8fbfa, 1); // 设置背景色
+                
+                // 清除之前的渲染器实例
+                while (container.firstChild) {
+                    container.removeChild(container.firstChild);
+                }
+                
+                container.appendChild(renderer.domElement);
+
+                // 添加轨道控制
+                let controls = null;
+                if (typeof THREE.OrbitControls !== 'undefined') {
+                    controls = new THREE.OrbitControls(camera, renderer.domElement);
+                    controls.enableDamping = true;
+                    controls.dampingFactor = 0.05;
+                    controls.screenSpacePanning = false;
+                    controls.minDistance = 30;
+                    controls.maxDistance = 100;
+                    controls.maxPolarAngle = Math.PI / 2;
+                    controls.minPolarAngle = Math.PI / 4;
+                    console.log('轨道控制器初始化成功');
+                } else {
+                    console.warn('OrbitControls未加载，3D图表将无法交互');
+                }
+
+                // 添加坐标轴
+                const axesHelper = new THREE.AxesHelper(20);
+                scene.add(axesHelper);
+
+                // 添加网格
+                const gridHelperXZ = new THREE.GridHelper(20, 10, 0x888888, 0xcccccc);
+                scene.add(gridHelperXZ);
+
+                const gridHelperYZ = new THREE.GridHelper(20, 10, 0x888888, 0xcccccc);
+                gridHelperYZ.rotation.x = Math.PI / 2;
+                scene.add(gridHelperYZ);
+                
+                const gridHelperXY = new THREE.GridHelper(20, 10, 0x888888, 0xcccccc);
+                gridHelperXY.rotation.z = Math.PI / 2;
+                scene.add(gridHelperXY);
+
+                // 准备数据 - 增加数据点数量以增强可视化效果
+                const userData = {
+                    high: [
+                        { x: 85, y: 75, z: 90 },
+                        { x: 90, y: 80, z: 85 },
+                        { x: 82, y: 78, z: 88 },
+                        { x: 88, y: 72, z: 92 },
+                        { x: 92, y: 85, z: 87 },
+                        { x: 87, y: 76, z: 89 },
+                        { x: 84, y: 79, z: 86 },
+                        { x: 89, y: 74, z: 91 }
+                    ],
+                    medium: [
+                        { x: 55, y: 50, z: 55 },
+                        { x: 60, y: 55, z: 50 },
+                        { x: 52, y: 48, z: 58 },
+                        { x: 58, y: 52, z: 53 },
+                        { x: 62, y: 58, z: 49 },
+                        { x: 57, y: 51, z: 56 },
+                        { x: 53, y: 49, z: 54 },
+                        { x: 61, y: 57, z: 51 }
+                    ],
+                    low: [
+                        { x: 25, y: 20, z: 15 },
+                        { x: 30, y: 25, z: 20 },
+                        { x: 22, y: 18, z: 18 },
+                        { x: 28, y: 22, z: 22 },
+                        { x: 32, y: 28, z: 25 },
+                        { x: 27, y: 21, z: 19 },
+                        { x: 23, y: 19, z: 17 },
+                        { x: 31, y: 26, z: 23 }
+                    ]
+                };
+
+                // 归一化函数
+                const normalize = (value, min, max) => {
+                    return (value - min) / (max - min) * 18 - 9; // 将值映射到 -9 到 9 的范围
+                };
+
+                // 创建点的材质 - 使用不透明材质确保可见性
+                const highValueMaterial = new THREE.MeshPhongMaterial({ 
+                    color: chartColors.primary, 
+                    transparent: false, 
+                    opacity: 1.0,
+                    shininess: 30
+                }); // 青色
+                const mediumValueMaterial = new THREE.MeshPhongMaterial({ 
+                    color: chartColors.quaternary, 
+                    transparent: false, 
+                    opacity: 1.0,
+                    shininess: 30
+                }); // 淡青色
+                const lowValueMaterial = new THREE.MeshPhongMaterial({ 
+                    color: chartColors.accent, 
+                    transparent: false, 
+                    opacity: 1.0,
+                    shininess: 30
+                }); // 橘色
+
+                // 创建条形几何体
+                const createBar = (height, material) => {
+                    const geometry = new THREE.BoxGeometry(0.5, height, 0.5);
+                    return new THREE.Mesh(geometry, material);
+                };
+
+                // 添加高价值用户条形
+                userData.high.forEach(point => {
+                    const normalizedPoint = {
+                        x: normalize(point.x, 0, 100),
+                        y: normalize(point.y, 0, 100) / 2, // 高度的一半，因为条形从底部开始
+                        z: normalize(point.z, 0, 100)
+                    };
+                    
+                    const bar = createBar(normalizedPoint.y * 2, highValueMaterial); // 完整高度
+                    bar.position.set(normalizedPoint.x, normalizedPoint.y, normalizedPoint.z);
+                    scene.add(bar);
+                });
+
+                // 添加中价值用户条形
+                userData.medium.forEach(point => {
+                    const normalizedPoint = {
+                        x: normalize(point.x, 0, 100),
+                        y: normalize(point.y, 0, 100) / 2, // 高度的一半，因为条形从底部开始
+                        z: normalize(point.z, 0, 100)
+                    };
+                    
+                    const bar = createBar(normalizedPoint.y * 2, mediumValueMaterial); // 完整高度
+                    bar.position.set(normalizedPoint.x, normalizedPoint.y, normalizedPoint.z);
+                    scene.add(bar);
+                });
+
+                // 添加低价值用户条形
+                userData.low.forEach(point => {
+                    const normalizedPoint = {
+                        x: normalize(point.x, 0, 100),
+                        y: normalize(point.y, 0, 100) / 2, // 高度的一半，因为条形从底部开始
+                        z: normalize(point.z, 0, 100)
+                    };
+                    
+                    const bar = createBar(normalizedPoint.y * 2, lowValueMaterial); // 完整高度
+                    bar.position.set(normalizedPoint.x, normalizedPoint.y, normalizedPoint.z);
+                    scene.add(bar);
+                });
+
+                // 添加坐标轴标签
+                const createAxisLabel = (text, position) => {
+                    const canvas = document.createElement('canvas');
+                    const context = canvas.getContext('2d');
+                    canvas.width = 128;
+                    canvas.height = 64;
+                    
+                    context.fillStyle = '#333333';
+                    context.font = 'Bold 20px Arial';
+                    context.textAlign = 'center';
+                    context.textBaseline = 'middle';
+                    context.fillText(text, 64, 32);
+                    
+                    const texture = new THREE.CanvasTexture(canvas);
+                    const material = new THREE.SpriteMaterial({ map: texture });
+                    const sprite = new THREE.Sprite(material);
+                    sprite.position.copy(position);
+                    sprite.scale.set(3, 1.5, 1);
+                    
+                    return sprite;
+                };
+
+                scene.add(createAxisLabel('最近购买时间 (R)', new THREE.Vector3(0, -12, 0)));
+                scene.add(createAxisLabel('购买频率 (F)', new THREE.Vector3(-12, 0, 0)));
+                scene.add(createAxisLabel('消费金额 (M)', new THREE.Vector3(0, 0, 12)));
+                
+                // 添加图表标题
+                scene.add(createAxisLabel('RFM三维用户分群可视化', new THREE.Vector3(0, 12, 0)));
+                
+                // 添加光源以确保物体可见
+                const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+                scene.add(ambientLight);
+                
+                const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+                directionalLight.position.set(5, 10, 7.5);
+                scene.add(directionalLight);
+                
+                console.log('光源添加完成');
+
+                // 动画循环
+                const animate = () => {
+                    requestAnimationFrame(animate);
+                    if (controls) {
+                        controls.update();
+                    }
+                    renderer.render(scene, camera);
+                };
+                
+                console.log('3D场景初始化完成，开始渲染循环');
+
+                // 响应窗口大小变化
+                window.addEventListener('resize', () => {
+                    const newWidth = container.clientWidth;
+                    const newHeight = container.clientHeight;
+                    
+                    if (newWidth && newHeight) {
+                        camera.aspect = newWidth / newHeight;
+                        camera.updateProjectionMatrix();
+                        renderer.setSize(newWidth, newHeight);
+                    }
+                });
+
+                // 开始动画
+                animate();
+                
+                console.log('3D散点图初始化成功');
+                
+                // 延迟隐藏加载动画，确保渲染完成
+                setTimeout(() => {
+                    window.hideLoading('rfm3DContainer');
+                }, 1000);
+                
+            } catch (error) {
+                console.error('3D散点图初始化失败:', error);
+                // 即使失败也要隐藏加载动画
+                setTimeout(() => {
+                    window.hideLoading('rfm3DContainer');
+                }, 2000);
+            }
+        }
+
+        // 商品类别分布图
+        function initCategoryChart(data) {
+            try {
+                const categoryCtx = document.getElementById('categoryChart');
+                if (!categoryCtx) {
+                    console.error('categoryChart元素未找到');
+                    return;
+                }
+                
+                const ctx = categoryCtx.getContext('2d');
+                if (!ctx) {
+                    console.error('无法获取canvas上下文');
+                    return;
+                }
+                
+                charts.categoryChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: data,
+                    options: {
+                        indexAxis: 'y',
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: '商品类别分布',
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                }
+                            },
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            x: {
+                                beginAtZero: true,
+                                ticks: {
+                                    callback: function(value) {
+                                        return (value / 1000000).toFixed(0) + 'M';
+                                    }
+                                }
+                            }
+                        },
+                        animation: {
+                            duration: 1500,
+                            easing: 'easeOutQuart'
+                        }
+                    }
+                });
+                
+                console.log('类别图表初始化成功');
+                window.hideLoading('categoryChart');
+            } catch (error) {
+                console.error('类别图表初始化失败:', error);
+                window.hideLoading('categoryChart');
+            }
+        }
+
+        // 支付方式饼图
+        function initPaymentChart(data) {
+            try {
+                const paymentCtx = document.getElementById('paymentChart');
+                if (!paymentCtx) {
+                    console.error('paymentChart元素未找到');
+                    return;
+                }
+                
+                const ctx = paymentCtx.getContext('2d');
+                if (!ctx) {
+                    console.error('无法获取canvas上下文');
+                    return;
+                }
+                
+                charts.paymentChart = new Chart(ctx, {
+                    type: 'pie',
+                    data: data,
+                    options: {
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: '支付方式分布',
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                }
+                            }
+                        },
+                        animation: {
+                            duration: 1500,
+                            easing: 'easeOutQuart'
+                        }
+                    }
+                });
+                
+                console.log('支付方式图表初始化成功');
+                window.hideLoading('paymentChart');
+            } catch (error) {
+                console.error('支付方式图表初始化失败:', error);
+                window.hideLoading('paymentChart');
+            }
+        }
+
+        // 年龄段分布图
+        function initAgeChart(data) {
+            try {
+                const ageCtx = document.getElementById('ageChart');
+                if (!ageCtx) {
+                    console.error('ageChart元素未找到');
+                    return;
+                }
+                
+                const ctx = ageCtx.getContext('2d');
+                if (!ctx) {
+                    console.error('无法获取canvas上下文');
+                    return;
+                }
+                
+                charts.ageChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: data,
+                    options: {
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: '用户年龄段分布',
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                }
+                            },
+                            legend: {
+                                display: false
+                            }
+                        },
+                        animation: {
+                            duration: 1500,
+                            easing: 'easeOutQuart'
+                        }
+                    }
+                });
+                
+                console.log('年龄分布图表初始化成功');
+                window.hideLoading('ageChart');
+            } catch (error) {
+                console.error('年龄分布图表初始化失败:', error);
+                window.hideLoading('ageChart');
+            }
+        }
+
+        // 地区分布图
+        function initRegionChart(data) {
+            try {
+                const regionCtx = document.getElementById('regionChart');
+                if (!regionCtx) {
+                    console.error('regionChart元素未找到');
+                    return;
+                }
+                
+                const ctx = regionCtx.getContext('2d');
+                if (!ctx) {
+                    console.error('无法获取canvas上下文');
+                    return;
+                }
+                
+                charts.regionChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: data,
+                    options: {
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: '地区分布',
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                }
+                            },
+                            legend: {
+                                display: false
+                            }
+                        },
+                        animation: {
+                            duration: 1500,
+                            easing: 'easeOutQuart'
+                        }
+                    }
+                });
+                
+                console.log('地区分布图表初始化成功');
+                window.hideLoading('regionChart');
+            } catch (error) {
+                console.error('地区分布图表初始化失败:', error);
+                window.hideLoading('regionChart');
+            }
+        }
+
+        // RFM用户价值层级特征分布热图
+        function initRfmHeatmapChart(data) {
+            try {
+                const rfmHeatmapCtx = document.getElementById('rfmHeatmapChart');
+                if (!rfmHeatmapCtx) {
+                    console.error('rfmHeatmapChart元素未找到');
+                    return;
+                }
+                
+                const ctx = rfmHeatmapCtx.getContext('2d');
+                if (!ctx) {
+                    console.error('无法获取canvas上下文');
+                    return;
+                }
+                
+                // 创建热力图数据
+                const chartData = [];
+                for (let i = 0; i < data.segments.length; i++) {
+                    for (let j = 0; j < data.metrics.length; j++) {
+                        chartData.push({
+                            x: j,
+                            y: i,
+                            v: data.values[i][j]
+                        });
+                    }
+                }
+                
+                charts.rfmHeatmapChart = new Chart(ctx, {
+                    type: 'scatter',
+                    data: {
+                        datasets: [{
+                            label: 'RFM特征值',
+                            data: chartData,
+                            backgroundColor: 'rgba(0, 191, 215, 0.1)',
+                            borderColor: 'rgba(0, 191, 215, 0.1)',
+                            borderWidth: 0,
+                            pointRadius: 0 // 不显示点，因为我们使用插件绘制方块
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: '用户价值层级特征分布图',
+                                font: {
+                                    size: 16,
+                                    weight: 'bold'
+                                },
+                                color: '#333',
+                                padding: {
+                                    top: 10,
+                                    bottom: 30
+                                }
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                                titleColor: '#333',
+                                bodyColor: '#666',
+                                borderColor: '#ccc',
+                                borderWidth: 1,
+                                padding: 10,
+                                callbacks: {
+                                    title: function(context) {
+                                        return `${data.metrics[context[0].parsed.x]} - ${data.segments[context[0].parsed.y]}`;
+                                    },
+                                    label: function(context) {
+                                        return `特征值: ${context.raw.v.toFixed(2)}`;
+                                    }
+                                }
+                            },
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            x: {
+                                type: 'linear',
+                                position: 'bottom',
+                                min: -0.5,
+                                max: data.metrics.length - 0.5,
+                                ticks: {
+                                    stepSize: 1,
+                                    callback: function(value) {
+                                        return data.metrics[value] || '';
+                                    }
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'RFM维度',
+                                    font: {
+                                        size: 12,
+                                        weight: 'bold'
+                                    }
+                                },
+                                grid: {
+                                    display: false
+                                }
+                            },
+                            y: {
+                                type: 'linear',
+                                position: 'left',
+                                min: -0.5,
+                                max: data.segments.length - 0.5,
+                                ticks: {
+                                    stepSize: 1,
+                                    callback: function(value) {
+                                        return data.segments[value] || '';
+                                    }
+                                },
+                                title: {
+                                    display: true,
+                                    text: '用户价值层级',
+                                    font: {
+                                        size: 12,
+                                        weight: 'bold'
+                                    }
+                                },
+                                grid: {
+                                    display: false
+                                }
+                            }
+                        },
+                        layout: {
+                            padding: {
+                                right: 40 // 为右侧颜色条留出空间
+                            }
+                        }
+                    },
+                    plugins: [{
+                        id: 'heatmapPlugin',
+                        afterDraw: function(chart) {
+                            const ctx = chart.ctx;
+                            const chartArea = chart.chartArea;
+                            const scales = chart.scales;
+                            
+                            // 绘制热力图方块
+                            for (let i = 0; i < data.segments.length; i++) {
+                                for (let j = 0; j < data.metrics.length; j++) {
+                                    const value = data.values[i][j];
+                                    
+                                    // 计算方块位置和大小
+                                    const x = scales.x.getPixelForValue(j - 0.5);
+                                    const y = scales.y.getPixelForValue(i - 0.5);
+                                    const width = scales.x.getPixelForValue(j + 0.5) - x;
+                                    const height = scales.y.getPixelForValue(i + 0.5) - y;
+                                    
+                                    // 设置颜色 - 使用从青色到橘色的渐变
+                                    let r, g, b;
+                                    if (value < 0.5) {
+                                        // 低值：青色
+                                        const t = value * 2; // 0 到 1
+                                        r = Math.floor(0 + t * (255 - 0));
+                                        g = Math.floor(191 + t * (122 - 191));
+                                        b = Math.floor(215 + t * (69 - 215));
+                                    } else {
+                                        // 高值：橘色
+                                        const t = (value - 0.5) * 2; // 0 到 1
+                                        r = Math.floor(255);
+                                        g = Math.floor(122 + t * (255 - 122));
+                                        b = Math.floor(69 + t * (255 - 69));
+                                    }
+                                    
+                                    // 绘制方块
+                                    ctx.fillStyle = `rgba(${r}, ${g}, ${b}, 0.9)`;
+                                    ctx.fillRect(x, y, width, height);
+                                    
+                                    // 绘制边框
+                                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+                                    ctx.lineWidth = 1;
+                                    ctx.strokeRect(x, y, width, height);
+                                    
+                                    // 绘制数值
+                                    ctx.fillStyle = '#333';
+                                    ctx.font = '12px Arial';
+                                    ctx.textAlign = 'center';
+                                    ctx.textBaseline = 'middle';
+                                    ctx.fillText(value.toFixed(2), x + width / 2, y + height / 2);
+                                }
+                            }
+                            
+                            // 绘制颜色条
+                            const colorBarWidth = 15;
+                            const colorBarHeight = chartArea.height;
+                            const colorBarX = chartArea.right + 20;
+                            const colorBarY = chartArea.top;
+                            
+                            // 绘制渐变色条 - 从青色到橘色
+                            const gradient = ctx.createLinearGradient(0, colorBarY, 0, colorBarY + colorBarHeight);
+                            gradient.addColorStop(0, 'rgba(255, 122, 69, 0.9)'); // 橘色
+                            gradient.addColorStop(0.5, 'rgba(255, 255, 255, 0.9)'); // 白色
+                            gradient.addColorStop(1, 'rgba(0, 191, 215, 0.9)'); // 青色
+                            
+                            ctx.fillStyle = gradient;
+                            ctx.fillRect(colorBarX, colorBarY, colorBarWidth, colorBarHeight);
+                            
+                            // 绘制颜色条边框
+                            ctx.strokeStyle = '#333';
+                            ctx.lineWidth = 1;
+                            ctx.strokeRect(colorBarX, colorBarY, colorBarWidth, colorBarHeight);
+                            
+                            // 绘制颜色条标签
+                            ctx.fillStyle = '#333';
+                            ctx.font = '10px Arial';
+                            ctx.textAlign = 'left';
+                            ctx.textBaseline = 'middle';
+                            ctx.fillText('1.0', colorBarX + colorBarWidth + 5, colorBarY);
+                            ctx.fillText('0.0', colorBarX + colorBarWidth + 5, colorBarY + colorBarHeight);
+                        }
+                    }]
+                });
+                
+                console.log('RFM热力图初始化成功');
+                window.hideLoading('rfmHeatmapChart');
+            } catch (error) {
+                console.error('RFM热力图初始化失败:', error);
+                window.hideLoading('rfmHeatmapChart');
+            }
+        }
+    </script>
+</body>
+</html>

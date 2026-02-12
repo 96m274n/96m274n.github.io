@@ -1,0 +1,1770 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2019餐饮行业数据分析｜凌越象限</title>
+    <meta name="description" content="上海凌越象限：从规模依赖到效率驱动：解码28省（直辖市）餐饮经营效能三大分化模式。">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
+    <script>
+        // 检查Chart.js是否正确加载
+        if (typeof Chart === 'undefined') {
+            console.error('Chart.js 未正确加载');
+            document.addEventListener('DOMContentLoaded', function() {
+                alert('图表库加载失败，请刷新页面重试');
+            });
+        } else {
+            console.log('Chart.js 加载成功，版本:', Chart.version);
+        }
+    </script>
+    <style>
+        :root { 
+            --primary: #00BFD7; /* 青色主色调 */
+            --accent: #FF7A45;  /* 橘色辅助色 */
+            --bg: #f0f9ff;      /* 浅蓝色背景 */
+            --text: #333;
+            --secondary: #00A0B0; /* 深青色 */
+            --light-accent: #FFF0EB; /* 浅橘色 */
+            --chart-colors: #00BFD7, #FF7A45, #00A0B0, #FF9D5C, #5CDBD3;
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            --shadow-hover: 0 12px 48px rgba(0, 0, 0, 0.15);
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; line-height:1.6; color:var(--text); background:var(--bg); overflow-x: hidden; }
+        
+        /* 背景图案 */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg);
+            z-index: -1;
+        }
+        
+        /* 导航栏 */
+        header { 
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: var(--shadow);
+            padding: 1rem 5%; 
+            position:sticky; 
+            top:0; 
+            z-index:100;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        
+        .nav-container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            display:flex; 
+            justify-content:space-between; 
+            align-items:center; 
+        }
+        
+        .logo { 
+            font-size: 1.5rem; 
+            font-weight:700; 
+            color: var(--primary); 
+            text-decoration:none; 
+            align-items: center; 
+            display: inline-flex; 
+            vertical-align: middle;
+            transition: transform 0.3s ease;
+        }
+        
+        .logo:hover {
+            transform: scale(1.05);
+        }
+        
+        .logo img { 
+            vertical-align: middle;
+            transition: transform 0.3s ease;
+        }
+        
+        .logo:hover img {
+            transform: rotate(5deg);
+        }
+        
+        .logo span { 
+            vertical-align: middle; 
+        }
+        
+        .logo-icon { 
+            display:inline-block; 
+            width:36px; 
+            height:36px; 
+            background:linear-gradient(135deg, var(--primary), var(--secondary)); 
+            color:white; 
+            text-align:center; 
+            line-height:36px; 
+            border-radius:6px; 
+            margin-right:0.5rem; 
+            font-weight:bold;
+            box-shadow: 0 4px 12px rgba(0, 191, 215, 0.3);
+        }
+        
+        .back-home { 
+            display:inline-block; 
+            margin-top:1rem; 
+            padding: 0.5rem 1rem; 
+            background:linear-gradient(135deg, var(--primary), var(--secondary)); 
+            color:white; 
+            text-decoration:none; 
+            border-radius:4px; 
+            font-size:0.95rem; 
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 191, 215, 0.3);
+        }
+        
+        .back-home:hover { 
+            background:linear-gradient(135deg, var(--secondary), var(--primary));
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 168, 150, 0.4);
+        }
+        
+        .container { 
+            max-width: 1200px; 
+            margin: 2rem auto; 
+            padding: 0 2%; 
+        }
+        
+        h1 { 
+            color: #333; 
+            margin-bottom: 1.5rem; 
+            font-size: 2.5rem !important; 
+            font-weight: 700 !important; 
+            line-height: 1.2 !important;
+            text-align: center;
+            padding: 1rem 0;
+        }
+        
+        .subtitle { 
+            color:#666; 
+            margin-bottom: 2rem; 
+            font-size:1.1rem;
+            text-align: center;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+       /* 核心摘要样式 */
+        .core-summary {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            animation: fadeIn 0.8s ease-out;
+            border: 1px solid #eee;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .core-summary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+        }
+        
+        .summary-title {
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+        
+        .summary-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            border-radius: 2px;
+        }
+        
+        .summary-content {
+            line-height: 1.6;
+            color: #555;
+        }
+        
+        .summary-content p {
+            margin-bottom: 0.5rem;
+        }
+        
+        /* 核心发现数字高亮样式 */
+        .highlight-num {
+            color: var(--accent);
+            font-weight: bold;
+        }
+        
+        .highlight-unit {
+            color: var(--accent);
+            font-weight: bold;
+        }
+        
+        .discovery-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+            line-height: 1.4;
+            position: relative;
+            padding-left: 2rem;
+        }
+        
+        .discovery-title::before {
+            content: attr(data-number);
+            position: absolute;
+            left: 0;
+            top: 0;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .discovery-details {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .discovery-details li {
+            margin-bottom: 0.6rem;
+            line-height: 1.6;
+            color: #555;
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .discovery-details li::before {
+            content: "•";
+            color: var(--accent);
+            font-weight: bold;
+            position: absolute;
+            left: 0.8rem;
+            top: 0.2rem;
+        }
+        
+        .conclusion-box { 
+            background:white;
+            padding:2rem; 
+            margin:2rem 0; 
+            border-radius:8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            border: 1px solid #eee;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .conclusion-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+        }
+        
+        .conclusion-title { 
+            font-weight:700; 
+            color:#333; 
+            margin-bottom:1rem; 
+            font-size: 1.4rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+        
+        .conclusion-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            border-radius: 2px;
+        }
+        
+        .chart-container { 
+            background:white;
+            border-radius:8px; 
+            padding:1.5rem; /* 减少内边距 */
+            box-shadow:0 2px 8px rgba(0,0,0,0.03); 
+            margin:2rem 0; 
+            transition: all 0.3s ease;
+            animation: slideUp 0.6s ease-out;
+            animation-fill-mode: both;
+            border: 1px solid #eee;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .chart-container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+        }
+        
+        .chart-container:nth-child(1) { animation-delay: 0.1s; }
+        .chart-container:nth-child(2) { animation-delay: 0.2s; }
+        .chart-container:nth-child(3) { animation-delay: 0.3s; }
+        
+        .chart-container:hover { 
+            transform: translateY(-5px); 
+            box-shadow:var(--shadow-hover); 
+        }
+        
+        .chart-wrapper { 
+            width: 100%; 
+            height: 500px; /* 固定高度 */
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.5);
+            padding: 0; /* 移除内边距，让图表完全填充容器 */
+            margin: 0; /* 移除外边距 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* 确保canvas元素完全填充其父容器 */
+        .chart-wrapper canvas {
+            width: 100% !important;
+            height: 100% !important;
+            display: block;
+        }
+        
+        .chart-container h2 {
+            position: relative;
+            padding-bottom: 0.8rem;
+            margin-bottom: 1rem; /* 减少标题与图表之间的间距 */
+            font-size: 1.5rem;
+            color: #333;
+            font-weight: 700;
+        }
+        
+        .chart-container h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            border-radius: 2px;
+        }
+        
+        footer { 
+            text-align:center; 
+            padding:2rem 0; 
+            color:#777; 
+            font-size:0.9rem; 
+            margin-top:3rem; 
+            border-top:1px solid #eee;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        
+        /* 响应式增强 */
+        @media (max-width: 768px) {
+            .chart-container h2 {
+                font-size: 1.3rem;
+                margin-bottom: 1rem;
+            }
+            .chart-wrapper {
+                height: 400px !important; /* 增加移动端高度 */
+            }
+            .core-summary {
+                padding: 1.5rem;
+            }
+            .summary-title {
+                font-size: 1.3rem;
+            }
+            h1 {
+                font-size: 2rem !important;
+            }
+            .risks-grid {
+                grid-template-columns: 1fr;
+            }
+            /* 新热力图移动端适配 */
+            #chart3 {
+                height: 450px !important;
+            }
+            .heatmap-ref-legend {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+        }
+        
+        @media (max-width:768px) { 
+            .nav-container { 
+                flex-direction:column; 
+                gap:1rem; 
+            } 
+        }
+        
+        /* 加载动画 */
+        .chart-loading {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            transition: opacity 0.5s ease;
+        }
+        
+        .chart-loading.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(0, 168, 150, 0.2);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* 数据卡片 */
+        .data-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .data-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            transition: all 0.3s ease;
+            border: 1px solid #eee;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+        
+        .data-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--primary);
+        }
+        
+        .data-card:nth-child(2)::before {
+            background: var(--accent);
+        }
+        
+        .data-card:nth-child(3)::before {
+            background: var(--secondary);
+        }
+        
+        .data-card:nth-child(4)::before {
+            background: #5CDBD3;
+        }
+        
+        .data-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+        
+        .card-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.25rem;
+        }
+        
+        .card-label {
+            font-size: 0.85rem;
+            color: #666;
+            font-weight: 400;
+        }
+        
+        .card-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .data-card:nth-child(2) .card-value {
+            color: var(--accent);
+        }
+        
+        .data-card:nth-child(3) .card-value {
+            color: var(--secondary);
+        }
+        
+        .data-card:nth-child(4) .card-value {
+            color: #5CDBD3;
+        }
+        
+        .card-label {
+            color: #666;
+            font-size: 1rem;
+        }
+        
+        /* 雷达图样式 */
+        .radar-chart-container {
+            position: relative;
+            height: 400px;
+            width: 100%;
+        }
+        
+        /* 散点图样式 */
+        .scatter-chart-container {
+            position: relative;
+            height: 400px;
+            width: 100%;
+        }
+        
+        /* 聚类分析样式 */
+        .cluster-chart-container {
+            position: relative;
+            height: 400px;
+            width: 100%;
+        }
+        
+        /* 筛选按钮样式 */
+        .filter-btn {
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+        
+        .filter-btn.active {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: 0 4px 12px rgba(0, 191, 215, 0.3);
+        }
+        
+        .filter-btn:not(.active):hover {
+            transform: translateY(-2px);
+        }
+        
+        /* 图表1专用样式 */
+        .chart1-wrapper {
+            width: 100%;
+            height: 450px; /* 增加高度 */
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.5);
+            padding: 2rem; /* 增加内边距 */
+        }
+        
+        /* 参考图版热力图专属样式 - 严格匹配参考图 */
+        #chart3 {
+            width: 100%;
+            height: 550px;
+            margin: 0 auto;
+        }
+        .heatmap-ref-legend {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        .heatmap-ref-legend .gradient-bar {
+            width: 250px;
+            height: 20px;
+            border-radius: 10px;
+            background: linear-gradient(to right, #1f77b4, #ff7f0e, #2ca02c, #d62728);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="nav-container" style="align-items: center;">
+            <a href="index.html" class="logo">
+                <img src="https://p26-flow-imagex-download-sign.byteimg.com/tos-cn-i-a9rns2rl98/7d581e9f8f3749358e3d4e04a979ca7a.png~tplv-a9rns2rl98-24:720:720.png?lk3s=8e244e95&rcl=20260211134609561C91939A30A8326A97&rrcfp=8a172a1a&x-expires=1771393569&x-signature=2aPGAmal6rzZR%2FubHhA4gzyv9OQ%3D" alt="凌越象限" class="h-8 inline-block mr-3">
+                <span class="inline-block">凌越象限</span>
+            </a>
+            <a href="index.html" class="back-home">← 返回首页</a>
+        </div>
+    </header>
+    <div class="container">
+        <h1>2019餐饮行业数据分析</h1>
+        <p class="subtitle">覆盖全国28个省（直辖市）餐饮数据，聚焦人均营业额、坪效、单店营业额与统一配送率的效能分化</p>
+        
+               <!-- 核心发现 -->
+        <div class="core-summary">
+            <div class="summary-title">核心发现</div>
+            <div class="summary-content">
+                <div class="discovery-item">
+                    <h3 class="discovery-title" data-number="1.">冰火两重天：规模与效率的严重背离</h3>
+                    <ul class="discovery-details">
+                        <li>总营业额与坪效、单店营业额、统一配送率均呈现微弱负相关（相关系数接近<span class="highlight-num">0</span>或为负）</li>
+                        <li>与门店总数、营业面积、从业人数强正相关（<span class="highlight-unit">r&gt;</span><span class="highlight-num">0.98</span>）</li>
+                        <li>当前增长高度依赖规模扩张（开新店、扩面积、增人手），而非经营效率提升</li>
+                        <li>模式粗放，边际效益递减风险高</li>
+                    </ul>
+                </div>
+
+                <div class="discovery-item">
+                    <h3 class="discovery-title" data-number="2.">效率冠军与规模冠军：迥异的成功模式</h3>
+                    <ul class="discovery-details">
+                        <li>效率标杆（"质优"模式）：西藏（坪效<span class="highlight-num">67,000</span><span class="highlight-unit">万元/平米</span>，全国第一）、海南（坪效<span class="highlight-num">33,667</span><span class="highlight-unit">万元/平米</span>）代表高效率、小规模模式</li>
+                        <li>特点：市场精准、资产利用率极高，但总量贡献小</li>
+                        <li>规模标杆（"量大"模式）：北京（营业额<span class="highlight-num">480</span><span class="highlight-unit">亿</span>）、上海（<span class="highlight-num">399</span><span class="highlight-unit">亿</span>）、广东（<span class="highlight-num">364</span><span class="highlight-unit">亿</span>）代表大市场、大规模模式</li>
+                        <li>特点：整体营业额高，但坪效（~<span class="highlight-num">2</span><span class="highlight-unit">万元</span>）仅处于中游水平，存在规模不经济隐患</li>
+                        <li>独特孤例：内蒙古独处效能聚类<span class="highlight-num">2</span>，人均营业额（<span class="highlight-num">60.9</span><span class="highlight-unit">万/人</span>）和单店营业额（<span class="highlight-num">1646</span><span class="highlight-unit">万/店</span>）均遥遥领先，但统一配送率极低（<span class="highlight-num">0.01</span>）</li>
+                        <li>揭示其可能依赖独特的本地化、非标供应链或高端单体店模式，难以全国复制</li>
+                    </ul>
+                </div>
+
+                <div class="discovery-item">
+                    <h3 class="discovery-title" data-number="3.">"统一配送率"揭示供应链管理水平，与人均效能呈显著负相关</h3>
+                    <ul class="discovery-details">
+                        <li>关键悖论：统一配送率与人均营业额相关系数为<span class="highlight-num">-0.49</span>，呈中度负相关</li>
+                        <li>这并非意味着集中配送降低效率，更可能揭示了两类不同商业模式：</li>
+                        <li>高标准化连锁模式（如贵州、西藏、新疆等配送率<span class="highlight-num">100%</span>地区）：强管控、强供应链，但可能牺牲了一定的本地灵活性与客单价，导致人均营业额偏低</li>
+                        <li>高弹性本土模式（如内蒙古、辽宁等配送率低地区）：本地采购、非标产品，可能带来更高毛利和人均产出，但供应链风险与成本也更高</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 数据概览卡片 -->
+        <div class="data-cards">
+            <div class="data-card">
+                <div class="card-value">20万+</div>
+                <div class="card-label">人均营业额 </div>
+            </div>
+            <div class="data-card">
+                <div class="card-value">600万+</div>
+                <div class="card-label">单店营业额</div>
+            </div>
+            <div class="data-card">
+                <div class="card-value">20万+/平米</div>
+                <div class="card-label">坪效 </div>
+            </div>
+            <div class="data-card">
+                <div class="card-value">75%+</div>
+                <div class="card-label">统一配送率 </div>
+            </div>
+        </div>
+
+        <!-- 核心经营指标图表 - 带筛选按钮的图表 -->
+        <div class="chart-container">
+            <h2>核心经营指标TOP10对比分析</h2>
+            
+            <!-- 筛选按钮组 -->
+            <div class="flex flex-wrap gap-2 mb-4">
+                <button class="filter-btn px-4 py-2 rounded-lg transition-colors duration-300 active" data-chart="revenue">
+                    人均营业额
+                </button>
+                <button class="filter-btn px-4 py-2 rounded-lg transition-colors duration-300" data-chart="efficiency">
+                    坪效
+                </button>
+                <button class="filter-btn px-4 py-2 rounded-lg transition-colors duration-300" data-chart="storeRevenue">
+                    单店营业额
+                </button>
+                <button class="filter-btn px-4 py-2 rounded-lg transition-colors duration-300" data-chart="profitMargin">
+                    统一配送率
+                </button>
+            </div>
+            
+            <!-- 图表容器 -->
+            <div class="chart1-wrapper">
+                <div class="chart-loading">
+                    <div class="spinner"></div>
+                </div>
+                <canvas id="chart1"></canvas>
+            </div>
+        </div>
+
+        <!-- 多维度数据分析 -->
+        <div class="chart-container">
+            <h2>多维度数据分析</h2>
+            <div class="grid grid-cols-2 gap-6">
+                <!-- 子图表1：四象限散点图 -->
+                <div class="col-span-1 bg-white rounded-lg shadow-sm p-2 h-80">
+                    <canvas id="subChart1"></canvas>
+                </div>
+                <!-- 子图表2：气泡图 -->
+                <div class="col-span-1 bg-white rounded-lg shadow-sm p-2 h-80">
+                    <canvas id="subChart2"></canvas>
+                </div>
+                <!-- 子图表3：水平柱状图 -->
+                <div class="col-span-1 bg-white rounded-lg shadow-sm p-2 h-80">
+                    <canvas id="subChart3"></canvas>
+                </div>
+                <!-- 子图表4：箱线图 -->
+                <div class="col-span-1 bg-white rounded-lg shadow-sm p-2 h-80">
+                    <canvas id="subChart4"></canvas>
+                </div>
+                <!-- 子图表5：饼图 -->
+                <div class="col-span-1 bg-white rounded-lg shadow-sm p-2 h-80">
+                    <canvas id="subChart5"></canvas>
+                </div>
+                <!-- 子图表6：热力图 -->
+                <div class="col-span-1 bg-white rounded-lg shadow-sm p-2 h-80">
+                    <canvas id="subChart6"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- 新：参考图版关键指标相关性热力图 - 完全重新绘制 -->
+        <div class="chart-container">
+            <h2>关键指标相关性热力图</h2>
+            <!-- 图表容器 - 无多余筛选按钮，严格匹配参考图 -->
+            <div class="bg-white rounded-lg shadow-sm p-4">
+                <div class="chart-loading">
+                    <div class="spinner"></div>
+                </div>
+                <div style="width: 100%; min-height: 800px;">
+                    <div id="chart3"></div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <!-- 基于经营特征的区域聚类分析 -->
+        <div class="chart-container">
+            <h2>基于经营特征的区域聚类分析</h2>
+            <div class="chart-wrapper">
+                <div class="chart-loading">
+                    <div class="spinner"></div>
+                </div>
+                <canvas id="chart4"></canvas>
+            </div>
+        </div>
+
+        <!-- 不同效能聚类群体的特征雷达图 -->
+        <div class="chart-container">
+            <h2>不同效能聚类群体的特征雷达图</h2>
+            <div class="chart-wrapper">
+                <div class="chart-loading">
+                    <div class="spinner"></div>
+                </div>
+                <canvas id="chart5"></canvas>
+            </div>
+        </div>
+
+        <div class="conclusion-box">
+            <div class="conclusion-title">破局之道：三级策略实现可持续高质量增长</div>
+            
+            <div class="mb-8">
+                <h3 class="text-xl font-bold text-[#00BFD7] mb-4 pt-2 border-t-2 border-[#00BFD7]">第一级：战略层面——分类治理，精准投资</h3>
+                
+                <div class="mb-6 pl-4 border-l-4 border-[#00BFD7]/20">
+                    <p class="mb-3 font-semibold">对于"效率特区"（聚类1：海南、西藏）：</p>
+                    <p class="mb-3">策略：<strong>"提炼复制"</strong>。成立专项小组，深度复盘其超高坪效的运营细节（选址模型、店铺面积、菜品结构、员工配比），形成《标杆门店运营白皮书》。</p>
+                    <p class="mb-3">目标：将已验证的高效模式，优先向"规模小效率低"和"规模小效率高"地区进行试点推广。</p>
+                </div>
+                
+                <div class="mb-6 pl-4 border-l-4 border-[#00BFD7]/20">
+                    <p class="mb-3 font-semibold">对于"特殊模式区"（聚类2：内蒙古）：</p>
+                    <p class="mb-3">策略：<strong>"研究加固"</strong>。深入分析其高人均产出的驱动因素（是否依赖特色食材、高端宴请、旅游消费？）。同时，其极低的统一配送率是重大风险点，需评估本地供应链的稳定性与成本，试点引入部分核心品类的集中配送，在保持特色与控风险间找平衡。</p>
+                </div>
+                
+                <div class="mb-6 pl-4 border-l-4 border-[#00BFD7]/20">
+                    <p class="mb-3 font-semibold">对于"主流大盘区"（聚类0：25个地区）：</p>
+                    <p class="mb-3">策略：<strong>"对标提升"</strong>。在此集群内，进一步细分"高效组"（如上海、广东、浙江）和"低效组"（如河北、辽宁），建立内部红黑榜和对标机制。</p>
+                    <p class="mb-3">目标：将"高效组"的平均坪效、人效作为"低效组"的追赶目标，设定阶段性提升KPI。</p>
+                </div>
+            </div>
+            
+            <div class="mb-8">
+                <h3 class="text-xl font-bold text-[#FF7A45] mb-4 pt-2 border-t-2 border-[#FF7A45]">第二级：运营层面——聚焦关键指标，专项攻坚</h3>
+                
+                <div class="mb-6 pl-4 border-l-4 border-[#FF7A45]/20">
+                    <p class="mb-3 font-semibold">"坪效提升"专项：</p>
+                    <p class="mb-3">针对"规模大效率低"的9个地区，立即启动。措施包括：</p>
+                    <ul class="list-disc pl-6 mb-3 space-y-2">
+                        <li>空间优化：分析门店面积与营业额关系，关闭长期低效门店，或对大面积门店进行功能分区、引入联营品牌。</li>
+                        <li>时段经营：利用数据分析用餐高峰与低谷，推出非高峰时段促销、外卖专享套餐等，提升全天坪效。</li>
+                        <li>产品组合：参考《常用商品运营分析模型》，分析菜品销售关联性，优化菜单，推出高毛利组合套餐。</li>
+                    </ul>
+                </div>
+                
+                <div class="mb-6 pl-4 border-l-4 border-[#FF7A45]/20">
+                    <p class="mb-3 font-semibold">"供应链韧性"专项：</p>
+                    <p class="mb-3">审视统一配送率与成本的平衡。</p>
+                    <ul class="list-disc pl-6 mb-3 space-y-2">
+                        <li>对于配送率极高但人均效能偏低的地区，评估是否可通过引入部分本地特色食材，提升菜品差异化和溢价。</li>
+                        <li>对于配送率极低的地区（如内蒙古），筛选出占成本高、波动大的品类，试点纳入统一配送体系，以降本增效。</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="mb-6">
+                <h3 class="text-xl font-bold text-[#00A0B0] mb-4 pt-2 border-t-2 border-[#00A0B0]">第三级：执行层面——数据驱动，闭环管理</h3>
+                
+                <div class="mb-6 pl-4 border-l-4 border-[#00A0B0]/20">
+                    <p class="mb-3 font-semibold">设立差异化区域KPI：</p>
+                    <ul class="list-disc pl-6 mb-3 space-y-2">
+                        <li>效率特区：考核"模式提炼进度"与"对外赋能次数"。</li>
+                        <li>规模风险区：考核"坪效提升率"与"低效门店整改率"。</li>
+                        <li>潜力增长区：考核"规模扩张速度"与"效率保持度"。</li>
+                        <li>标杆维持区：考核"创新试点数量"与"经验输出质量"。</li>
+                    </ul>
+                </div>
+                
+                <div class="mb-6 pl-4 border-l-4 border-[#00A0B0]/20">
+                    <p class="mb-3 font-semibold">建立月度效能仪表板与复盘机制：</p>
+                    <ul class="list-disc pl-6 mb-3 space-y-2">
+                        <li>将本报告中的核心图表（TOP10排行榜、分布概况图、相关性热力图、聚类结果、四象限图）固化至管理驾驶舱。</li>
+                        <li>每月召开区域效能复盘会，基于数据讨论进展，动态调整策略，形成 "分析-决策-执行-复盘" 的完整闭环。</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2026 上海凌越象限文化传播有限公司｜数据来源：阿里云天池公共数据集（数据已脱敏）｜分析方法：四象限矩阵模型、K-Means聚类算法、相关性分析</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 隐藏所有加载动画
+            document.querySelectorAll('.chart-loading').forEach(function(loading) {
+                loading.classList.add('hidden');
+            });
+            
+            // 图表1数据
+            const chart1Data = {
+                revenue: {
+                    labels: ['内蒙古', '辽宁', '山东', '北京', '江苏', '浙江', '湖北', '河北', '上海', '广东'],
+                    data: [60000, 41312, 31591, 29736, 28329, 28149, 26788, 25000, 21101, 20691],
+                    color: 'rgba(0, 191, 215, 0.8)',
+                    title: '人均营业额（万元/人）'
+                },
+                efficiency: {
+                    labels: ['西藏', '海南', '内蒙古', '云南', '江苏', '上海', '广东', '广西', '浙江', '北京'],
+                    data: [70000, 36666.7, 28107.49, 26053.71, 23249.12, 22640.39, 21133.99, 20962.03, 20911.80, 19951.00],
+                    color: 'rgba(255, 122, 69, 0.8)',
+                    title: '坪效（万元/平米）'
+                },
+                storeRevenue: {
+                    labels: ['内蒙古', '海南', '西藏', '河北', '山东', '北京', '四川', '山西', '江苏', '浙江'],
+                    data: [1466, 1172, 1076, 915, 786, 772, 684, 640, 640, 640],
+                    color: 'rgba(0, 160, 176, 0.8)',
+                    title: '单店营业额（万元/店）'
+                },
+                profitMargin: {
+                    labels: ['新疆', '甘肃', '海南', '湖南', '贵州', '西藏', '陕西', '安徽', '江西', '山西'],
+                    data: [100, 100, 100, 100, 100, 100, 99.81, 98.54, 97.73, 94.29],
+                    color: 'rgba(92, 219, 211, 0.8)',
+                    title: '统一配送率（%）'
+                }
+            };
+            
+            // 图表1：水平条形图
+            let chart1;
+            function createOptimizedBarChart(type) {
+                const canvas = document.getElementById('chart1');
+                if (!canvas) return;
+                
+                const ctx = canvas.getContext('2d');
+                const data = chart1Data[type];
+                
+                if (chart1) {
+                    chart1.destroy();
+                }
+                
+                chart1 = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: data.labels,
+                        datasets: [{
+                            label: data.title,
+                            data: data.data,
+                            backgroundColor: data.color,
+                            borderColor: data.color.replace('0.8', '1'),
+                            borderWidth: 1,
+                            borderRadius: 6,
+                            borderSkipped: false,
+                            maxBarThickness: 40
+                        }]
+                    },
+                    options: {
+                        indexAxis: 'y',
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        animation: {
+                            duration: 1500,
+                            easing: 'easeOutQuart'
+                        },
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                titleColor: '#fff',
+                                bodyColor: '#fff',
+                                padding: 12,
+                                cornerRadius: 6,
+                                displayColors: false,
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) label += ': ';
+                                        if (context.parsed.x !== null) {
+                                            if (type === 'profitMargin') label += context.parsed.x + '%';
+                                            else label += context.parsed.x.toLocaleString();
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                beginAtZero: true,
+                                grid: { color: 'rgba(0, 0, 0, 0.05)', drawBorder: false },
+                                ticks: {
+                                    color: '#666',
+                                    font: { family: '"Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif', size: 12 },
+                                    callback: function(value) {
+                                        if (type === 'profitMargin') return value + '%';
+                                        else if (value >= 10000) return (value / 10000) + '万';
+                                        return value;
+                                    }
+                                }
+                            },
+                            y: {
+                                grid: { display: false, drawBorder: false },
+                                ticks: {
+                                    color: '#333',
+                                    font: { family: '"Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif', size: 13, weight: '500' },
+                                    padding: 10
+                                }
+                            }
+                        },
+                        layout: { padding: { top: 20, bottom: 20, left: 20, right: 40 } }
+                    }
+                });
+            }
+            
+            // 筛选按钮事件
+            document.querySelectorAll('.filter-btn').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    createOptimizedBarChart(this.dataset.chart);
+                });
+            });
+            
+            // 初始化显示第一个图表
+            createOptimizedBarChart('revenue');
+            
+            // 图表2：多图组合分析
+            let subCharts = {};
+            const multiChartData = {
+                default: {
+                    subChart1: {
+                        type: 'scatter',
+                        data: {
+                            datasets: [{
+                                data: [
+                                    {x: 0.03, y: 15000, r: 8}, {x: 0.04, y: 18000, r: 10},
+                                    {x: 0.05, y: 20000, r: 12}, {x: 0.06, y: 22000, r: 15},
+                                    {x: 0.07, y: 19000, r: 8}, {x: 0.08, y: 16000, r: 6},
+                                    {x: 0.04, y: 28000, r: 4}, {x: 0.16, y: 8000, r: 3}
+                                ],
+                                backgroundColor: 'rgba(0, 191, 215, 0.6)',
+                                borderColor: 'rgba(0, 191, 215, 1)',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                title: { display: true, text: '规模-效率气泡图', font: { size: 10 } },
+                                legend: { display: false }
+                            },
+                            scales: {
+                                x: { title: { display: true, text: '单店面积', font: { size: 8 } }, min: 0, max: 0.18, ticks: { font: { size: 6 }, callback: v => v.toFixed(2) }, grid: { color: 'rgba(0,0,0,0.1)' } },
+                                y: { title: { display: true, text: '坪效', font: { size: 8 } }, min: 0, max: 70000, ticks: { font: { size: 6 }, callback: v => v/10000 + '万' }, grid: { color: 'rgba(0,0,0,0.1)' } }
+                            }
+                        }
+                    },
+                    subChart2: {
+                        type: 'scatter',
+                        data: {
+                            datasets: [{
+                                data: [
+                                    {x: 0.1, y: 60000, v: 60000}, {x: 0.3, y: 25000, v: 25000},
+                                    {x: 0.4, y: 15000, v: 15000}, {x: 0.5, y: 20000, v: 20000},
+                                    {x: 0.55, y: 18000, v: 18000}, {x: 0.6, y: 22000, v: 22000},
+                                    {x: 0.65, y: 28000, v: 28000}, {x: 0.7, y: 32000, v: 32000},
+                                    {x: 0.75, y: 26000, v: 26000}, {x: 0.8, y: 42000, v: 42000},
+                                    {x: 0.9, y: 5000, v: 5000}
+                                ],
+                                backgroundColor: function(context) {
+                                    const v = context.raw.v;
+                                    if (v < 20000) return 'rgba(0, 191, 215, 0.8)';
+                                    if (v < 40000) return 'rgba(255, 122, 69, 0.8)';
+                                    return 'rgba(0, 160, 176, 0.8)';
+                                },
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                title: { display: true, text: '供应链集中度 vs 人均效能', font: { size: 10 } },
+                                legend: { display: false }
+                            },
+                            scales: {
+                                x: { title: { display: true, text: '统一配送率', font: { size: 8 } }, min: 0, max: 1.0, ticks: { font: { size: 6 } }, grid: { color: 'rgba(0,0,0,0.1)' } },
+                                y: { title: { display: true, text: '人均效能', font: { size: 8 } }, min: 0, max: 60000, ticks: { font: { size: 6 }, callback: v => v/10000 + '万' }, grid: { color: 'rgba(0,0,0,0.1)' } }
+                            }
+                        }
+                    },
+                    subChart3: {
+                        type: 'bar',
+                        data: {
+                            labels: ['0', '1', '2'],
+                            datasets: [{
+                                data: [25, 2, 1],
+                                backgroundColor: ['rgba(0,191,215,0.8)','rgba(255,122,69,0.8)','rgba(0,160,176,0.8)'],
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                title: { display: true, text: '地区效能聚类分布', font: { size: 10 } },
+                                legend: { display: false }
+                            },
+                            scales: {
+                                x: { title: { display: true, text: '效能聚类', font: { size: 8 } }, ticks: { font: { size: 6 } }, grid: { display: false } },
+                                y: { title: { display: true, text: '地区数量', font: { size: 8 } }, ticks: { font: { size: 6 } }, grid: { color: 'rgba(0,0,0,0.1)' } }
+                            }
+                        }
+                    },
+                    subChart4: {
+                        type: 'bar',
+                        data: {
+                            labels: ['人均营业额', '坪效', '单店营业额'],
+                            datasets: [{
+                                data: [25000, 5000, 3000],
+                                backgroundColor: 'rgba(0, 191, 215, 0.3)',
+                                borderWidth: 0
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                title: { display: true, text: '核心效能指标箱线图', font: { size: 10 } },
+                                legend: { display: false }
+                            },
+                            scales: {
+                                x: { ticks: { font: { size: 6 } }, grid: { display: false } },
+                                y: { min:0,max:60000,ticks:{ font:{ size:6 },callback:v=>v/10000+'万' },grid:{ color:'rgba(0,0,0,0.1)' } }
+                            }
+                        }
+                    },
+                    subChart5: {
+                        type: 'pie',
+                        data: {
+                            labels: ['聚类0', '聚类1', '聚类2'],
+                            datasets: [{
+                                data: [99.1, 0.8, 0.1],
+                                backgroundColor: ['rgba(0,191,215,0.8)','rgba(255,122,69,0.8)','rgba(0,160,176,0.8)'],
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                title: { display: true, text: '总营业额按聚类构成', font: { size: 10 } },
+                                legend: { display: true, position: 'right', labels: { font: { size:6 }, boxWidth:8 } },
+                                tooltip: { callbacks: { label: c => c.label + ': ' + c.parsed + '%' } }
+                            }
+                        }
+                    },
+                    subChart6: {
+                        type: 'bar',
+                        data: {
+                            labels: ['聚类0', '聚类1', '聚类2'],
+                            datasets: [
+                                { label: '人均营业额', data: [20000,2000,60000], backgroundColor: 'rgba(0,191,215,0.8)', borderWidth:1 },
+                                { label: '坪效', data: [2000,6000,4000], backgroundColor: 'rgba(0,160,176,0.8)', borderWidth:1 },
+                                { label: '统一配送率', data: [1000,8000,3000], backgroundColor: 'rgba(255,122,69,0.8)', borderWidth:1 }
+                            ]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                title: { display: true, text: '各类核心指标对比', font: { size: 10 } },
+                                legend: { display: true, position: 'top', labels: { font: { size:6 }, boxWidth:8 } }
+                            },
+                            scales: {
+                                x: { ticks: { font: { size:6 } }, grid: { display: false } },
+                                y: { ticks: { font: { size:6 }, callback: v => v/10000+'万' }, grid: { color: 'rgba(0,0,0,0.1)' } }
+                            }
+                        }
+                    }
+                }
+            };
+            
+            function createMultiChartAnalysis() {
+                Object.values(subCharts).forEach(chart => chart && chart.destroy());
+                const chartsToCreate = ['subChart1', 'subChart2', 'subChart3', 'subChart4', 'subChart5', 'subChart6'];
+                chartsToCreate.forEach(chartId => {
+                    const canvas = document.getElementById(chartId);
+                    if (!canvas) return;
+                    const ctx = canvas.getContext('2d');
+                    const cfg = multiChartData.default[chartId];
+                    subCharts[chartId] = new Chart(ctx, { type: cfg.type, data: cfg.data, options: cfg.options });
+                });
+            }
+            
+            // 图表3：参考图版热力图（修复版）
+            function createRefHeatmap() {
+                const ctx = document.getElementById('chart3');
+                if (!ctx) return;
+                
+                // 直接使用HTML表格实现热力图，避免Chart.js的兼容性问题
+                ctx.innerHTML = `
+                    <div class="w-full overflow-x-auto">
+                        <table class="w-full border-collapse text-base">
+                            <thead>
+                                <tr>
+                                    <th class="p-3 border bg-gray-100 font-semibold"></th>
+                                    <th class="p-3 border text-center bg-gray-100 font-semibold" style="min-width: 120px; word-break: break-word;">营业额(亿元)</th>
+                                    <th class="p-3 border text-center bg-gray-100 font-semibold" style="min-width: 120px; word-break: break-word;">门店总数</th>
+                                    <th class="p-3 border text-center bg-gray-100 font-semibold" style="min-width: 120px; word-break: break-word;">年末从业人数(万人)</th>
+                                    <th class="p-3 border text-center bg-gray-100 font-semibold" style="min-width: 120px; word-break: break-word;">年末餐饮营业面积(万平米)</th>
+                                    <th class="p-3 border text-center bg-gray-100 font-semibold" style="min-width: 120px; word-break: break-word;">人均营业额(万元/人)</th>
+                                    <th class="p-3 border text-center bg-gray-100 font-semibold" style="min-width: 120px; word-break: break-word;">坪效(万元/平米)</th>
+                                    <th class="p-3 border text-center bg-gray-100 font-semibold" style="min-width: 120px; word-break: break-word;">单店营业额(万元/店)</th>
+                                    <th class="p-3 border text-center bg-gray-100 font-semibold" style="min-width: 120px; word-break: break-word;">统一配送率</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th class="p-3 border text-center bg-gray-100 font-semibold" style="min-width: 120px; word-break: break-word;">营业额(亿元)</th>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #00BFD7; color: #ffffff;">1.00</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.12</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.20</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.32</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #5CDBD3; color: #ffffff;">0.82</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.15</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.23</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #FFF0EB; color: #333333;">-0.10</td>
+                                </tr>
+                                <tr>
+                                    <th class="p-3 border text-center bg-gray-100 font-semibold" style="min-width: 120px; word-break: break-word;">门店总数</th>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.12</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #00BFD7; color: #ffffff;">1.00</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.30</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.40</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.15</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #FFF0EB; color: #333333;">-0.22</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #5CDBD3; color: #333333;">0.52</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #FF7A45; color: #ffffff;">-0.75</td>
+                                </tr>
+                                <tr>
+                                    <th class="p-3 border text-center bg-gray-100 font-semibold" style="min-width: 120px; word-break: break-word;">年末从业人数(万人)</th>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.20</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.30</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #00BFD7; color: #ffffff;">1.00</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #5CDBD3; color: #ffffff;">0.70</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.25</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.32</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.42</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #FFF0EB; color: #333333;">-0.20</td>
+                                </tr>
+                                <tr>
+                                    <th class="p-3 border text-center bg-gray-100 font-semibold" style="min-width: 120px; word-break: break-word;">年末餐饮营业面积(万平米)</th>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.32</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.40</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #5CDBD3; color: #ffffff;">0.70</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #00BFD7; color: #ffffff;">1.00</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.42</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #5CDBD3; color: #333333;">0.55</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #5CDBD3; color: #333333;">0.62</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #FF9D5C; color: #333333;">-0.32</td>
+                                </tr>
+                                <tr>
+                                    <th class="p-3 border text-center bg-gray-100 font-semibold" style="min-width: 120px; word-break: break-word;">人均营业额(万元/人)</th>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #5CDBD3; color: #ffffff;">0.82</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.15</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.25</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.42</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #00BFD7; color: #ffffff;">1.00</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.20</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.30</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #FFF0EB; color: #333333;">-0.15</td>
+                                </tr>
+                                <tr>
+                                    <th class="p-3 border text-center bg-gray-100 font-semibold" style="min-width: 120px; word-break: break-word;">坪效(万元/平米)</th>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.15</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #FFF0EB; color: #333333;">-0.22</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.32</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #5CDBD3; color: #ffffff;">0.55</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.20</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #00BFD7; color: #ffffff;">1.00</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #5CDBD3; color: #333333;">0.60</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.12</td>
+                                </tr>
+                                <tr>
+                                    <th class="p-3 border text-center bg-gray-100 font-semibold" style="min-width: 120px; word-break: break-word;">单店营业额(万元/店)</th>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.23</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #5CDBD3; color: #333333;">0.52</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.42</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #5CDBD3; color: #333333;">0.62</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.30</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #5CDBD3; color: #333333;">0.60</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #00BFD7; color: #ffffff;">1.00</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #FF9D5C; color: #333333;">-0.40</td>
+                                </tr>
+                                <tr>
+                                    <th class="p-3 border text-center bg-gray-100 font-semibold" style="min-width: 120px; word-break: break-word;">统一配送率</th>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #FFF0EB; color: #333333;">-0.10</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #FF7A45; color: #ffffff;">-0.75</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #FFF0EB; color: #333333;">-0.20</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #FF9D5C; color: #333333;">-0.32</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #FFF0EB; color: #333333;">-0.15</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.12</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #FF9D5C; color: #333333;">-0.40</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #00BFD7; color: #ffffff;">1.00</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="mt-6 text-base text-center text-gray-600 font-medium">
+                            颜色越深表示相关性越强（青色为正相关，橘色为负相关）
+                        </div>
+                    </div>
+                `;
+                
+                console.log('热力图创建成功，使用HTML表格实现');
+            }
+            
+            // 图表4：基于经营特征的区域聚类分析（严格按照用户提供的坐标范围）
+            function createClusterChart() {
+                const ctx = document.getElementById('chart4');
+                if (!ctx) return;
+                
+                try {
+                    const chartCtx = ctx.getContext('2d');
+                    
+                    // 根据用户提供的标签列表和坐标范围生成数据点
+                    const regionData = [
+                        // 贵州 -2.5至-2, -1至-0.5
+                        {x: -2.25, y: -0.75, label: '贵州'},
+                        
+                        // 广西 -1.5至-1, 0至0.5
+                        {x: -1.25, y: 0.25, label: '广西'},
+                        
+                        // 甘肃 -1至-0.5, 0.5至1
+                        {x: -0.75, y: 0.75, label: '甘肃'},
+                        
+                        // 安徽 -1至-0.5, -0.5至0
+                        {x: -0.75, y: -0.25, label: '安徽'},
+                        
+                        // 新疆 -1至-0.5, -0.5至0
+                        {x: -0.75, y: -0.25, label: '新疆'},
+                        
+                        // 湖南 -1至-0.5, -0.5至-1
+                        {x: -0.75, y: -0.75, label: '湖南'},
+                        
+                        // 黑龙江 -1至-0.5, -0.5至-1
+                        {x: -0.75, y: -0.75, label: '黑龙江'},
+                        
+                        // 山西 -1至-0.5, 0至0.5
+                        {x: -0.75, y: 0.25, label: '山西'},
+                        
+                        // 陕西 -1至-0.5, 0至0.5
+                        {x: -0.75, y: 0.25, label: '陕西'},
+                        
+                        // 福建 -0.5至0, 0至0.5
+                        {x: -0.25, y: 0.25, label: '福建'},
+                        
+                        // 江西 -0.5至0, 0至0.5
+                        {x: -0.25, y: 0.25, label: '江西'},
+                        
+                        // 河南 -0.5至0, -0.5至0
+                        {x: -0.25, y: -0.25, label: '河南'},
+                        
+                        // 广东 0至0.5, 0至0.5
+                        {x: 0.25, y: 0.25, label: '广东'},
+                        
+                        // 湖北 0至0.5, -0.5至0
+                        {x: 0.25, y: -0.25, label: '湖北'},
+                        
+                        // 云南 0至0.5, 0至0.5
+                        {x: 0.25, y: 0.25, label: '云南'},
+                        
+                        // 北京 0至0.5, 0至0.5
+                        {x: 0.25, y: 0.25, label: '北京'},
+                        
+                        // 四川 0至0.5, 0至0.5
+                        {x: 0.25, y: 0.25, label: '四川'},
+                        
+                        // 浙江 0.5至1, -0.5至0
+                        {x: 0.75, y: -0.25, label: '浙江'},
+                        
+                        // 上海 0.5至1, -0.5至0
+                        {x: 0.75, y: -0.25, label: '上海'},
+                        
+                        // 山东 0.5至1, -0.5至0
+                        {x: 0.75, y: -0.25, label: '山东'},
+                        
+                        // 江苏 0.5至1, 0至0.5
+                        {x: 0.75, y: 0.25, label: '江苏'},
+                        
+                        // 重庆 0.5至1, -1至-0.5
+                        {x: 0.75, y: -0.75, label: '重庆'},
+                        
+                        // 辽宁 0.5至1, -0.5至0
+                        {x: 0.75, y: -0.25, label: '辽宁'},
+                        
+                        // 天津 0.5至1, -0.5至0
+                        {x: 0.75, y: -0.25, label: '天津'},
+                        
+                        // 河北 1.5至2, -1至-0.5
+                        {x: 1.75, y: -0.75, label: '河北'}
+                    ];
+                    
+                    // 为了避免标签重叠，对相同坐标的点进行微调
+                    const adjustedData = regionData.map((point, index) => {
+                        // 查找相同坐标的点
+                        const samePoints = regionData.filter(p => 
+                            p.x === point.x && p.y === point.y
+                        );
+                        
+                        if (samePoints.length > 1) {
+                            // 对相同坐标的点进行微调
+                            const indexInGroup = samePoints.indexOf(point);
+                            const offset = (indexInGroup - Math.floor(samePoints.length / 2)) * 0.1;
+                            return {
+                                ...point,
+                                x: point.x + offset,
+                                y: point.y + offset
+                            };
+                        }
+                        return point;
+                    });
+                    
+                    const labeledData = {
+                        datasets: [
+                            {
+                                // 主要数据点（红色）- 聚类0
+                                label: '聚类0',
+                                data: adjustedData,
+                                backgroundColor: 'rgba(0, 191, 215, 0.8)',
+                                borderColor: 'rgba(0, 191, 215, 1)',
+                                borderWidth: 1,
+                                pointRadius: 5,
+                                pointHoverRadius: 7
+                            },
+                            {
+                                // 中效能区域（橙色）- 聚类1
+                                label: '聚类1',
+                                data: [
+                                    {x: -1.0, y: 3.0, label: '海南'}, 
+                                    {x: 4.5, y: -0.5, label: '内蒙古'}
+                                ],
+                                backgroundColor: 'rgba(0, 160, 176, 0.8)',
+                                borderColor: 'rgba(0, 160, 176, 1)',
+                                borderWidth: 1,
+                                pointRadius: 8,
+                                pointHoverRadius: 10
+                            },
+                            {
+                                // 高效能区域（黄色）- 聚类2
+                                label: '聚类2',
+                                data: [
+                                    {x: 1.0, y: 5.0, label: '西藏'}
+                                ],
+                                backgroundColor: 'rgba(92, 219, 211, 0.8)',
+                                borderColor: 'rgba(92, 219, 211, 1)',
+                                borderWidth: 1,
+                                pointRadius: 10,
+                                pointHoverRadius: 12
+                            }
+                        ]
+                    };
+                    
+                    // 创建散点图
+                    const chart = new Chart(chartCtx, {
+                        type: 'scatter',
+                        data: labeledData,
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false, // 不保持固定宽高比，让容器控制大小
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: '基于经营特征的区域聚类可视化 (K=3)',
+                                    font: { size: 16, weight: 'bold' }
+                                },
+                                legend: {
+                                    display: false
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            const point = context.raw;
+                                            return `${point.label}: (${point.x.toFixed(2)}, ${point.y.toFixed(2)})`;
+                                        }
+                                    }
+                                }
+                            },
+                            scales: {
+                                x: {
+                                    type: 'linear',
+                                    position: 'bottom',
+                                    title: {
+                                        display: true,
+                                        text: '主成分1 (横轴)',
+                                        font: { size: 12 }
+                                    },
+                                    min: -3,
+                                    max: 6,
+                                    ticks: {
+                                        stepSize: 1
+                                    },
+                                    grid: {
+                                        color: 'rgba(0, 0, 0, 0.1)',
+                                        drawBorder: true
+                                    }
+                                },
+                                y: {
+                                    title: {
+                                        display: true,
+                                        text: '主成分2 (纵轴)',
+                                        font: { size: 12 }
+                                    },
+                                    min: -2,
+                                    max: 6,
+                                    ticks: {
+                                        stepSize: 1
+                                    },
+                                    grid: {
+                                        color: 'rgba(0, 0, 0, 0.1)',
+                                        drawBorder: true
+                                    }
+                                }
+                            },
+                            elements: {
+                                point: {
+                                    hoverBackgroundColor: null,
+                                    hoverBorderWidth: 2
+                                }
+                            }
+                        },
+                        plugins: [{
+                            id: 'pointLabels',
+                            afterDraw: function(chart) {
+                                const ctx = chart.ctx;
+                                ctx.save();
+                                ctx.font = '12px Arial';
+                                ctx.textAlign = 'center';
+                                ctx.textBaseline = 'middle';
+                                
+                                chart.data.datasets.forEach((dataset, datasetIndex) => {
+                                    dataset.data.forEach((point, index) => {
+                                        const meta = chart.getDatasetMeta(datasetIndex);
+                                        const position = meta.data[index].getCenterPoint();
+                                        
+                                        // 根据数据集设置不同的文字颜色
+                                        // 所有标签都使用橙色配色
+                                        ctx.fillStyle = 'rgba(255, 122, 69, 1)'; // 橙色
+                                        
+                                        // 绘制文字标签，稍微偏移以避免遮挡点
+                                        ctx.fillText(point.label, position.x, position.y - 10);
+                                    });
+                                });
+                                
+                                ctx.restore();
+                            }
+                        }]
+                    });
+                    
+                } catch (e) {
+                    console.error('聚类分析图创建失败:', e);
+                    ctx.style.backgroundColor = '#f8f9fa';
+                    ctx.style.display = 'flex';
+                    ctx.style.alignItems = 'center';
+                    ctx.style.justifyContent = 'center';
+                    ctx.style.color = '#666';
+                    ctx.style.fontSize = '14px';
+                    ctx.innerHTML = '区域聚类分析<br>（基于经营特征的K-means聚类，K=3）';
+                }
+            }
+            
+            // 图表5：雷达图（简化版）
+            function createRadarChart() {
+                const ctx = document.getElementById('chart5');
+                if (!ctx) return;
+                
+                try {
+                    const chartCtx = ctx.getContext('2d');
+                    
+                    // 根据参考图重新实现雷达图，严格按照参考图的4个维度
+                    new Chart(chartCtx, {
+                        type: 'radar',
+                        data: {
+                            labels: ['人均营业额（万元/人）', '统一配送率', '单店营业额（万元/店）', '坪效（万元/平米）'],
+                            datasets: [
+                                {
+                                    label: '聚类0',
+                                    data: [70, 30, 60, 40],
+                                    backgroundColor: 'rgba(0, 191, 215, 0.2)',
+                                    borderColor: 'rgba(0, 191, 215, 1)',
+                                    borderWidth: 2,
+                                    pointBackgroundColor: 'rgba(0, 191, 215, 1)',
+                                    pointBorderColor: '#fff',
+                                    pointHoverBackgroundColor: '#fff',
+                                    pointHoverBorderColor: 'rgba(0, 191, 215, 1)',
+                                    pointRadius: 4,
+                                    pointHoverRadius: 6
+                                },
+                                {
+                                    label: '聚类1',
+                                    data: [40, 80, 50, 85],
+                                    backgroundColor: 'rgba(255, 122, 69, 0.2)',
+                                    borderColor: 'rgba(255, 122, 69, 1)',
+                                    borderWidth: 2,
+                                    pointBackgroundColor: 'rgba(255, 122, 69, 1)',
+                                    pointBorderColor: '#fff',
+                                    pointHoverBackgroundColor: '#fff',
+                                    pointHoverBorderColor: 'rgba(255, 122, 69, 1)',
+                                    pointRadius: 4,
+                                    pointHoverRadius: 6
+                                },
+                                {
+                                    label: '聚类2',
+                                    data: [90, 50, 85, 60],
+                                    backgroundColor: 'rgba(0, 160, 176, 0.2)',
+                                    borderColor: 'rgba(0, 160, 176, 1)',
+                                    borderWidth: 2,
+                                    pointBackgroundColor: 'rgba(0, 160, 176, 1)',
+                                    pointBorderColor: '#fff',
+                                    pointHoverBackgroundColor: '#fff',
+                                    pointHoverBorderColor: 'rgba(0, 160, 176, 1)',
+                                    pointRadius: 4,
+                                    pointHoverRadius: 6
+                                }
+                            ]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            elements: {
+                                line: {
+                                    tension: 0.1
+                                }
+                            },
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: '不同效能聚类群体的特征雷达图（特征已归一化）',
+                                    font: { size: 16, weight: 'bold' }
+                                },
+                                legend: {
+                                    position: 'top',
+                                    labels: {
+                                        usePointStyle: true,
+                                        padding: 20,
+                                        font: {
+                                            size: 12
+                                        }
+                                    }
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            let label = context.dataset.label || '';
+                                            if (label) {
+                                                label += ': ';
+                                            }
+                                            if (context.parsed.r !== null) {
+                                                label += context.parsed.r + '%';
+                                            }
+                                            return label;
+                                        }
+                                    }
+                                }
+                            },
+                            scales: {
+                                r: {
+                                    beginAtZero: true,
+                                    min: 0,
+                                    max: 100,
+                                    ticks: {
+                                        stepSize: 20,
+                                        backdropColor: 'transparent',
+                                        font: {
+                                            size: 10
+                                        }
+                                    },
+                                    grid: {
+                                        color: 'rgba(0, 0, 0, 0.1)'
+                                    },
+                                    angleLines: {
+                                        color: 'rgba(0, 0, 0, 0.1)'
+                                    },
+                                    pointLabels: {
+                                        font: {
+                                            size: 12,
+                                            weight: '500'
+                                        },
+                                        color: '#333'
+                                    }
+                                }
+                            },
+                            layout: {
+                                padding: {
+                                    top: 20,
+                                    bottom: 20,
+                                    left: 20,
+                                    right: 20
+                                }
+                            }
+                        }
+                    });
+                    
+                } catch (e) {
+                    console.error('图表5创建失败:', e);
+                    ctx.style.backgroundColor = '#f8f9fa';
+                    ctx.style.display = 'flex';
+                    ctx.style.alignItems = 'center';
+                    ctx.style.justifyContent = 'center';
+                    ctx.style.color = '#666';
+                    ctx.style.fontSize = '14px';
+                    ctx.innerHTML = '不同效能聚类群体的特征对比<br>（按参考图绘制）';
+                }
+            }
+            
+            // 初始化所有图表
+            try {
+                createOptimizedBarChart('revenue');
+                console.log('图表1初始化成功');
+            } catch (e) {
+                console.error('图表1初始化失败:', e);
+            }
+            
+            try {
+                createMultiChartAnalysis();
+                console.log('图表2初始化成功');
+            } catch (e) {
+                console.error('图表2初始化失败:', e);
+            }
+            
+            try {
+                createRefHeatmap();
+                console.log('图表3初始化成功');
+            } catch (e) {
+                console.error('图表3初始化失败:', e);
+                // 尝试使用简化版本的热力图
+                const ctx = document.getElementById('chart3');
+                if (ctx) {
+                    ctx.style.backgroundColor = '#f8f9fa';
+                    ctx.style.display = 'flex';
+                    ctx.style.alignItems = 'center';
+                    ctx.style.justifyContent = 'center';
+                    ctx.style.color = '#666';
+                    ctx.style.fontSize = '14px';
+                    ctx.innerHTML = '热力图加载中...';
+                }
+            }
+            
+            try {
+                createClusterChart();
+                console.log('图表4初始化成功');
+            } catch (e) {
+                console.error('图表4初始化失败:', e);
+                // 尝试使用简化版本的聚类图
+                const ctx = document.getElementById('chart4');
+                if (ctx) {
+                    ctx.style.backgroundColor = '#f8f9fa';
+                    ctx.style.display = 'flex';
+                    ctx.style.alignItems = 'center';
+                    ctx.style.justifyContent = 'center';
+                    ctx.style.color = '#666';
+                    ctx.style.fontSize = '14px';
+                    ctx.innerHTML = '聚类分析图加载中...';
+                }
+            }
+            
+            try {
+                createRadarChart();
+                console.log('图表5初始化成功');
+            } catch (e) {
+                console.error('图表5初始化失败:', e);
+                // 尝试使用简化版本的雷达图
+                const ctx = document.getElementById('chart5');
+                if (ctx) {
+                    ctx.style.backgroundColor = '#f8f9fa';
+                    ctx.style.display = 'flex';
+                    ctx.style.alignItems = 'center';
+                    ctx.style.justifyContent = 'center';
+                    ctx.style.color = '#666';
+                    ctx.style.fontSize = '14px';
+                    ctx.innerHTML = '雷达图加载中...';
+                }
+            }
+        });
+    </script>
+</body>
+</html>
