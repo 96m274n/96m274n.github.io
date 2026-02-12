@@ -397,6 +397,27 @@
             padding: 1rem;
         }
         
+        /* 响应式图表网格布局 */
+        .responsive-chart-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            height: 100%;
+        }
+        
+        @media (min-width: 768px) {
+            .responsive-chart-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 2rem;
+            }
+        }
+        
+        /* 确保图表在容器中完全填充 */
+        .responsive-chart-grid .chart-wrapper {
+            height: 100% !important;
+            margin-bottom: 0 !important;
+        }
+        
         /* 加载动画 */
         .chart-loading {
             position: absolute;
@@ -546,34 +567,31 @@
                 <!-- 关键指标相关性热力图 -->
                 <div class="chart-container" style="grid-column: 1 / -1;">
                     <h3 class="chart-title-center">关键指标相关性热力图</h3>
-                    <div class="chart-wrapper" style="height: 500px;">
+                    <div class="chart-wrapper" style="height: 400px;">
                         <div class="chart-loading" id="chart3Loading">
                             <div class="spinner"></div>
                         </div>
-                        <div id="chart3" style="width: 100%; height: 100%;"></div>
+                        <div id="chart3" style="width: 100%; height: 100%; overflow-x: auto;"></div>
                     </div>
                 </div>
                 
                 <!-- 用户行为漏斗分析图表 -->
-                <div class="chart-container" style="grid-column: 1 / -1;">
+                <div class="chart-container">
                     <h3 class="chart-title-center">用户行为漏斗分析</h3>
-                    <div class="chart-wrapper" style="height: 500px;">
-                        <div class="grid" style="height: 100%;">
-                            <!-- 用户行为漏斗（各阶段用户数） -->
-                            <div class="chart-wrapper" style="height: 100%;">
-                                <div class="chart-loading" id="chart4Loading">
-                                    <div class="spinner"></div>
-                                </div>
-                                <canvas id="chart4"></canvas>
-                            </div>
-                            <!-- 各环节转化率 -->
-                            <div class="chart-wrapper" style="height: 100%;">
-                                <div class="chart-loading" id="chart4LineLoading">
-                                    <div class="spinner"></div>
-                                </div>
-                                <canvas id="chart4Line"></canvas>
-                            </div>
+                    <div class="chart-wrapper flex items-center justify-center">
+                        <div class="chart-loading" id="chart4Loading">
+                            <div class="spinner"></div>
                         </div>
+                        <canvas id="chart4"></canvas>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <h3 class="chart-title-center">各环节转化率</h3>
+                    <div class="chart-wrapper flex items-center justify-center">
+                        <div class="chart-loading" id="chart4LineLoading">
+                            <div class="spinner"></div>
+                        </div>
+                        <canvas id="chart4Line"></canvas>
                     </div>
                 </div>
             </div>
@@ -591,7 +609,7 @@
     </div>
 
     <footer>
-        <p>© 2026 上海凌越象限文化传播有限公司｜地址：上海市浦东新区｜邮箱：data@lingyue-xiangxian.com</p>
+        <p>© 2026 上海凌越象限文化传播有限公司｜地址：上海市浦东新区｜邮箱：mmjyzc@163.com</p>
     </footer>
 
     <script>
@@ -987,12 +1005,12 @@
                 
                 // 直接使用HTML表格实现热力图，避免Chart.js的兼容性问题
                 ctx.innerHTML = `
-                    <div class="w-full overflow-x-auto">
-                        <table class="w-full border-collapse text-base">
+                    <div class="w-full overflow-x-auto" style="max-height: 350px;">
+                        <table class="w-full border-collapse text-sm min-w-[800px]">
                             <thead>
                                 <tr>
                                     <th class="p-3 border bg-gray-100 font-semibold"></th>
-                                    <th class="p-3 border text-center bg-gray-100 font-semibold" style="min-width: 120px; word-break: break-word;">营业额(亿元)</th>
+                                    <th class="p-2 border text-center bg-gray-100 font-semibold" style="min-width: 100px; word-break: break-word; font-size: 0.85rem;">营业额(亿元)</th>
                                     <th class="p-3 border text-center bg-gray-100 font-semibold" style="min-width: 120px; word-break: break-word;">门店总数</th>
                                     <th class="p-3 border text-center bg-gray-100 font-semibold" style="min-width: 120px; word-break: break-word;">年末从业人数(万人)</th>
                                     <th class="p-3 border text-center bg-gray-100 font-semibold" style="min-width: 120px; word-break: break-word;">年末餐饮营业面积(万平米)</th>
@@ -1004,8 +1022,8 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <th class="p-3 border text-center bg-gray-100 font-semibold" style="min-width: 120px; word-break: break-word;">营业额(亿元)</th>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #00BFD7; color: #ffffff;">100</td>
+                                    <th class="p-2 border text-center bg-gray-100 font-semibold" style="min-width: 100px; word-break: break-word; font-size: 0.85rem;">营业额(亿元)</th>
+                                    <td class="p-2 border text-center font-medium" style="background-color: #00BFD7; color: #ffffff; font-size: 0.85rem;">100</td>
                                     <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">012</td>
                                     <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">020</td>
                                     <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">032</td>
@@ -1017,7 +1035,7 @@
                                 <tr>
                                     <th class="p-3 border text-center bg-gray-100 font-semibold" style="min-width: 120px; word-break: break-word;">门店总数</th>
                                     <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">012</td>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #00BFD7; color: #ffffff;">100</td>
+                                    <td class="p-2 border text-center font-medium" style="background-color: #00BFD7; color: #ffffff; font-size: 0.85rem;">100</td>
                                     <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">030</td>
                                     <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">040</td>
                                     <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">015</td>
@@ -1029,7 +1047,7 @@
                                     <th class="p-3 border text-center bg-gray-100 font-semibold" style="min-width: 120px; word-break: break-word;">年末从业人数(万人)</th>
                                     <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">020</td>
                                     <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">030</td>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #00BFD7; color: #ffffff;">100</td>
+                                    <td class="p-2 border text-center font-medium" style="background-color: #00BFD7; color: #ffffff; font-size: 0.85rem;">100</td>
                                     <td class="p-3 border text-center font-medium" style="background-color: #5CDBD3; color: #ffffff;">070</td>
                                     <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">025</td>
                                     <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">032</td>
@@ -1041,7 +1059,7 @@
                                     <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">032</td>
                                     <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">040</td>
                                     <td class="p-3 border text-center font-medium" style="background-color: #5CDBD3; color: #ffffff;">070</td>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #00BFD7; color: #ffffff;">100</td>
+                                    <td class="p-2 border text-center font-medium" style="background-color: #00BFD7; color: #ffffff; font-size: 0.85rem;">100</td>
                                     <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">042</td>
                                     <td class="p-3 border text-center font-medium" style="background-color: #5CDBD3; color: #333333;">055</td>
                                     <td class="p-3 border text-center font-medium" style="background-color: #5CDBD3; color: #333333;">062</td>
@@ -1053,7 +1071,7 @@
                                     <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">015</td>
                                     <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">025</td>
                                     <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">042</td>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #00BFD7; color: #ffffff;">100</td>
+                                    <td class="p-2 border text-center font-medium" style="background-color: #00BFD7; color: #ffffff; font-size: 0.85rem;">100</td>
                                     <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">020</td>
                                     <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">030</td>
                                     <td class="p-3 border text-center font-medium" style="background-color: #FFF0EB; color: #333333;">-015</td>
@@ -1065,7 +1083,7 @@
                                     <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">032</td>
                                     <td class="p-3 border text-center font-medium" style="background-color: #5CDBD3; color: #333333;">055</td>
                                     <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">020</td>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #00BFD7; color: #ffffff;">100</td>
+                                    <td class="p-2 border text-center font-medium" style="background-color: #00BFD7; color: #ffffff; font-size: 0.85rem;">100</td>
                                     <td class="p-3 border text-center font-medium" style="background-color: #5CDBD3; color: #333333;">060</td>
                                     <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">012</td>
                                 </tr>
@@ -1077,7 +1095,7 @@
                                     <td class="p-3 border text-center font-medium" style="background-color: #5CDBD3; color: #333333;">062</td>
                                     <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">030</td>
                                     <td class="p-3 border text-center font-medium" style="background-color: #5CDBD3; color: #333333;">060</td>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #00BFD7; color: #ffffff;">100</td>
+                                    <td class="p-2 border text-center font-medium" style="background-color: #00BFD7; color: #ffffff; font-size: 0.85rem;">100</td>
                                     <td class="p-3 border text-center font-medium" style="background-color: #FF9D5C; color: #333333;">-040</td>
                                 </tr>
                                 <tr>
@@ -1089,7 +1107,7 @@
                                     <td class="p-3 border text-center font-medium" style="background-color: #FFF0EB; color: #333333;">-015</td>
                                     <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">012</td>
                                     <td class="p-3 border text-center font-medium" style="background-color: #FF9D5C; color: #333333;">-040</td>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #00BFD7; color: #ffffff;">100</td>
+                                    <td class="p-2 border text-center font-medium" style="background-color: #00BFD7; color: #ffffff; font-size: 0.85rem;">100</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -1115,7 +1133,7 @@
             new Chart(ctx4, {
                 type: 'bar',
                 data: {
-                    labels: ['高价值用户', '购买用户', '活跃用户(有停留)', '浏览用户', '总用户'],
+                    labels: ['高价值用户', '购买用户', '活跃用户', '浏览用户', '总用户'],
                     datasets: [{
                         label: '用户数量',
                         data: [500, 1000, 1000, 1000, 1000], // 可根据实际数据修改
@@ -1128,25 +1146,74 @@
                     indexAxis: 'y', // 水平条形图（漏斗样式）
                     responsive: true,
                     maintainAspectRatio: false,
+                    // 添加设备检测，为移动设备应用特殊样式
+                    onResize: function(chart) {
+                        const isMobile = window.innerWidth < 768;
+                        if (isMobile) {
+                            // 为移动设备调整配置 - 保持与桌面端一致，左对齐到边框
+                            chart.options.scales.y.ticks.padding = 0;
+                            chart.options.scales.y.ticks.font.size = 11;
+                            chart.options.layout.padding.left = 0;
+                        }
+                    },
+                    layout: {
+                        padding: {
+                            left: 0, // 移除左侧内边距，使标签左对齐到边框
+                            right: 10,
+                            top: 10,
+                            bottom: 20
+                        }
+                    },
                     plugins: {
                         title: {
                             display: true,
                             text: '用户行为漏斗（各阶段用户数）',
-                            font: { size: 14, weight: 'bold' }
+                            font: { size: 14, weight: 'bold' },
+                            padding: {
+                                bottom: 15
+                            }
                         },
                         legend: { display: false }
                     },
                     scales: {
                         x: {
                             beginAtZero: true,
-                            title: { display: true, text: '用户数量' },
+                            title: { 
+                                display: true, 
+                                text: '用户数量',
+                                padding: {
+                                    top: 10
+                                }
+                            },
                             grid: { color: 'rgba(0,0,0,0.05)' },
-                            ticks: { color: '#666' }
+                            ticks: { 
+                                color: '#666',
+                                maxRotation: 0 // 防止数字标签旋转
+                            }
                         },
                         y: {
-                            title: { display: true, text: '用户阶段' },
+                            title: { 
+                                display: true, 
+                                text: '用户阶段',
+                                padding: {
+                                    left: 10
+                                }
+                            },
                             grid: { display: false },
-                            ticks: { color: '#666' }
+                            ticks: { 
+                                color: '#666',
+                                maxRotation: 0,
+                                autoSkip: false,
+                                font: {
+                                    size: 11, // 调整字体大小
+                                    family: "'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif"
+                                },
+                                lineHeight: 1.4,
+                                padding: 0 // 移除标签内边距，使文本左对齐到边框
+                            },
+                            grid: {
+                                drawOnChartArea: false // 确保网格线不会干扰标签显示
+                            }
                         }
                     }
                 }
@@ -1178,11 +1245,22 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    layout: {
+                        padding: {
+                            left: 20,
+                            right: 20,
+                            top: 10,
+                            bottom: 40 // 增加底部内边距，为旋转的标签提供空间
+                        }
+                    },
                     plugins: {
                         title: {
                             display: true,
                             text: '各环节转化率',
-                            font: { size: 14, weight: 'bold' }
+                            font: { size: 14, weight: 'bold' },
+                            padding: {
+                                bottom: 15
+                            }
                         },
                         legend: { display: false }
                     },
@@ -1190,7 +1268,13 @@
                         y: {
                             beginAtZero: true,
                             max: 110, // 预留空间显示100%
-                            title: { display: true, text: '转化率(%)' },
+                            title: { 
+                                display: true, 
+                                text: '转化率(%)',
+                                padding: {
+                                    top: 10
+                                }
+                            },
                             grid: { color: 'rgba(0,0,0,0.05)' },
                             ticks: { 
                                 color: '#666',
@@ -1198,9 +1282,22 @@
                             }
                         },
                         x: {
-                            title: { display: true, text: '转化阶段' },
+                            title: { 
+                                display: true, 
+                                text: '转化阶段',
+                                padding: {
+                                    top: 10
+                                }
+                            },
                             grid: { display: false },
-                            ticks: { color: '#666', maxRotation: 45, minRotation: 45 }
+                            ticks: { 
+                                color: '#666', 
+                                maxRotation: 45, 
+                                minRotation: 45,
+                                font: {
+                                    size: 11 // 调整字体大小
+                                }
+                            }
                         }
                     }
                 }
