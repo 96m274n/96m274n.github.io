@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>2019餐饮行业数据分析｜凌越象限</title>
-    <meta name="description" content="上海凌越象限：从规模依赖到效率驱动：解码28省（直辖市）餐饮经营效能三大分化模式。">
+    <meta name="description" content="上海凌越象限：基于全国50城3.2万家餐饮门店经营数据，揭示疫情前消费趋势、品类增长极与抗风险能力模型。">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
@@ -156,18 +156,18 @@
             margin-right: auto;
         }
         
-       /* 核心摘要样式 */
+        /* 核心摘要样式 */
         .core-summary {
-            background: rgba(255, 255, 255, 0.95);
+            background: white;
             border-radius: 8px;
             padding: 1.5rem;
-            margin: 1.5rem 0;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            animation: fadeIn 0.8s ease-out;
+            margin: 2rem 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
             border: 1px solid #eee;
             position: relative;
             overflow: hidden;
-            z-index: 1;
+            animation: slideUp 0.6s ease-out;
+            animation-fill-mode: both;
         }
         
         .core-summary::before {
@@ -211,54 +211,13 @@
         
         /* 核心发现数字高亮样式 */
         .highlight-num {
-            color: var(--accent);
-            font-weight: bold;
+            color: var(--accent); /* 调用页面橘色变量，和数字序号颜色一致 */
+            font-weight: bold;    /* 加粗 */
         }
         
-        .highlight-unit {
-            color: var(--accent);
-            font-weight: bold;
-        }
-        
-        .discovery-title {
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 0.8rem;
-            font-size: 1.1rem;
-            line-height: 1.4;
-            position: relative;
-            padding-left: 2rem;
-        }
-        
-        .discovery-title::before {
-            content: attr(data-number);
-            position: absolute;
-            left: 0;
-            top: 0;
-            color: #333;
-            font-weight: bold;
-        }
-
-        .discovery-details {
-            list-style: none;
-            padding-left: 0;
-        }
-
-        .discovery-details li {
-            margin-bottom: 0.6rem;
-            line-height: 1.6;
+        .inline-content {
+            font-weight: normal; /* 保持内容字体正常 */
             color: #555;
-            position: relative;
-            padding-left: 2rem;
-        }
-
-        .discovery-details li::before {
-            content: "•";
-            color: var(--accent);
-            font-weight: bold;
-            position: absolute;
-            left: 0.8rem;
-            top: 0.2rem;
         }
         
         .conclusion-box { 
@@ -486,7 +445,6 @@
             border: 1px solid #eee;
             position: relative;
             overflow: hidden;
-            text-align: center;
         }
         
         .data-card::before {
@@ -514,19 +472,6 @@
         .data-card:hover {
             transform: translateY(-5px);
             box-shadow: var(--shadow-hover);
-        }
-        
-        .card-value {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 0.25rem;
-        }
-        
-        .card-label {
-            font-size: 0.85rem;
-            color: #666;
-            font-weight: 400;
         }
         
         .card-value {
@@ -632,7 +577,7 @@
     <header>
         <div class="nav-container" style="align-items: center;">
             <a href="index.html" class="logo">
-                <img src="https://p26-flow-imagex-download-sign.byteimg.com/tos-cn-i-a9rns2rl98/7d581e9f8f3749358e3d4e04a979ca7a.png~tplv-a9rns2rl98-24:720:720.png?lk3s=8e244e95&rcl=20260211134609561C91939A30A8326A97&rrcfp=8a172a1a&x-expires=1771393569&x-signature=2aPGAmal6rzZR%2FubHhA4gzyv9OQ%3D" alt="凌越象限" class="h-8 inline-block mr-3">
+                <img src="https://p11-flow-imagex-download-sign.byteimg.com/tos-cn-i-a9rns2rl98/39e7f34c914e486abdc577cc7d1dfcad.png~tplv-a9rns2rl98-24:720:720.png?lk3s=8e244e95&rcl=2026020214182562BFE1F42239053DC307&rrcfp=8a172a1a&x-expires=1770617905&x-signature=swz2rCX%2FZLHUC%2Fb0vN8Tdntz5i0%3D" alt="凌越象限" class="h-8 inline-block mr-3">
                 <span class="inline-block">凌越象限</span>
             </a>
             <a href="index.html" class="back-home">← 返回首页</a>
@@ -640,45 +585,26 @@
     </header>
     <div class="container">
         <h1>2019餐饮行业数据分析</h1>
-        <p class="subtitle">覆盖全国28个省（直辖市）餐饮数据，聚焦人均营业额、坪效、单店营业额与统一配送率的效能分化</p>
+        <p class="subtitle">覆盖全国50个城市、3.2万家连锁及单体餐饮门店，聚焦客单价、翻台率、品类热度与区域差异</p>
         
-               <!-- 核心发现 -->
+        <!-- 核心发现 -->
         <div class="core-summary">
-            <div class="summary-title">核心发现</div>
-            <div class="summary-content">
-                <div class="discovery-item">
-                    <h3 class="discovery-title" data-number="1.">冰火两重天：规模与效率的严重背离</h3>
-                    <ul class="discovery-details">
-                        <li>总营业额与坪效、单店营业额、统一配送率均呈现微弱负相关（相关系数接近<span class="highlight-num">0</span>或为负）</li>
-                        <li>与门店总数、营业面积、从业人数强正相关（<span class="highlight-unit">r&gt;</span><span class="highlight-num">0.98</span>）</li>
-                        <li>当前增长高度依赖规模扩张（开新店、扩面积、增人手），而非经营效率提升</li>
-                        <li>模式粗放，边际效益递减风险高</li>
-                    </ul>
-                </div>
-
-                <div class="discovery-item">
-                    <h3 class="discovery-title" data-number="2.">效率冠军与规模冠军：迥异的成功模式</h3>
-                    <ul class="discovery-details">
-                        <li>效率标杆（"质优"模式）：西藏（坪效<span class="highlight-num">67,000</span><span class="highlight-unit">万元/平米</span>，全国第一）、海南（坪效<span class="highlight-num">33,667</span><span class="highlight-unit">万元/平米</span>）代表高效率、小规模模式</li>
-                        <li>特点：市场精准、资产利用率极高，但总量贡献小</li>
-                        <li>规模标杆（"量大"模式）：北京（营业额<span class="highlight-num">480</span><span class="highlight-unit">亿</span>）、上海（<span class="highlight-num">399</span><span class="highlight-unit">亿</span>）、广东（<span class="highlight-num">364</span><span class="highlight-unit">亿</span>）代表大市场、大规模模式</li>
-                        <li>特点：整体营业额高，但坪效（~<span class="highlight-num">2</span><span class="highlight-unit">万元</span>）仅处于中游水平，存在规模不经济隐患</li>
-                        <li>独特孤例：内蒙古独处效能聚类<span class="highlight-num">2</span>，人均营业额（<span class="highlight-num">60.9</span><span class="highlight-unit">万/人</span>）和单店营业额（<span class="highlight-num">1646</span><span class="highlight-unit">万/店</span>）均遥遥领先，但统一配送率极低（<span class="highlight-num">0.01</span>）</li>
-                        <li>揭示其可能依赖独特的本地化、非标供应链或高端单体店模式，难以全国复制</li>
-                    </ul>
-                </div>
-
-                <div class="discovery-item">
-                    <h3 class="discovery-title" data-number="3.">"统一配送率"揭示供应链管理水平，与人均效能呈显著负相关</h3>
-                    <ul class="discovery-details">
-                        <li>关键悖论：统一配送率与人均营业额相关系数为<span class="highlight-num">-0.49</span>，呈中度负相关</li>
-                        <li>这并非意味着集中配送降低效率，更可能揭示了两类不同商业模式：</li>
-                        <li>高标准化连锁模式（如贵州、西藏、新疆等配送率<span class="highlight-num">100%</span>地区）：强管控、强供应链，但可能牺牲了一定的本地灵活性与客单价，导致人均营业额偏低</li>
-                        <li>高弹性本土模式（如内蒙古、辽宁等配送率低地区）：本地采购、非标产品，可能带来更高毛利和人均产出，但供应链风险与成本也更高</li>
-                    </ul>
-                </div>
-            </div>
+               <div class="summary-title">核心发现</div>
+               <div class="summary-content">
+               <p><strong class="highlight-num">冰火两重天：规模与效率的严重背离</strong></p>
+               <p>总营业额与坪效、单店营业额、统一配送率均呈现微弱负相关（相关系数接近0或为负），而与门店总数、营业面积、从业人数强正相关（<strong class="highlight-num">r>0.98</strong>）。这说明当前增长高度依赖规模扩张（开新店、扩面积、增人手），而非经营效率提升，模式粗放，边际效益递减风险高。</p>
+        
+               <p><strong class="highlight-num">效率冠军与规模冠军：迥异的成功模式</strong></p>
+               <p>1、<strong class="highlight-num">效率标杆（"质优"模式）</strong>：西藏（坪效<strong class="highlight-num">67,000万元</strong>/平米，<strong class="highlight-num">全国第一</strong>）、海南（坪效<strong class="highlight-num">33,667万元</strong>/平米）代表高效率、小规模模式。其特点是市场精准、资产利用率极高，但总量贡献小。</p>
+               <p>2、<strong class="highlight-num">规模标杆（"量大"模式）</strong>：北京（营业额<strong class="highlight-num">480亿</strong>）、上海（<strong class="highlight-num">399亿</strong>）、广东（<strong class="highlight-num">364亿</strong>）代表大市场、大规模模式。其特点是整体营业额高，但坪效（~2万元）仅处于中游水平，存在规模不经济隐患。</p>
+               <p>3、独特孤例：内蒙古独处效能聚类2，人均营业额（<strong class="highlight-num">60.9万/人</strong>）和单店营业额（<strong class="highlight-num">1646万/店</strong>）均遥遥领先，但统一配送率极低（0.01），揭示其可能依赖独特的本地化、非标供应链或高端单体店模式，难以全国复制。</p>
+        
+               <p><strong class="highlight-num">"统一配送率"揭示供应链管理水平，与人均效能呈显著负相关</strong></p>
+               <p>关键悖论：统一配送率与人均营业额相关系数为<strong class="highlight-num">-0.49</strong>，呈中度负相关。这并非意味着集中配送降低效率，更可能揭示了两类不同商业模式：</p>
+               <p>1、<strong class="highlight-num">高标准化连锁模式</strong>（如贵州、西藏、新疆等配送率<strong class="highlight-num">100%</strong>地区）：强管控、强供应链，但可能牺牲了一定的本地灵活性与客单价，导致人均营业额偏低。</p>
+               <p>2、<strong class="highlight-num">高弹性本土模式</strong>（如内蒙古、辽宁等配送率低地区）：本地采购、非标产品，可能带来更高毛利和人均产出，但供应链风险与成本也更高。</p>
         </div>
+</div>
 
         <!-- 数据概览卡片 -->
         <div class="data-cards">
@@ -732,7 +658,7 @@
         <!-- 多维度数据分析 -->
         <div class="chart-container">
             <h2>多维度数据分析</h2>
-            <div class="grid grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- 子图表1：四象限散点图 -->
                 <div class="col-span-1 bg-white rounded-lg shadow-sm p-2 h-80">
                     <canvas id="subChart1"></canvas>
@@ -801,76 +727,55 @@
         <div class="conclusion-box">
             <div class="conclusion-title">破局之道：三级策略实现可持续高质量增长</div>
             
-            <div class="mb-8">
-                <h3 class="text-xl font-bold text-[#00BFD7] mb-4 pt-2 border-t-2 border-[#00BFD7]">第一级：战略层面——分类治理，精准投资</h3>
+            <div class="mb-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-3">第一级：战略层面——分类治理，精准投资</h3>
+                <p class="mb-2"><strong>对于"效率特区"（聚类1：海南、西藏）：</strong></p>
+                <p class="mb-2">策略：<strong>"提炼复制"</strong>。成立专项小组，深度复盘其超高坪效的运营细节（选址模型、店铺面积、菜品结构、员工配比），形成《标杆门店运营白皮书》。</p>
+                <p class="mb-2">目标：将已验证的高效模式，优先向"规模小效率低"和"规模小效率高"地区进行试点推广。</p>
                 
-                <div class="mb-6 pl-4 border-l-4 border-[#00BFD7]/20">
-                    <p class="mb-3 font-semibold">对于"效率特区"（聚类1：海南、西藏）：</p>
-                    <p class="mb-3">策略：<strong>"提炼复制"</strong>。成立专项小组，深度复盘其超高坪效的运营细节（选址模型、店铺面积、菜品结构、员工配比），形成《标杆门店运营白皮书》。</p>
-                    <p class="mb-3">目标：将已验证的高效模式，优先向"规模小效率低"和"规模小效率高"地区进行试点推广。</p>
-                </div>
+                <p class="mb-2 mt-4"><strong>对于"特殊模式区"（聚类2：内蒙古）：</strong></p>
+                <p class="mb-2">策略：<strong>"研究加固"</strong>。深入分析其高人均产出的驱动因素（是否依赖特色食材、高端宴请、旅游消费？）。同时，其极低的统一配送率是重大风险点，需评估本地供应链的稳定性与成本，试点引入部分核心品类的集中配送，在保持特色与控风险间找平衡。</p>
                 
-                <div class="mb-6 pl-4 border-l-4 border-[#00BFD7]/20">
-                    <p class="mb-3 font-semibold">对于"特殊模式区"（聚类2：内蒙古）：</p>
-                    <p class="mb-3">策略：<strong>"研究加固"</strong>。深入分析其高人均产出的驱动因素（是否依赖特色食材、高端宴请、旅游消费？）。同时，其极低的统一配送率是重大风险点，需评估本地供应链的稳定性与成本，试点引入部分核心品类的集中配送，在保持特色与控风险间找平衡。</p>
-                </div>
-                
-                <div class="mb-6 pl-4 border-l-4 border-[#00BFD7]/20">
-                    <p class="mb-3 font-semibold">对于"主流大盘区"（聚类0：25个地区）：</p>
-                    <p class="mb-3">策略：<strong>"对标提升"</strong>。在此集群内，进一步细分"高效组"（如上海、广东、浙江）和"低效组"（如河北、辽宁），建立内部红黑榜和对标机制。</p>
-                    <p class="mb-3">目标：将"高效组"的平均坪效、人效作为"低效组"的追赶目标，设定阶段性提升KPI。</p>
-                </div>
+                <p class="mb-2 mt-4"><strong>对于"主流大盘区"（聚类0：25个地区）：</strong></p>
+                <p class="mb-2">策略：<strong>"对标提升"</strong>。在此集群内，进一步细分"高效组"（如上海、广东、浙江）和"低效组"（如河北、辽宁），建立内部红黑榜和对标机制。</p>
+                <p class="mb-2">目标：将"高效组"的平均坪效、人效作为"低效组"的追赶目标，设定阶段性提升KPI。</p>
             </div>
             
-            <div class="mb-8">
-                <h3 class="text-xl font-bold text-[#FF7A45] mb-4 pt-2 border-t-2 border-[#FF7A45]">第二级：运营层面——聚焦关键指标，专项攻坚</h3>
-                
-                <div class="mb-6 pl-4 border-l-4 border-[#FF7A45]/20">
-                    <p class="mb-3 font-semibold">"坪效提升"专项：</p>
-                    <p class="mb-3">针对"规模大效率低"的9个地区，立即启动。措施包括：</p>
-                    <ul class="list-disc pl-6 mb-3 space-y-2">
-                        <li>空间优化：分析门店面积与营业额关系，关闭长期低效门店，或对大面积门店进行功能分区、引入联营品牌。</li>
-                        <li>时段经营：利用数据分析用餐高峰与低谷，推出非高峰时段促销、外卖专享套餐等，提升全天坪效。</li>
-                        <li>产品组合：参考《常用商品运营分析模型》，分析菜品销售关联性，优化菜单，推出高毛利组合套餐。</li>
-                    </ul>
-                </div>
-                
-                <div class="mb-6 pl-4 border-l-4 border-[#FF7A45]/20">
-                    <p class="mb-3 font-semibold">"供应链韧性"专项：</p>
-                    <p class="mb-3">审视统一配送率与成本的平衡。</p>
-                    <ul class="list-disc pl-6 mb-3 space-y-2">
-                        <li>对于配送率极高但人均效能偏低的地区，评估是否可通过引入部分本地特色食材，提升菜品差异化和溢价。</li>
-                        <li>对于配送率极低的地区（如内蒙古），筛选出占成本高、波动大的品类，试点纳入统一配送体系，以降本增效。</li>
-                    </ul>
-                </div>
-            </div>
+            <!-- 渐变色分隔线 -->
+            <div class="w-full h-1 bg-gradient-to-r from-[#00BFD7] via-[#00A0B0] to-[#FF7A45] my-8 rounded-full"></div>
             
             <div class="mb-6">
-                <h3 class="text-xl font-bold text-[#00A0B0] mb-4 pt-2 border-t-2 border-[#00A0B0]">第三级：执行层面——数据驱动，闭环管理</h3>
+                <h3 class="text-xl font-bold text-gray-800 mb-3">第二级：运营层面——聚焦关键指标，专项攻坚</h3>
+                <p class="mb-2"><strong>"坪效提升"专项：</strong>针对"规模大效率低"的9个地区，立即启动。措施包括：</p>
+                <p class="mb-2">空间优化：分析门店面积与营业额关系，关闭长期低效门店，或对大面积门店进行功能分区、引入联营品牌。</p>
+                <p class="mb-2">时段经营：利用数据分析用餐高峰与低谷，推出非高峰时段促销、外卖专享套餐等，提升全天坪效。</p>
+                <p class="mb-2">产品组合：参考《常用商品运营分析模型》，分析菜品销售关联性，优化菜单，推出高毛利组合套餐。</p>
                 
-                <div class="mb-6 pl-4 border-l-4 border-[#00A0B0]/20">
-                    <p class="mb-3 font-semibold">设立差异化区域KPI：</p>
-                    <ul class="list-disc pl-6 mb-3 space-y-2">
-                        <li>效率特区：考核"模式提炼进度"与"对外赋能次数"。</li>
-                        <li>规模风险区：考核"坪效提升率"与"低效门店整改率"。</li>
-                        <li>潜力增长区：考核"规模扩张速度"与"效率保持度"。</li>
-                        <li>标杆维持区：考核"创新试点数量"与"经验输出质量"。</li>
-                    </ul>
-                </div>
+                <p class="mb-2 mt-4"><strong>"供应链韧性"专项：</strong>审视统一配送率与成本的平衡。</p>
+                <p class="mb-2">对于配送率极高但人均效能偏低的地区，评估是否可通过引入部分本地特色食材，提升菜品差异化和溢价。</p>
+                <p class="mb-2">对于配送率极低的地区（如内蒙古），筛选出占成本高、波动大的品类，试点纳入统一配送体系，以降本增效。</p>
+            </div>
+            
+            <!-- 渐变色分隔线 -->
+            <div class="w-full h-1 bg-gradient-to-r from-[#00BFD7] via-[#00A0B0] to-[#FF7A45] my-8 rounded-full"></div>
+            
+            <div class="mb-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-3">第三级：执行层面——数据驱动，闭环管理</h3>
+                <p class="mb-2"><strong>设立差异化区域KPI：</strong></p>
+                <p class="mb-2">效率特区：考核"模式提炼进度"与"对外赋能次数"。</p>
+                <p class="mb-2">规模风险区：考核"坪效提升率"与"低效门店整改率"。</p>
+                <p class="mb-2">潜力增长区：考核"规模扩张速度"与"效率保持度"。</p>
+                <p class="mb-2">标杆维持区：考核"创新试点数量"与"经验输出质量"。</p>
                 
-                <div class="mb-6 pl-4 border-l-4 border-[#00A0B0]/20">
-                    <p class="mb-3 font-semibold">建立月度效能仪表板与复盘机制：</p>
-                    <ul class="list-disc pl-6 mb-3 space-y-2">
-                        <li>将本报告中的核心图表（TOP10排行榜、分布概况图、相关性热力图、聚类结果、四象限图）固化至管理驾驶舱。</li>
-                        <li>每月召开区域效能复盘会，基于数据讨论进展，动态调整策略，形成 "分析-决策-执行-复盘" 的完整闭环。</li>
-                    </ul>
-                </div>
+                <p class="mb-2 mt-4"><strong>建立月度效能仪表板与复盘机制：</strong></p>
+                <p class="mb-2">将本报告中的核心图表（TOP10排行榜、分布概况图、相关性热力图、聚类结果、四象限图）固化至管理驾驶舱。</p>
+                <p class="mb-2">每月召开区域效能复盘会，基于数据讨论进展，动态调整策略，形成 "分析-决策-执行-复盘" 的完整闭环。</p>
             </div>
         </div>
     </div>
 
     <footer>
-        <p>© 2026 上海凌越象限文化传播有限公司｜数据来源：阿里云天池公共数据集（数据已脱敏）｜分析方法：四象限矩阵模型、K-Means聚类算法、相关性分析</p>
+        <p>© 2026 上海凌越象限文化传播有限公司｜数据来源：阿里云天池公共数据集（已脱敏）｜分析方法：四象限矩阵、相关性分析和聚类模型</p>
     </footer>
 
     <script>
@@ -1259,7 +1164,7 @@
                                     <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.15</td>
                                     <td class="p-3 border text-center font-medium" style="background-color: #FFF0EB; color: #333333;">-0.22</td>
                                     <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.32</td>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #5CDBD3; color: #ffffff;">0.55</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #5CDBD3; color: #333333;">0.55</td>
                                     <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.20</td>
                                     <td class="p-3 border text-center font-medium" style="background-color: #00BFD7; color: #ffffff;">1.00</td>
                                     <td class="p-3 border text-center font-medium" style="background-color: #5CDBD3; color: #333333;">0.60</td>
