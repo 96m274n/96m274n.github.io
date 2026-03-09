@@ -3,8 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>全球产品库存数据分析｜凌越象限</title>
+    <title>【数据清洗 + 数据分析】全球产品库存数据分析｜凌越象限</title>
     <meta name="description" content="上海凌越象限：覆盖北美、欧亚、拉美三大仓网的SKU级库存周转分析，识别滞销风险与智能补货阈值。">
+    <!-- 引入阿里巴巴普惠体 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Alibaba+Pu+Hui+Ti:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
@@ -23,7 +27,8 @@
             --shadow-hover: 0 12px 48px rgba(0, 0, 0, 0.15);
         }
         * { margin:0; padding:0; box-sizing:border-box; }
-        body { font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; line-height:1.6; color:var(--text); background:var(--bg); overflow-x: hidden; }
+        /* 全局字体替换为阿里巴巴普惠体 */
+        body { font-family: "Alibaba Pu Hui Ti", "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; line-height:1.6; color:var(--text); background:var(--bg); overflow-x: hidden; }
         
         /* 背景图案 */
         body::before {
@@ -134,6 +139,20 @@
             max-width: 800px;
             margin-left: auto;
             margin-right: auto;
+        }
+        
+        /* 数据清洗说明模块 */
+        .data-cleaning-note {
+            background: white;
+            border-radius: 8px;
+            padding: 1.2rem 1.5rem;
+            margin: 0 auto 2rem;
+            max-width: 1000px;
+            border-left: 4px solid var(--primary);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            font-size: 0.95rem;
+            color: #444;
+            line-height: 1.7;
         }
         
         /* 核心摘要样式 */
@@ -484,8 +503,18 @@
     </header>
 
     <div class="container">
-        <h1>全球产品库存数据分析</h1>
-        <p class="subtitle">解析产品库龄与价值分布，解锁库存周转与资金效率提升路径</p>
+        <h1>【数据清洗 + 数据分析】全球产品库存数据分析</h1>
+        <p class="subtitle">基于企业真实库存数据，完成标准化清洗与可视化分析，输出可落地的库存优化与运营建议</p>
+        
+        <!-- 数据清洗工作说明 -->
+       <div class="core-summary mt-4">
+       <div class="summary-title">数据清洗工作说明</div>
+       <div class="summary-content">
+        <p class="discovery-item">
+            <span class="inline-content">本次分析基于阿里云天池脱敏库存数据集，已完成缺失值处理、异常值剔除、重复数据去重、字段标准化、品类统一归类、时间格式校正、库存单位换算等全流程清洗工作，确保数据准确性与可用性，为后续库存分析、ABC分类、周转诊断提供可靠数据支撑。</span>
+        </p>
+    </div>
+</div>
         
         <!-- 核心发现 -->
         <div class="core-summary">
@@ -595,41 +624,41 @@
 
         <!-- 结论与建议 -->
         <div class="conclusion-box">
-            <div class="conclusion-title">破局之道</div>
+            <div class="conclusion-title">落地优化方案</div>
             <div class="summary-content">
                 <!-- 第一级：战略层面 -->
                 <div style="background: linear-gradient(90deg, #00BFD7, #00A0B0); height: 4px; border-radius: 2px; margin: 2rem 0 1rem 0;"></div>
-                <h3 style="color: #00BFD7; font-size: 1.2rem; font-weight: 700; margin-bottom: 1rem;">第一级：战略层面——重构库存管理逻辑，从"数量均衡"转向"价值驱动"</h3>
-                <p class="discovery-item"><span class="highlight-num">• </span><span class="inline-content"><strong>立即成立"库存健康度"专项工作组：</strong>首要任务彻查"100%过期"数据的真实性与原因。若属实，立即启动全品类库存清点与减值评估，并制定紧急去化方案（大力度促销、渠道转移、捐赠或报废）。</span></p>
-                <p class="discovery-item"><span class="highlight-num">• </span><span class="inline-content"><strong>采纳ABC分类作为核心管理框架：</strong></span></p>
-                <p class="discovery-item" style="text-indent: 4em;"><span class="inline-content">A类产品：实施JIT（准时制）补货，降低库存持有成本；进行需求预测深化分析，参考《常用商品运营分析模型分享》中的销售预测模型，提高供应准确性。</span></p>
-                <p class="discovery-item" style="text-indent: 4em;"><span class="inline-content">B类产品：采用定期定量补货，保持服务水平。</span></p>
-                <p class="discovery-item" style="text-indent: 4em;"><span class="inline-content">C类产品：冻结采购，制定明确的清仓时间表（如未来90天），并将释放的现金流和仓容优先支持A类产品。</span></p>
+                <h3 style="color: #00BFD7; font-size: 1.2rem; font-weight: 700; margin-bottom: 1rem;">战略层面：重构库存管理逻辑，从数量管控转向价值驱动</h3>
+                <p class="discovery-item"><span class="highlight-num">• </span><span class="inline-content"><strong>成立库存健康度专项小组：</strong>完成全量库存盘点，核实滞销与过期数据，制定分级去化方案（促销/调拨/清仓/报废）。</span></p>
+                <p class="discovery-item"><span class="highlight-num">• </span><span class="inline-content"><strong>落地ABC分类管理体系：</strong></span></p>
+                <p class="discovery-item" style="text-indent: 4em;"><span class="inline-content">A类产品：采用JIT准时补货，降低库存成本，强化需求预测；</span></p>
+                <p class="discovery-item" style="text-indent: 4em;"><span class="inline-content">B类产品：执行定期定量补货，保障服务水平；</span></p>
+                <p class="discovery-item" style="text-indent: 4em;"><span class="inline-content">C类产品：暂停新增采购，制定90日清仓计划，释放资金与仓容。</span></p>
 
                 <!-- 第二级：运营层面 -->
                 <div style="background: linear-gradient(90deg, #FF7A45, #FF9D5C); height: 4px; border-radius: 2px; margin: 2rem 0 1rem 0;"></div>
-                <h3 style="color: #FF7A45; font-size: 1.2rem; font-weight: 700; margin-bottom: 1rem;">第二级：运营层面——聚焦关键指标优化专项</h3>
-                <p class="discovery-item"><span class="highlight-num">• </span><span class="inline-content"><strong>"产品年龄与时效"优化专项：</strong></span></p>
-                <p class="discovery-item" style="text-indent: 4em;"><span class="inline-content">建立动态库龄监控仪表板，对库龄超过1年的产品自动标记预警。</span></p>
-                <p class="discovery-item" style="text-indent: 4em;"><span class="inline-content">推行FIFO（先进先出）出库原则，并在采购合同中增加滞销品退换条款。</span></p>
+                <h3 style="color: #FF7A45; font-size: 1.2rem; font-weight: 700; margin-bottom: 1rem;">运营层面：聚焦核心指标，开展专项优化</h3>
+                <p class="discovery-item"><span class="highlight-num">• </span><span class="inline-content"><strong>库龄与时效监控专项：</strong></span></p>
+                <p class="discovery-item" style="text-indent: 4em;"><span class="inline-content">搭建实时库龄监控看板，对超1年库存自动预警；</span></p>
+                <p class="discovery-item" style="text-indent: 4em;"><span class="inline-content">严格执行FIFO先进先出，在采购合同中增加滞销退换条款。</span></p>
                 
-                <p class="discovery-item"><span class="highlight-num">• </span><span class="inline-content"><strong>"产品评分与质量"提升专项：</strong></span></p>
-                <p class="discovery-item" style="text-indent: 4em;"><span class="inline-content">对所有评分低于2.5分的产品进行根本原因分析（RCA），关联其产品类别、供应商、价格带。</span></p>
-                <p class="discovery-item" style="text-indent: 4em;"><span class="inline-content">将"平均产品评分"纳入采购与供应商绩效考核体系，建立质量门槛。</span></p>
+                <p class="discovery-item"><span class="highlight-num">• </span><span class="inline-content"><strong>产品质量与评分提升：</strong></span></p>
+                <p class="discovery-item" style="text-indent: 4em;"><span class="inline-content">对评分低于2.5分的商品做根因分析，关联品类、供应商与价格段；</span></p>
+                <p class="discovery-item" style="text-indent: 4em;"><span class="inline-content">将产品评分纳入供应商考核，建立准入与淘汰标准。</span></p>
                 
-                <p class="discovery-item"><span class="highlight-num">• </span><span class="inline-content"><strong>"价格带与库存"匹配优化：</strong></span></p>
-                <p class="discovery-item" style="text-indent: 4em;"><span class="inline-content">重点分析库存量最高的200-300与400-500价格带，其库存周转率是否健康？是否与高价值产品（A类）重合？优化这些价格带的库存深度，避免积压。</span></p>
+                <p class="discovery-item"><span class="highlight-num">• </span><span class="inline-content"><strong>价格带与库存匹配优化：</strong></span></p>
+                <p class="discovery-item" style="text-indent: 4em;"><span class="inline-content">重点监控200-300、400-500价格带库存健康度，优化库存深度，减少积压。</span></p>
 
                 <!-- 第三级：执行层面 -->
                 <div style="background: linear-gradient(90deg, #5CDBD3, #00BFD7); height: 4px; border-radius: 2px; margin: 2rem 0 1rem 0;"></div>
-                <h3 style="color: #5CDBD3; font-size: 1.2rem; font-weight: 700; margin-bottom: 1rem;">第三级：执行层面——数据驱动，闭环管理</h3>
-                <p class="discovery-item"><span class="highlight-num">• </span><span class="inline-content"><strong>设立差异化库存KPI：</strong></span></p>
-                <p class="discovery-item" style="text-indent: 4em;"><span class="inline-content">整体层面：监控库存周转率、滞销库存比例、平均库龄。</span></p>
-                <p class="discovery-item" style="text-indent: 4em;"><span class="inline-content">分类层面：A类考核缺货率与周转率；B类考核服务水平；C类考核清仓完成率与损失率。</span></p>
+                <h3 style="color: #5CDBD3; font-size: 1.2rem; font-weight: 700; margin-bottom: 1rem;">执行层面：数据驱动，建立闭环管理机制</h3>
+                <p class="discovery-item"><span class="highlight-num">• </span><span class="inline-content"><strong>制定分级库存KPI：</strong></span></p>
+                <p class="discovery-item" style="text-indent: 4em;"><span class="inline-content">整体指标：库存周转率、滞销占比、平均库龄；</span></p>
+                <p class="discovery-item" style="text-indent: 4em;"><span class="inline-content">分类指标：A类盯缺货率、B类盯服务水平、C类盯清仓完成率。</span></p>
                 
-                <p class="discovery-item"><span class="highlight-num">• </span><span class="inline-content"><strong>建立月度库存健康度仪表板与复盘机制：</strong></span></p>
-                <p class="discovery-item" style="text-indent: 4em;"><span class="inline-content">将本报告中的核心图表（属性分布图、箱线图、ABC分类图、价格带分析）固化为管理驾驶舱。</span></p>
-                <p class="discovery-item" style="text-indent: 4em;"><span class="inline-content">每月召开复盘会，基于ABC分类结果审视各品类行动进展，形成"分析-分类-行动-复盘"的闭环。</span></p>
+                <p class="discovery-item"><span class="highlight-num">• </span><span class="inline-content"><strong>建立月度复盘机制：</strong></span></p>
+                <p class="discovery-item" style="text-indent: 4em;"><span class="inline-content">固化核心分析图表为管理看板，每月复盘ABC分类执行效果；</span></p>
+                <p class="discovery-item" style="text-indent: 4em;"><span class="inline-content">形成“分析-分类-执行-复盘”闭环，持续优化库存结构。</span></p>
             </div>
         </div>
     </div>
@@ -701,6 +730,7 @@
             gsap.from('header', { duration: 1, y: -50, opacity: 0, ease: 'power3.out' });
             gsap.from('h1', { duration: 1, y: 30, opacity: 0, ease: 'power3.out', delay: 0.2 });
             gsap.from('.subtitle', { duration: 1, y: 30, opacity: 0, ease: 'power3.out', delay: 0.4 });
+            gsap.from('.data-cleaning-note', { duration: 0.8, y: 20, opacity: 0, ease: 'power3.out', delay: 0.5 });
             gsap.from('.core-summary', { duration: 1, y: 30, opacity: 0, ease: 'power3.out', delay: 0.6 });
             gsap.from('.data-overview > div > div', { 
                 duration: 0.8, 
@@ -813,6 +843,3 @@
 </body>
 
 </html>
-
-
-
