@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>凌越象限 · 双认证数据服务专家</title>
     <meta name="description" content="凌越象限由CDA二级+工信部大数据分析师双认证专业团队创立，专注为中小微企业提供数据清洗、深度分析及落地建议，AI提效+人工精析，让数据真正驱动业务。">
-    <!-- 引入阿里巴巴普惠体（免费商用，无版权风险） -->
-    <link rel="stylesheet" href="https://at.alicdn.com/t/c/font_4444792_9901g59995l.css">
     <script src="https://cdn.jsdelivr.net/npm/three@0.140.1/build/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.140.1/examples/js/controls/OrbitControls.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
@@ -28,14 +26,7 @@
             --card-padding: 2rem;
         }
         * { margin:0; padding:0; box-sizing:border-box; }
-        /* 核心修改：替换为阿里巴巴普惠体，移除微软雅黑 */
-        body { 
-            font-family: "Alibaba PuHuiTi 2.0", "Alibaba-PuHuiTi", "Segoe UI", "PingFang SC", -apple-system, BlinkMacSystemFont, sans-serif; 
-            line-height:1.6; 
-            color:var(--text); 
-            background:var(--bg); 
-            overflow-x: hidden; 
-        }
+        body { font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; line-height:1.6; color:var(--text); background:var(--bg); overflow-x: hidden; }
         
         /* 背景图案 */
         body::before {
@@ -615,7 +606,8 @@
     <header>
         <div class="nav-container">
             <a href="index.html" class="logo">
-                <img src="logo.png" alt="凌越象限" class="logo-image">
+                <!-- 替换为GitHub RAW logo链接 -->
+                <img src="https://raw.githubusercontent.com/96m274n/96m274n.github.io/58169afbb0d318ac59b20748f8f5c27dd6c07d5c/logo.png" alt="凌越象限" class="logo-image">
                 <span class="logo-text">凌越象限</span>
                 <span class="certification-badge">CDA二级 | 工信部大数据分析师 双认证</span>
             </a>
@@ -632,375 +624,748 @@
             <div class="service-card">
                 <div class="service-icon">🧹</div>
                 <h3>数据清洗与治理</h3>
-                <p>专业处理脏数据、缺失值、重复值，规范数据格式，建立数据质量标准，为后续分析奠定坚实基础。</p>
+                <p>标准化处理缺失值、异常值、重复值，统一多源数据格式，建立企业数据资产标准化体系，确保数据质量。</p>
             </div>
             <div class="service-card">
                 <div class="service-icon">📊</div>
                 <h3>深度数据分析</h3>
-                <p>基于业务场景构建分析模型，挖掘数据规律，提供用户画像、行为分析、转化漏斗等核心洞察。</p>
+                <p>基于RFM、ABC分类、漏斗分析等专业模型，提供用户行为、行业趋势、库存管理等定制化分析服务。</p>
             </div>
             <div class="service-card">
                 <div class="service-icon">💡</div>
-                <h3>业务落地建议</h3>
-                <p>将数据分析结果转化为可执行的业务策略，提供具体的优化方向和落地步骤，确保数据价值落地。</p>
-            </div>
-            <div class="service-card">
-                <div class="service-icon">🤖</div>
-                <h3>AI提效赋能</h3>
-                <p>结合大模型工具提升分析效率，自动化生成分析报告，快速迭代分析思路，降低人力成本。</p>
+                <h3>落地建议与咨询</h3>
+                <p>不只交付分析报告，更提供可执行的业务优化建议，支持策略落地跟踪，确保数据洞察真正转化为业务价值。</p>
             </div>
         </div>
 
-        <h2 class="section-title">数据概览</h2>
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-number">98%</div>
-                <div class="stat-label">数据清洗准确率</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">50+</div>
-                <div class="stat-label">企业服务案例</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">15+</div>
-                <div class="stat-label">行业分析经验</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-number">30%↑</div>
-                <div class="stat-label">客户业务增长</div>
-            </div>
-        </div>
+        <h2 class="section-title">我们的数据分析项目</h2>
+        <p style="color:#555; margin-bottom:1.5rem;">点击进入任一项目详情页，查看完整分析过程、交互图表与落地建议</p>
 
-        <h2 class="section-title">案例展示</h2>
         <div class="project-grid">
             <div class="project-card">
-                <h3><span class="icon">🛒</span>电商用户行为分析</h3>
-                <p>为某电商平台分析用户购买路径，识别转化瓶颈，优化商品推荐策略，最终提升下单转化率25%。</p>
-                <a href="project1.html">查看详情</a>
+                <h3><span class="icon">📊</span> 【数据清洗+用户分析】社交电商用户购买行为</h3>
+                <p>先完成千万级用户行为数据标准化清洗（缺失值填充/异常交易剔除/维度统一），再基于清洗后高质量数据开展RFM与聚类分析，精准诊断出"高额沉睡客"误判与零复购增长瓶颈，通过重构价值评估体系与分层运营策略，推动用户生命周期价值（LTV）重塑，助力保障核心交易盘稳定。</p>
+                <a href="project1.html" title="查看社交电商用户购买行为记录详细分析">进入项目</a>
             </div>
+
             <div class="project-card">
-                <h3><span class="icon">📱</span>APP留存率优化</h3>
-                <p>分析某APP用户留存数据，定位流失关键节点，提出产品迭代建议，7日留存率提升18%。</p>
-                <a href="project2.html">查看详情</a>
+                <h3><span class="icon">🍽️</span> 【经典行业分析】2019餐饮行业数据分析</h3>
+                <p>（可基于此模型为本地餐饮中小微企业做定制化轻量分析）系统性诊断全国28省餐饮经营效能，运用四象限矩阵与效能聚类模型，精准挖掘行业"规模依赖与效率背离"的核心矛盾，识别效率标杆、规模风险与特殊模式三大区域，为从粗放扩张转向"分类治理、精准提效"的存量增长提供了数据驱动的战略方向。</p>
+                <a href="project2.html" title="查看2019餐饮行业数据分析详细报告">进入项目</a>
             </div>
+
             <div class="project-card">
-                <h3><span class="icon">🏪</span>线下门店运营分析</h3>
-                <p>整合多门店销售、客流、库存数据，优化商品陈列和补货策略，单店营收提升12%。</p>
-                <a href="project3.html">查看详情</a>
+                <h3><span class="icon">📦</span> 【数据清洗+库存分析】全球产品库存数据分析</h3>
+                <p>先完成46.5万SKU库存数据清洗（库龄标准化/异常库存剔除/维度统一），再通过ABC分类与库龄分析，暴露出价值高度集中、疑似全库过期与品类结构性积压三大风险，制定从"数量均衡"到"价值驱动"的战略转型及三级闭环管理方案，旨在大幅优化库存周转与资金效率。</p>
+                <a href="project3.html" title="查看全球产品库存数据分析详细报告">进入项目</a>
             </div>
+
             <div class="project-card">
-                <h3><span class="icon">📈</span>营销活动效果评估</h3>
-                <p>量化评估多渠道营销活动ROI，优化预算分配，营销成本降低15%，转化效果提升20%。</p>
-                <a href="project4.html">查看详情</a>
+                <h3><span class="icon">📱</span> 【数据清洗+电商分析】抖音电商用户特征分析</h3>
+                <p>先完成抖音电商全域用户行为数据清洗（剔除无效行为/统一数据维度/补全缺失转化数据），融合RFM、漏斗分析及机器学习模型，精准定位「核心价值用户稀缺」「购买后转化腰斩」两大核心问题；为45%的「重要保持用户」绘制4类精细化画像，落地建议：针对不同画像制定个性化触达策略，构建用户价值跃迁路径，助力提升用户复购与转化效率。</p>
+                <a href="project4.html" title="查看抖音电商用户特征数据分析详细报告">进入项目</a>
             </div>
         </div>
 
-        <h2 class="section-title">数据可视化洞察</h2>
+        <!-- 数据图表展示 -->
         <div class="charts-section">
+            <h2 class="section-title">数据能力概览</h2>
             <div class="charts-grid">
                 <div class="chart-container">
-                    <h3 class="mb-4">各行业数据服务需求分布</h3>
-                    <div class="chart-loading" id="chart1-loading">
-                        <div class="spinner"></div>
-                    </div>
+                    <h3 class="chart-title-center">基于RFM的三维用户价值分群空间分布图</h3>
                     <div class="chart-wrapper">
-                        <canvas id="industryChart"></canvas>
-                    </div>
-                </div>
-                <div class="chart-container">
-                    <h3 class="mb-4">数据服务价值转化曲线</h3>
-                    <div class="chart-loading" id="chart2-loading">
-                        <div class="spinner"></div>
-                    </div>
-                    <div class="chart-wrapper">
-                        <canvas id="valueChart"></canvas>
-                    </div>
-                </div>
-                <div class="chart-container">
-                    <h3 class="mb-4">多维度分析效果对比</h3>
-                    <div class="chart-loading" id="chart3-loading">
-                        <div class="spinner"></div>
-                    </div>
-                    <div class="chart-wrapper">
-                        <div class="responsive-chart-grid">
-                            <div class="chart-subwrapper">
-                                <canvas id="comparisonChart1"></canvas>
-                            </div>
-                            <div class="chart-subwrapper">
-                                <canvas id="comparisonChart2"></canvas>
-                            </div>
+                        <div class="chart-loading" id="rfm3DContainerLoading">
+                            <div class="spinner"></div>
                         </div>
+                        <div id="rfm3DContainer" style="width: 100%; height: 100%;"></div>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <h3 class="chart-title-center">库存价值ABC分类</h3>
+                    <div class="chart-wrapper">
+                        <div class="chart-loading" id="chart2Loading">
+                            <div class="spinner"></div>
+                        </div>
+                        <canvas id="chart2"></canvas>
+                    </div>
+                </div>
+                <!-- 关键指标相关性热力图 -->
+                <div class="chart-container" style="grid-column: 1 / -1;">
+                    <h3 class="chart-title-center">关键指标相关性热力图</h3>
+                    <div class="chart-wrapper" style="height: 400px;">
+                        <div class="chart-loading" id="chart3Loading">
+                            <div class="spinner"></div>
+                        </div>
+                        <div id="chart3" style="width: 100%; height: 100%; overflow-x: auto;"></div>
+                    </div>
+                </div>
+                
+                <!-- 用户行为漏斗分析图表 -->
+                <div class="chart-container">
+                    <h3 class="chart-title-center">用户行为漏斗分析</h3>
+                    <div class="chart-wrapper flex items-center justify-center">
+                        <div class="chart-loading" id="chart4Loading">
+                            <div class="spinner"></div>
+                        </div>
+                        <canvas id="chart4"></canvas>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <h3 class="chart-title-center">各环节转化率</h3>
+                    <div class="chart-wrapper flex items-center justify-center">
+                        <div class="chart-loading" id="chart4LineLoading">
+                            <div class="spinner"></div>
+                        </div>
+                        <canvas id="chart4Line"></canvas>
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="conclusion-box">
-            <h3 class="conclusion-title">为什么选择凌越象限？</h3>
+            <div class="conclusion-title">为什么客户信任凌越象限？</div>
             <div class="conclusion-content">
-                <p><strong>双认证专业团队：</strong> 核心成员拥有CDA二级数据分析师和工信部大数据分析师双重认证，具备扎实的理论基础和实战经验。</p>
-                <p><strong>中小微企业专属：</strong> 针对中小微企业数据量小、业务灵活的特点，定制轻量化分析方案，性价比更高，落地更快。</p>
-                <p><strong>AI+人工双驱动：</strong> 结合AI工具提升分析效率，同时保留人工深度解读，兼顾效率与精准度，避免纯AI分析的片面性。</p>
-                <p><strong>结果导向：</strong> 不做无用的数据分析，所有分析结果都聚焦于业务增长，提供可落地、可量化的优化建议。</p>
+                <p>• <strong>双认证专业保障</strong>：CDA二级+工信部大数据分析师全程把控，从数据清洗到分析落地，每一步都符合专业标准，避免AI分析的「数据垃圾进、结果垃圾出」问题。</p>
+                <p>• <strong>AI提效+人工精析</strong>：AI自动化完成基础数据清洗、报表生成等重复性工作，人工聚焦深度分析、业务解读与落地建议，效率更高，价值更精准。</p>
+                <p>• <strong>中小微轻量定制</strong>：适配中小微企业数据规模、业务场景与预算，无需自建数据团队，提供「一对一」分析报告解读，拒绝通用化模板报告。</p>
+                <p>• <strong>全链路落地跟踪</strong>：不只交付分析报告，更提供可执行的落地建议，支持后续策略执行的数据分析跟踪，确保数据洞察真正落地到业务。</p>
             </div>
         </div>
 
         <div class="contact-section">
-            <h3>合作咨询</h3>
-            <p>如果您的企业需要专业的数据清洗、分析或落地建议，欢迎联系我们</p>
-            <a href="tel:16621711304" class="contact-btn">立即咨询</a>
+            <h3>需要数据服务支持？</h3>
+            <p>我们提供免费企业数据诊断服务，帮你快速发现数据问题与增长机会</p>
+            <a href="mailto:mmjyzc@163.com" class="contact-btn">立即咨询合作</a>
         </div>
     </div>
 
     <footer>
-        <p>凌越象限 © 2025 版权所有 | 数据驱动业务增长</p>
+        <p>© 2026 上海凌越象限文化传播有限公司｜地址：上海市浦东新区｜邮箱：mmjyzc@163.com</p>
+        <p>凌越象限 · 双认证数据服务 | 助力本地中小微企业数字化转型</p>
     </footer>
 
     <script>
-        // 等待页面加载完成
-        window.addEventListener('DOMContentLoaded', function() {
-            // 模拟图表加载延迟，提升用户体验
-            setTimeout(function() {
-                // 隐藏加载动画
-                document.getElementById('chart1-loading').classList.add('hidden');
-                document.getElementById('chart2-loading').classList.add('hidden');
-                document.getElementById('chart3-loading').classList.add('hidden');
+        /**
+         * 基于RFM的三维用户价值分群空间分布图
+         * 使用Three.js实现的3D散点图，展示不同价值用户群体在RFM三维空间中的分布
+         */
+
+        // 颜色配置
+        const chartColors = {
+            primary: '#00BFD7', // 青色主色调
+            accent: '#FF7A45',  // 橘色辅助色
+            secondary: '#00A0B0', // 深青色
+            tertiary: '#FF9D5C', // 浅橘色
+            quaternary: '#5CDBD3', // 淡青色
+            background: 'rgba(0, 191, 215, 0.1)',
+            grid: 'rgba(0, 0, 0, 0.05)'
+        };
+
+        /**
+         * 初始化3D散点图
+         * @param {string} containerId - 容器元素ID
+         */
+        function init3DScatterPlot(containerId = 'rfm3DContainer') {
+            try {
+                console.log('开始初始化3D散点图...');
                 
-                // 1. 行业分布饼图
-                const industryCtx = document.getElementById('industryChart').getContext('2d');
-                new Chart(industryCtx, {
-                    type: 'pie',
+                // 获取容器尺寸
+                const container = document.getElementById(containerId);
+                if (!container) {
+                    console.error(`${containerId}元素未找到`);
+                    return;
+                }
+                
+                const width = container.clientWidth || 800;
+                const height = container.clientHeight || 500;
+                
+                console.log('3D容器尺寸:', width, 'x', height);
+
+                // 创建场景
+                const scene = new THREE.Scene();
+                scene.background = new THREE.Color(0xf8fbfa);
+
+                // 创建相机
+                const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
+                camera.position.set(35, 25, 35);
+                camera.lookAt(0, 0, 0);
+
+                // 创建渲染器
+                const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+                renderer.setSize(width, height);
+                renderer.setPixelRatio(window.devicePixelRatio || 1);
+                renderer.setClearColor(0xf8fbfa, 1); // 设置背景色
+                
+                // 清除之前的渲染器实例
+                while (container.firstChild) {
+                    container.removeChild(container.firstChild);
+                }
+                
+                container.appendChild(renderer.domElement);
+
+                // 添加轨道控制
+                let controls = null;
+                if (typeof THREE.OrbitControls !== 'undefined') {
+                    controls = new THREE.OrbitControls(camera, renderer.domElement);
+                    controls.enableDamping = true;
+                    controls.dampingFactor = 0.05;
+                    controls.screenSpacePanning = false;
+                    controls.minDistance = 30;
+                    controls.maxDistance = 100;
+                    controls.maxPolarAngle = Math.PI / 2;
+                    controls.minPolarAngle = Math.PI / 4;
+                    console.log('轨道控制器初始化成功');
+                } else {
+                    console.warn('OrbitControls未加载，3D图表将无法交互');
+                }
+
+                // 添加坐标轴
+                const axesHelper = new THREE.AxesHelper(20);
+                scene.add(axesHelper);
+
+                // 添加网格
+                const gridHelperXZ = new THREE.GridHelper(20, 10, 0x888888, 0xcccccc);
+                scene.add(gridHelperXZ);
+
+                const gridHelperYZ = new THREE.GridHelper(20, 10, 0x888888, 0xcccccc);
+                gridHelperYZ.rotation.x = Math.PI / 2;
+                scene.add(gridHelperYZ);
+                
+                const gridHelperXY = new THREE.GridHelper(20, 10, 0x888888, 0xcccccc);
+                gridHelperXY.rotation.z = Math.PI / 2;
+                scene.add(gridHelperXY);
+
+                // 准备数据 - 不同价值用户群体的RFM数据
+                const userData = {
+                    high: [  // 高价值用户
+                        { x: 85, y: 75, z: 90 },
+                        { x: 90, y: 80, z: 85 },
+                        { x: 82, y: 78, z: 88 },
+                        { x: 88, y: 72, z: 92 },
+                        { x: 92, y: 85, z: 87 },
+                        { x: 87, y: 76, z: 89 },
+                        { x: 84, y: 79, z: 86 },
+                        { x: 89, y: 74, z: 91 }
+                    ],
+                    medium: [  // 中价值用户
+                        { x: 55, y: 50, z: 55 },
+                        { x: 60, y: 55, z: 50 },
+                        { x: 52, y: 48, z: 58 },
+                        { x: 58, y: 52, z: 53 },
+                        { x: 62, y: 58, z: 49 },
+                        { x: 57, y: 51, z: 56 },
+                        { x: 53, y: 49, z: 54 },
+                        { x: 61, y: 57, z: 51 }
+                    ],
+                    low: [  // 低价值用户
+                        { x: 25, y: 20, z: 15 },
+                        { x: 30, y: 25, z: 20 },
+                        { x: 22, y: 18, z: 18 },
+                        { x: 28, y: 22, z: 22 },
+                        { x: 32, y: 28, z: 25 },
+                        { x: 27, y: 21, z: 19 },
+                        { x: 23, y: 19, z: 17 },
+                        { x: 31, y: 26, z: 23 }
+                    ]
+                };
+
+                // 归一化函数 - 将数据映射到可视化空间
+                const normalize = (value, min, max) => {
+                    return (value - min) / (max - min) * 18 - 9; // 将值映射到 -9 到 9 的范围
+                };
+
+                // 创建点的材质 - 使用不透明材质确保可见性
+                const highValueMaterial = new THREE.MeshPhongMaterial({ 
+                    color: chartColors.primary, 
+                    transparent: false, 
+                    opacity: 1.0,
+                    shininess: 30
+                }); // 青色
+                const mediumValueMaterial = new THREE.MeshPhongMaterial({ 
+                    color: chartColors.quaternary, 
+                    transparent: false, 
+                    opacity: 1.0,
+                    shininess: 30
+                }); // 淡青色
+                const lowValueMaterial = new THREE.MeshPhongMaterial({ 
+                    color: chartColors.accent, 
+                    transparent: false, 
+                    opacity: 1.0,
+                    shininess: 30
+                }); // 橘色
+
+                // 创建条形几何体
+                const createBar = (height, material) => {
+                    const geometry = new THREE.BoxGeometry(0.5, height, 0.5);
+                    return new THREE.Mesh(geometry, material);
+                };
+
+                // 添加高价值用户条形
+                userData.high.forEach(point => {
+                    const normalizedPoint = {
+                        x: normalize(point.x, 0, 100),
+                        y: normalize(point.y, 0, 100) / 2, // 高度的一半，因为条形从底部开始
+                        z: normalize(point.z, 0, 100)
+                    };
+                    
+                    const bar = createBar(normalizedPoint.y * 2, highValueMaterial); // 完整高度
+                    bar.position.set(normalizedPoint.x, normalizedPoint.y, normalizedPoint.z);
+                    scene.add(bar);
+                });
+
+                // 添加中价值用户条形
+                userData.medium.forEach(point => {
+                    const normalizedPoint = {
+                        x: normalize(point.x, 0, 100),
+                        y: normalize(point.y, 0, 100) / 2, // 高度的一半，因为条形从底部开始
+                        z: normalize(point.z, 0, 100)
+                    };
+                    
+                    const bar = createBar(normalizedPoint.y * 2, mediumValueMaterial); // 完整高度
+                    bar.position.set(normalizedPoint.x, normalizedPoint.y, normalizedPoint.z);
+                    scene.add(bar);
+                });
+
+                // 添加低价值用户条形
+                userData.low.forEach(point => {
+                    const normalizedPoint = {
+                        x: normalize(point.x, 0, 100),
+                        y: normalize(point.y, 0, 100) / 2, // 高度的一半，因为条形从底部开始
+                        z: normalize(point.z, 0, 100)
+                    };
+                    
+                    const bar = createBar(normalizedPoint.y * 2, lowValueMaterial); // 完整高度
+                    bar.position.set(normalizedPoint.x, normalizedPoint.y, normalizedPoint.z);
+                    scene.add(bar);
+                });
+
+                // 添加坐标轴标签
+                const createAxisLabel = (text, position) => {
+                    const canvas = document.createElement('canvas');
+                    const context = canvas.getContext('2d');
+                    canvas.width = 128;
+                    canvas.height = 64;
+                    
+                    context.fillStyle = '#333333';
+                    context.font = 'Bold 20px Arial';
+                    context.textAlign = 'center';
+                    context.textBaseline = 'middle';
+                    context.fillText(text, 64, 32);
+                    
+                    const texture = new THREE.CanvasTexture(canvas);
+                    const material = new THREE.SpriteMaterial({ map: texture });
+                    const sprite = new THREE.Sprite(material);
+                    sprite.position.copy(position);
+                    sprite.scale.set(3, 1.5, 1);
+                    
+                    return sprite;
+                };
+
+                // 添加坐标轴标签
+                scene.add(createAxisLabel('最近购买时间 (R)', new THREE.Vector3(0, -12, 0)));
+                scene.add(createAxisLabel('购买频率 (F)', new THREE.Vector3(-12, 0, 0)));
+                scene.add(createAxisLabel('消费金额 (M)', new THREE.Vector3(0, 0, 12)));
+                
+                // 添加图表标题
+                scene.add(createAxisLabel('RFM三维用户分群可视化', new THREE.Vector3(0, 12, 0)));
+                
+                // 添加光源以确保物体可见
+                const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+                scene.add(ambientLight);
+                
+                const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+                directionalLight.position.set(5, 10, 7.5);
+                scene.add(directionalLight);
+                
+                console.log('光源添加完成');
+
+                // 动画循环
+                const animate = () => {
+                    requestAnimationFrame(animate);
+                    if (controls) {
+                        controls.update();
+                    }
+                    renderer.render(scene, camera);
+                };
+                
+                console.log('3D场景初始化完成，开始渲染循环');
+
+                // 响应窗口大小变化
+                window.addEventListener('resize', () => {
+                    const newWidth = container.clientWidth;
+                    const newHeight = container.clientHeight;
+                    
+                    if (newWidth && newHeight) {
+                        camera.aspect = newWidth / newHeight;
+                        camera.updateProjectionMatrix();
+                        renderer.setSize(newWidth, newHeight);
+                    }
+                });
+
+                // 开始动画
+                animate();
+                
+                console.log('3D散点图初始化成功');
+                
+                // 延迟隐藏加载动画，确保渲染完成
+                setTimeout(() => {
+                    hideLoading(containerId);
+                }, 1000);
+                
+            } catch (error) {
+                console.error('3D散点图初始化失败:', error);
+                // 即使失败也要隐藏加载动画
+                setTimeout(() => {
+                    hideLoading(containerId);
+                }, 2000);
+            }
+        }
+
+        /**
+         * 隐藏加载动画
+         * @param {string} chartId - 图表容器ID
+         */
+        function hideLoading(chartId) {
+            const loadingElement = document.querySelector(`#${chartId}`).parentElement.querySelector('.chart-loading');
+            if (loadingElement) {
+                if (typeof gsap !== 'undefined') {
+                    gsap.to(loadingElement, {
+                        opacity: 0,
+                        duration: 0.5,
+                        onComplete: function() {
+                            loadingElement.style.display = 'none';
+                        }
+                    });
+                } else {
+                    // 如果GSAP未加载，使用基本的CSS过渡
+                    loadingElement.style.transition = 'opacity 0.5s ease';
+                    loadingElement.style.opacity = '0';
+                    setTimeout(() => {
+                        loadingElement.style.display = 'none';
+                    }, 500);
+                }
+            }
+        }
+
+        function initChart(id, title, labels, data, type = 'bar', backgroundColor = null, borderColor = null) {
+            const ctx = document.getElementById(id).getContext('2d');
+            const chart = new Chart(ctx, {
+                type: type,
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: title,
+                        data: data,
+                        backgroundColor: backgroundColor || (type === 'doughnut' ? 
+                            ['#00BFD7', '#FF7A45', '#00A0B0', '#FF9D5C', '#5CDBD3'] :
+                            data.map((_, i) => i % 2 === 0 ? '#00BFD7' : '#FF7A45')),
+                        borderColor: borderColor || 'rgba(0,0,0,0.1)',
+                        borderWidth: 1,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: { 
+                            display: false
+                        },
+                        legend: { 
+                            display: type === 'doughnut',
+                            position: 'bottom',
+                            labels: {
+                                padding: 20,
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        }
+                    },
+                    scales: type !== 'doughnut' ? {
+                        y: { 
+                            beginAtZero: true, 
+                            grid: { color: 'rgba(0,0,0,0.05)' },
+                            ticks: { color: '#666' }
+                        },
+                        x: { 
+                            grid: { display: false },
+                            ticks: { color: '#666' }
+                        }
+                    } : {}
+                }
+            });
+
+            // 隐藏加载动画
+            setTimeout(() => {
+                document.getElementById(id + 'Loading').classList.add('hidden');
+            }, 800);
+
+            return chart;
+        }
+
+        // GSAP动画
+        document.addEventListener('DOMContentLoaded', function() {
+            gsap.from('header', { duration: 1, y: -50, opacity: 0, ease: 'power3.out' });
+            gsap.from('h1', { duration: 1, y: 30, opacity: 0, ease: 'power3.out', delay: 0.2 });
+            gsap.from('.subtitle', { duration: 1, y: 30, opacity: 0, ease: 'power3.out', delay: 0.4 });
+            gsap.from('.stat-card', { 
+                duration: 0.8, 
+                y: 50, 
+                opacity: 0, 
+                stagger: 0.1, 
+                ease: 'power3.out', 
+                delay: 0.6 
+            });
+        });
+
+        window.onload = () => {
+            // 初始化3D RFM散点图
+            init3DScatterPlot('rfm3DContainer');
+
+            // 库存价值ABC分类饼图
+            initChart('chart2', '库存价值ABC分类', ['A类商品', 'B类商品', 'C类商品'], [45, 25, 30], 'doughnut', [
+                'rgba(0, 191, 215, 0.8)',
+                'rgba(0, 160, 176, 0.8)',
+                'rgba(255, 122, 69, 0.8)'
+            ]);
+
+            // 关键指标相关性热力图实现函数
+            function createRefHeatmap() {
+                const ctx = document.getElementById('chart3');
+                if (!ctx) return;
+                
+                // 直接使用HTML表格实现热力图，避免Chart.js的兼容性问题
+                ctx.innerHTML = `
+                    <div class="w-full overflow-x-auto" style="max-height: 350px;">
+                        <table class="w-full border-collapse text-sm min-w-[800px]">
+                            <thead>
+                                <tr>
+                                    <th class="p-3 border bg-gray-100 font-semibold"></th>
+                                    <th class="p-2 border text-center bg-gray-100 font-semibold" style="min-width: 100px; word-break: break-word; font-size: 0.85rem;">营业额(亿元)</th>
+                                    <th class="p-3 border text-center bg-gray-100 font-semibold" style="min-width: 120px; word-break: break-word;">门店总数</th>
+                                    <th class="p-3 border text-center bg-gray-100 font-semibold" style="min-width: 120px; word-break: break-word;">年末从业人数(万人)</th>
+                                    <th class="p-3 border text-center bg-gray-100 font-semibold" style="min-width: 120px; word-break: break-word;">年末餐饮营业面积(万平米)</th>
+                                    <th class="p-3 border text-center bg-gray-100 font-semibold" style="min-width: 120px; word-break: break-word;">人均营业额(万元/人)</th>
+                                    <th class="p-3 border text-center bg-gray-100 font-semibold" style="min-width: 120px; word-break: break-word;">坪效(万元/平米)</th>
+                                    <th class="p-3 border text-center bg-gray-100 font-semibold" style="min-width: 120px; word-break: break-word;">单店营业额(万元/店)</th>
+                                    <th class="p-3 border text-center bg-gray-100 font-semibold" style="min-width: 120px; word-break: break-word;">统一配送率</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th class="p-2 border text-center bg-gray-100 font-semibold" style="min-width: 100px; word-break: break-word; font-size: 0.85rem;">营业额(亿元)</th>
+                                    <td class="p-2 border text-center font-medium" style="background-color: #00BFD7; color: #ffffff; font-size: 0.85rem;">1.00</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.12</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.20</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.32</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #5CDBD3; color: #ffffff;">0.82</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.15</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.23</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #FFF0EB; color: #333333;">-0.10</td>
+                                </tr>
+                                <tr>
+                                    <th class="p-3 border text-center bg-gray-100 font-semibold" style="min-width: 120px; word-break: break-word;">门店总数</th>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.12</td>
+                                    <td class="p-2 border text-center font-medium" style="background-color: #00BFD7; color: #ffffff; font-size: 0.85rem;">1.00</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.30</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.40</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.15</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #FFF0EB; color: #333333;">-0.22</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #5CDBD3; color: #333333;">0.52</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #FF7A45; color: #ffffff;">-0.75</td>
+                                </tr>
+                                <tr>
+                                    <th class="p-3 border text-center bg-gray-100 font-semibold" style="min-width: 120px; word-break: break-word;">年末从业人数(万人)</th>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.20</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.30</td>
+                                    <td class="p-2 border text-center font-medium" style="background-color: #00BFD7; color: #ffffff; font-size: 0.85rem;">1.00</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #5CDBD3; color: #ffffff;">0.70</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.25</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.32</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.42</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #FFF0EB; color: #333333;">-0.20</td>
+                                </tr>
+                                <tr>
+                                    <th class="p-3 border text-center bg-gray-100 font-semibold" style="min-width: 120px; word-break: break-word;">年末餐饮营业面积(万平米)</th>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.32</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.40</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #5CDBD3; color: #ffffff;">0.70</td>
+                                    <td class="p-2 border text-center font-medium" style="background-color: #00BFD7; color: #ffffff; font-size: 0.85rem;">1.00</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.42</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #5CDBD3; color: #333333;">0.55</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #5CDBD3; color: #333333;">0.62</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #FF9D5C; color: #333333;">-0.32</td>
+                                </tr>
+                                <tr>
+                                    <th class="p-3 border text-center bg-gray-100 font-semibold" style="min-width: 120px; word-break: break-word;">人均营业额(万元/人)</th>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #5CDBD3; color: #ffffff;">0.82</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.15</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.25</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.42</td>
+                                    <td class="p-2 border text-center font-medium" style="background-color: #00BFD7; color: #ffffff; font-size: 0.85rem;">1.00</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.20</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.30</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #FFF0EB; color: #333333;">-0.15</td>
+                                </tr>
+                                <tr>
+                                    <th class="p-3 border text-center bg-gray-100 font-semibold" style="min-width: 120px; word-break: break-word;">坪效(万元/平米)</th>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.15</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #FFF0EB; color: #333333;">-0.22</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.32</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #5CDBD3; color: #333333;">0.55</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.20</td>
+                                    <td class="p-2 border text-center font-medium" style="background-color: #00BFD7; color: #ffffff; font-size: 0.85rem;">1.00</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.45</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #FFF0EB; color: #333333;">-0.25</td>
+                                </tr>
+                                <tr>
+                                    <th class="p-3 border text-center bg-gray-100 font-semibold" style="min-width: 120px; word-break: break-word;">单店营业额(万元/店)</th>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.23</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #5CDBD3; color: #333333;">0.52</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.42</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #5CDBD3; color: #333333;">0.62</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.30</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.45</td>
+                                    <td class="p-2 border text-center font-medium" style="background-color: #00BFD7; color: #ffffff; font-size: 0.85rem;">1.00</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #FF7A45; color: #ffffff;">-0.68</td>
+                                </tr>
+                                <tr>
+                                    <th class="p-3 border text-center bg-gray-100 font-semibold" style="min-width: 120px; word-break: break-word;">统一配送率</th>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #FFF0EB; color: #333333;">-0.10</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #FF7A45; color: #ffffff;">-0.75</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #FFF0EB; color: #333333;">-0.20</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #FF9D5C; color: #333333;">-0.32</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #FFF0EB; color: #333333;">-0.15</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #FFF0EB; color: #333333;">-0.25</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #FF7A45; color: #ffffff;">-0.68</td>
+                                    <td class="p-2 border text-center font-medium" style="background-color: #00BFD7; color: #ffffff; font-size: 0.85rem;">1.00</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+                
+                // 隐藏加载动画
+                setTimeout(() => {
+                    document.getElementById('chart3Loading').classList.add('hidden');
+                }, 800);
+            }
+            
+            // 初始化热力图
+            createRefHeatmap();
+
+            // 初始化漏斗图（用户行为漏斗分析）
+            function initFunnelChart() {
+                const ctx = document.getElementById('chart4').getContext('2d');
+                const funnelChart = new Chart(ctx, {
+                    type: 'bar',
                     data: {
-                        labels: ['电商零售', '本地生活', '教育培训', '金融科技', '其他行业'],
+                        labels: ['曝光', '点击', '加购', '下单', '支付', '复购'],
                         datasets: [{
-                            label: '需求占比',
-                            data: [35, 25, 18, 12, 10],
+                            label: '用户数',
+                            data: [10000, 6500, 3200, 1800, 1500, 450],
                             backgroundColor: [
-                                '#00BFD7', '#FF7A45', '#00A0B0', '#FF9D5C', '#5CDBD3'
+                                'rgba(0, 191, 215, 0.8)',
+                                'rgba(0, 191, 215, 0.7)',
+                                'rgba(0, 191, 215, 0.6)',
+                                'rgba(255, 122, 69, 0.7)',
+                                'rgba(255, 122, 69, 0.8)',
+                                'rgba(255, 122, 69, 0.9)'
                             ],
-                            borderWidth: 1,
-                            borderColor: '#fff'
+                            borderColor: 'rgba(0,0,0,0.1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        indexAxis: 'y',
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false }
+                        },
+                        scales: {
+                            x: {
+                                beginAtZero: true,
+                                grid: { color: 'rgba(0,0,0,0.05)' },
+                                ticks: { color: '#666' }
+                            },
+                            y: {
+                                grid: { display: false },
+                                ticks: { color: '#666' }
+                            }
+                        }
+                    }
+                });
+                
+                // 隐藏加载动画
+                setTimeout(() => {
+                    document.getElementById('chart4Loading').classList.add('hidden');
+                }, 800);
+                
+                return funnelChart;
+            }
+            
+            // 初始化转化率折线图
+            function initConversionLineChart() {
+                const ctx = document.getElementById('chart4Line').getContext('2d');
+                const lineChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ['曝光→点击', '点击→加购', '加购→下单', '下单→支付', '支付→复购'],
+                        datasets: [{
+                            label: '转化率(%)',
+                            data: [65, 49.2, 56.2, 83.3, 30],
+                            fill: true,
+                            backgroundColor: 'rgba(0, 191, 215, 0.1)',
+                            borderColor: 'rgba(0, 191, 215, 1)',
+                            tension: 0.4,
+                            pointBackgroundColor: 'rgba(255, 122, 69, 1)',
+                            pointRadius: 5
                         }]
                     },
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
                         plugins: {
-                            legend: {
-                                position: 'right',
-                                labels: {
-                                    font: {
-                                        size: 12,
-                                        family: "'Alibaba PuHuiTi 2.0', 'Alibaba-PuHuiTi', sans-serif"
-                                    }
-                                }
+                            legend: { 
+                                display: true,
+                                position: 'bottom',
+                                labels: { color: '#666' }
                             }
-                        }
-                    }
-                });
-
-                // 2. 价值转化曲线
-                const valueCtx = document.getElementById('valueChart').getContext('2d');
-                new Chart(valueCtx, {
-                    type: 'line',
-                    data: {
-                        labels: ['数据采集', '数据清洗', '初步分析', '深度挖掘', '策略落地', '效果追踪'],
-                        datasets: [{
-                            label: '数据价值',
-                            data: [10, 30, 50, 80, 95, 100],
-                            borderColor: '#00BFD7',
-                            backgroundColor: 'rgba(0, 191, 215, 0.1)',
-                            fill: true,
-                            tension: 0.4
-                        }, {
-                            label: '实施成本',
-                            data: [20, 40, 30, 25, 20, 15],
-                            borderColor: '#FF7A45',
-                            backgroundColor: 'rgba(255, 122, 69, 0.1)',
-                            fill: true,
-                            tension: 0.4
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
+                        },
                         scales: {
                             y: {
                                 beginAtZero: true,
-                                grid: {
-                                    color: 'rgba(0,0,0,0.05)'
+                                max: 100,
+                                grid: { color: 'rgba(0,0,0,0.05)' },
+                                ticks: { 
+                                    color: '#666',
+                                    callback: function(value) {
+                                        return value + '%';
+                                    }
                                 }
                             },
                             x: {
-                                grid: {
-                                    display: false
-                                }
-                            }
-                        },
-                        plugins: {
-                            legend: {
-                                labels: {
-                                    font: {
-                                        size: 12,
-                                        family: "'Alibaba PuHuiTi 2.0', 'Alibaba-PuHuiTi', sans-serif"
-                                    }
-                                }
+                                grid: { display: false },
+                                ticks: { color: '#666' }
                             }
                         }
                     }
                 });
-
-                // 3.1 对比图表1 - 效率提升
-                const comparisonCtx1 = document.getElementById('comparisonChart1').getContext('2d');
-                new Chart(comparisonCtx1, {
-                    type: 'bar',
-                    data: {
-                        labels: ['传统分析', 'AI辅助分析', '凌越象限方案'],
-                        datasets: [{
-                            label: '分析效率',
-                            data: [100, 180, 250],
-                            backgroundColor: [
-                                'rgba(0, 191, 215, 0.5)',
-                                'rgba(0, 160, 176, 0.6)',
-                                'rgba(255, 122, 69, 0.7)'
-                            ],
-                            borderWidth: 0
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                title: {
-                                    display: true,
-                                    text: '效率指数',
-                                    font: {
-                                        family: "'Alibaba PuHuiTi 2.0', 'Alibaba-PuHuiTi', sans-serif"
-                                    }
-                                }
-                            }
-                        },
-                        plugins: {
-                            legend: {
-                                display: false
-                            }
-                        }
-                    }
-                });
-
-                // 3.2 对比图表2 - 落地效果
-                const comparisonCtx2 = document.getElementById('comparisonChart2').getContext('2d');
-                new Chart(comparisonCtx2, {
-                    type: 'bar',
-                    data: {
-                        labels: ['仅报告', '通用建议', '定制化落地'],
-                        datasets: [{
-                            label: '落地转化率',
-                            data: [20, 50, 85],
-                            backgroundColor: [
-                                'rgba(255, 157, 92, 0.5)',
-                                'rgba(92, 219, 211, 0.6)',
-                                'rgba(0, 191, 215, 0.7)'
-                            ],
-                            borderWidth: 0
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                title: {
-                                    display: true,
-                                    text: '转化率(%)',
-                                    font: {
-                                        family: "'Alibaba PuHuiTi 2.0', 'Alibaba-PuHuiTi', sans-serif"
-                                    }
-                                }
-                            }
-                        },
-                        plugins: {
-                            legend: {
-                                display: false
-                            }
-                        }
-                    }
-                });
-            }, 800);
-
-            // 3D背景效果（简化版，避免性能问题）
-            try {
-                // 创建简单的3D背景装饰
-                const scene = new THREE.Scene();
-                const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-                const renderer = new THREE.WebGLRenderer({ alpha: true });
-                renderer.setSize(window.innerWidth, window.innerHeight);
-                renderer.setClearColor(0x000000, 0);
-                renderer.domElement.style.position = 'fixed';
-                renderer.domElement.style.top = '0';
-                renderer.domElement.style.left = '0';
-                renderer.domElement.style.zIndex = '-1';
-                document.body.appendChild(renderer.domElement);
-
-                // 创建粒子
-                const geometry = new THREE.BufferGeometry();
-                const count = 1500;
-                const positions = new Float32Array(count * 3);
-                const colors = new Float32Array(count * 3);
-
-                for (let i = 0; i < count * 3; i += 3) {
-                    positions[i] = (Math.random() - 0.5) * 2000;
-                    positions[i + 1] = (Math.random() - 0.5) * 2000;
-                    positions[i + 2] = (Math.random() - 0.5) * 2000;
-
-                    colors[i] = 0.0; // r
-                    colors[i + 1] = 0.7; // g
-                    colors[i + 2] = 0.8; // b
-                }
-
-                geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-                geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-
-                const material = new THREE.PointsMaterial({
-                    size: 2,
-                    vertexColors: true,
-                    transparent: true,
-                    opacity: 0.6
-                });
-
-                const points = new THREE.Points(geometry, material);
-                scene.add(points);
-
-                camera.position.z = 300;
-
-                // 轨道控制器
-                const controls = new THREE.OrbitControls(camera, renderer.domElement);
-                controls.enableZoom = false;
-                controls.enablePan = false;
-                controls.autoRotate = true;
-                controls.autoRotateSpeed = 0.2;
-
-                // 动画循环
-                function animate() {
-                    requestAnimationFrame(animate);
-                    controls.update();
-                    renderer.render(scene, camera);
-                }
-                animate();
-
-                // 窗口大小适配
-                window.addEventListener('resize', () => {
-                    camera.aspect = window.innerWidth / window.innerHeight;
-                    camera.updateProjectionMatrix();
-                    renderer.setSize(window.innerWidth, window.innerHeight);
-                });
-            } catch (e) {
-                console.log('3D背景加载失败，不影响核心功能', e);
+                
+                // 隐藏加载动画
+                setTimeout(() => {
+                    document.getElementById('chart4LineLoading').classList.add('hidden');
+                }, 800);
+                
+                return lineChart;
             }
-        });
+            
+            // 初始化漏斗图和折线图
+            initFunnelChart();
+            initConversionLineChart();
+        };
     </script>
 </body>
 </html>
