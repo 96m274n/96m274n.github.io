@@ -575,13 +575,18 @@
 </head>
 <body>
     <header>
-      <div class="nav-container">
-            <a href="index.html" class="logo">
-                <!-- 替换为GitHub RAW logo链接 -->
-                <img src="https://raw.githubusercontent.com/96m274n/96m274n.github.io/58169afbb0d318ac59b20748f8f5c27dd6c07d5c/logo.png" alt="凌越象限" class="logo-image">
-                <span class="logo-text">凌越象限</span>
-            <span class="inline-block">凌越象限</span>
-            </a>
+             <nav class="bg-white/90 dark:bg-dark/90 fixed w-full z-10 backdrop-blur-sm border-b border-gray-200 dark:border-dark-light">
+       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+       <div class="flex justify-between h-16">
+      <div class="flex items-center">
+        <!-- 核心修改处：替换 src 为指定的 GitHub RAW 链接 -->
+        <a href="index.html" class="flex-shrink-0 flex items-center">
+          <img 
+            src="https://raw.githubusercontent.com/96m274n/96m274n.github.io/58169afbb0d318ac59b20748f8f5c27dd6c07d5c/logo.png" 
+            alt="凌越象限 Logo" 
+            class="h-10 w-auto"  <!-- 可根据需要调整尺寸，保持和原有 Logo 一致 -->
+          >
+        </a>
             <a href="index.html" class="back-home">← 返回首页</a>
         </div>
     </header>
@@ -1675,4 +1680,5 @@
     </script>
 </body>
 </html>
+
 
