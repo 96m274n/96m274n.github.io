@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>社交电商用户购买行为记录｜凌越象限</title>
+    <title>【数据清洗+数据分析】电商购物用户行为分析｜凌越象限</title>
     <meta name="description" content="上海凌越象限：基于千万级用户行为日志的转化路径深度分析，识别关键流失节点与高价值触点。">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
@@ -11,6 +11,11 @@
     <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/loaders/GLTFLoader.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.2/dist/gsap.min.js"></script>
+    <!-- 引入阿里巴巴普惠体 -->
+    <style>
+        @import url('https://www.fonts.net.cn/css?family=Alibaba+PuHui+Ti+R');
+        @import url('https://www.fonts.net.cn/css?family=Alibaba+PuHui+Ti+B');
+    </style>
     <style>
         :root { 
             --primary: #00BFD7; /* 青色主色调 */
@@ -26,7 +31,18 @@
             --shadow-hover: 0 12px 48px rgba(0, 0, 0, 0.15);
         }
         * { margin:0; padding:0; box-sizing:border-box; }
-        body { font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; line-height:1.6; color:var(--text); background:var(--bg); overflow-x: hidden; }
+        /* 全局替换为阿里巴巴普惠体 */
+        body { 
+            font-family: "Alibaba PuHui Ti R", "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; 
+            line-height:1.6; 
+            color:var(--text); 
+            background:var(--bg); 
+            overflow-x: hidden; 
+        }
+        h1,h2,h3,h4,h5,h6,strong,.summary-title,.conclusion-title,.segment-title {
+            font-family: "Alibaba PuHui Ti B", sans-serif;
+            font-weight: 700;
+        }
         
         /* 背景图案 */
         body::before {
@@ -931,7 +947,6 @@
 <body>
     <header>
     <div class="nav-container">
-        <!-- Logo区域：使用原有定义的样式，匹配Logo的青色主色调 -->
         <a href="index.html" class="logo">
             <img 
                 src="https://raw.githubusercontent.com/96m274n/96m274n.github.io/58169afbb0d318ac59b20748f8f5c27dd6c07d5c/logo.png" 
@@ -940,15 +955,23 @@
             >
             <span style="color: var(--primary); font-weight: 700; font-size: 1.5rem;">凌越象限</span>
         </a>
-        
-        <!-- 返回首页按钮：恢复原有渐变背景样式 -->
         <a href="index.html" class="back-home">← 返回首页</a>
     </div>
     </header>
     
     <div class="container">
-        <h1>电商购物用户行为分析</h1>
+        <h1>【数据清洗 + 数据分析】电商购物用户行为分析</h1>
         <p class="subtitle">驾驭RFM深度分析：驱动用户生命周期价值跃迁</p>
+
+        <!-- 新增：数据清洗前置说明 -->
+        <div class="core-summary" style="background: rgba(240,253,250,0.9); border: 1px solid var(--primary);">
+            <div class="summary-title" style="color: var(--secondary);">数据清洗与预处理</div>
+            <div class="summary-content">
+                <p class="discovery-item">对千万级原始订单数据进行标准化清洗：剔除异常交易、缺失值填充、重复数据去重、用户ID统一规范。</p>
+                <p class="discovery-item">完成多维度数据整合：用户行为、订单信息、支付记录、地域与品类数据对齐，确保分析数据源准确可靠。</p>
+                <p class="discovery-item">构建可用于RFM建模、聚类分析的高质量数据集，为后续精准分析与策略输出奠定基础。</p>
+            </div>
+        </div>
         
         <!-- 核心发现区域 -->
         <div class="core-summary">
@@ -968,7 +991,7 @@
             <div class="summary-item">
                 <h3>3、增长模式不可持续</h3>
                 <div class="summary-content">
-                    <p><span class="discovery-item">业务增长完全依赖拉新，缺乏留存驱动的内生增长。</span></p>
+                    <p><span class="discovery-item">业务增长完全依赖拉新，缺乏留存驱动的内生增长，长期运营成本高、效率低。</span></p>
                 </div>
             </div>
             <div class="summary-item">
@@ -1019,12 +1042,10 @@
                     <div class="spinner"></div>
                 </div>
                 <div id="rfm3DContainer">
-                    <!-- 坐标轴标签 -->
                     <div class="axis-label x-axis-label">最近购买时间 (R)</div>
                     <div class="axis-label y-axis-label">购买频率 (F)</div>
                     <div class="axis-label z-axis-label">消费金额 (M)</div>
                     
-                    <!-- 图例 -->
                     <div class="legend-3d">
                         <div class="legend-item">
                             <div class="legend-color" style="background-color: rgba(0, 191, 215, 0.7);"></div>
@@ -1168,7 +1189,6 @@
                                 <div class="flex-grow">
                                     <p class="mb-4">设计会员/积分成长路径，将复购、互动行为与权益挂钩，并建立"分析-策略-实验-监控"的闭环。</p>
                                     
-                                    <!-- 用户进阶路径与权益体系 -->
                                     <div class="user-path-container">
                                         <div class="user-path-title">用户进阶路径与权益体系</div>
                                         <div class="user-path-steps">
@@ -1233,7 +1253,7 @@
     </div>
 
     <footer>
-        <p>© 2026 上海凌越象限文化传播有限公司｜数据来源：阿里云天池公共数据集（已脱敏）｜分析方法：RFM扩展模型与K-Means聚类</p>
+        <p>© 2026 上海凌越象限文化传播有限公司｜数据来源：阿里云天池公共数据集｜分析方法：归因模型+生存分析</p>
     </footer>
 
     <script>
@@ -1249,7 +1269,7 @@
         };
 
         // 图表全局配置
-        Chart.defaults.font.family = '"Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif';
+        Chart.defaults.font.family = '"Alibaba PuHui Ti R", "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif';
         Chart.defaults.color = '#666';
         Chart.defaults.borderColor = chartColors.grid;
         Chart.defaults.responsive = true;
@@ -1267,8 +1287,6 @@
 
         // 模拟数据生成函数
         function generateChartData() {
-            // 这里可以根据筛选条件生成不同的数据
-            // 实际应用中，这里应该是从API获取数据
             return {
                 categoryData: {
                     labels: ['Clothing', 'Books', 'Electronics', 'Home & Kitchen', 'Beauty', 'Sports', 'Toys'],
@@ -1380,7 +1398,6 @@
         document.addEventListener('DOMContentLoaded', function() {
             console.log('DOM加载完成，开始初始化图表...');
             
-            // 检查必要的库是否加载
             if (typeof Chart === 'undefined') {
                 console.error('Chart.js 未加载');
                 alert('图表库加载失败，请刷新页面重试');
@@ -1392,7 +1409,6 @@
                 alert('3D渲染库加载失败，请刷新页面重试');
             }
             
-            // 初始化所有图表
             try {
                 initCharts();
                 console.log('图表初始化完成');
@@ -1405,40 +1421,23 @@
         // 初始化所有图表
         function initCharts() {
             console.log('开始初始化图表...');
-            
-            // 生成数据
             const data = generateChartData();
             console.log('数据生成完成');
             
-            // 按顺序初始化图表，确保每个图表都有足够时间加载
             setTimeout(() => {
-                console.log('初始化K-Means图表...');
                 initKmeansChart(data.kmeansData);
-                
                 setTimeout(() => {
-                    console.log('初始化3D散点图...');
                     init3DScatterPlot();
-                    
                     setTimeout(() => {
-                        console.log('初始化类别图表...');
                         initCategoryChart(data.categoryData);
-                        
                         setTimeout(() => {
-                            console.log('初始化支付方式图表...');
                             initPaymentChart(data.paymentData);
-                            
                             setTimeout(() => {
-                                console.log('初始化年龄分布图表...');
                                 initAgeChart(data.ageData);
-                                
                                 setTimeout(() => {
-                                    console.log('初始化地区分布图表...');
                                     initRegionChart(data.regionData);
-                                    
                                     setTimeout(() => {
-                                        console.log('初始化RFM热力图...');
                                         initRfmHeatmapChart(data.rfmHeatmapData);
-                                        
                                         console.log('所有图表初始化完成');
                                     }, 300);
                                 }, 300);
@@ -1453,16 +1452,9 @@
         function initKmeansChart(data) {
             try {
                 const kmeansCtx = document.getElementById('kmeansChart');
-                if (!kmeansCtx) {
-                    console.error('kmeansChart元素未找到');
-                    return;
-                }
-                
+                if (!kmeansCtx) return;
                 const ctx = kmeansCtx.getContext('2d');
-                if (!ctx) {
-                    console.error('无法获取canvas上下文');
-                    return;
-                }
+                if (!ctx) return;
                 
                 charts.kmeansChart = new Chart(ctx, {
                     type: 'line',
@@ -1490,19 +1482,7 @@
                                 borderWidth: 1,
                                 padding: 12,
                                 boxPadding: 6,
-                                usePointStyle: true,
-                                callbacks: {
-                                    label: function(context) {
-                                        let label = context.dataset.label || '';
-                                        if (label) {
-                                            label += ': ';
-                                        }
-                                        if (context.parsed.y !== null) {
-                                            label += context.parsed.y.toFixed(3);
-                                        }
-                                        return label;
-                                    }
-                                }
+                                usePointStyle: true
                             },
                             legend: {
                                 position: 'top',
@@ -1579,7 +1559,6 @@
                         }
                     }
                 });
-                
                 console.log('K-Means图表初始化成功');
                 window.hideLoading('kmeansChart');
             } catch (error) {
@@ -1588,46 +1567,30 @@
             }
         }
 
-        // 基于RFM的三维用户价值分群空间分布图 - 使用Three.js实现3D散点图
+        // 基于RFM的三维用户价值分群空间分布图
         function init3DScatterPlot() {
             try {
                 console.log('开始初始化3D散点图...');
-                
-                // 获取容器尺寸
                 const container = document.getElementById('rfm3DContainer');
-                if (!container) {
-                    console.error('rfm3DContainer元素未找到');
-                    return;
-                }
+                if (!container) return;
                 
                 const width = container.clientWidth || 800;
                 const height = container.clientHeight || 500;
-                
-                console.log('3D容器尺寸:', width, 'x', height);
-
-                // 创建场景
                 const scene = new THREE.Scene();
                 scene.background = new THREE.Color(0xf8fbfa);
-
-                // 创建相机
                 const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
                 camera.position.set(35, 25, 35);
                 camera.lookAt(0, 0, 0);
-
-                // 创建渲染器
                 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
                 renderer.setSize(width, height);
                 renderer.setPixelRatio(window.devicePixelRatio || 1);
-                renderer.setClearColor(0xf8fbfa, 1); // 设置背景色
+                renderer.setClearColor(0xf8fbfa, 1);
                 
-                // 清除之前的渲染器实例
                 while (container.firstChild) {
                     container.removeChild(container.firstChild);
                 }
-                
                 container.appendChild(renderer.domElement);
 
-                // 添加轨道控制
                 let controls = null;
                 if (typeof THREE.OrbitControls !== 'undefined') {
                     controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -1638,209 +1601,91 @@
                     controls.maxDistance = 100;
                     controls.maxPolarAngle = Math.PI / 2;
                     controls.minPolarAngle = Math.PI / 4;
-                    console.log('轨道控制器初始化成功');
-                } else {
-                    console.warn('OrbitControls未加载，3D图表将无法交互');
                 }
 
-                // 添加坐标轴
                 const axesHelper = new THREE.AxesHelper(20);
                 scene.add(axesHelper);
-
-                // 添加网格
                 const gridHelperXZ = new THREE.GridHelper(20, 10, 0x888888, 0xcccccc);
                 scene.add(gridHelperXZ);
-
                 const gridHelperYZ = new THREE.GridHelper(20, 10, 0x888888, 0xcccccc);
                 gridHelperYZ.rotation.x = Math.PI / 2;
                 scene.add(gridHelperYZ);
-                
                 const gridHelperXY = new THREE.GridHelper(20, 10, 0x888888, 0xcccccc);
                 gridHelperXY.rotation.z = Math.PI / 2;
                 scene.add(gridHelperXY);
 
-                // 准备数据 - 增加数据点数量以增强可视化效果
                 const userData = {
                     high: [
-                        { x: 85, y: 75, z: 90 },
-                        { x: 90, y: 80, z: 85 },
-                        { x: 82, y: 78, z: 88 },
-                        { x: 88, y: 72, z: 92 },
-                        { x: 92, y: 85, z: 87 },
-                        { x: 87, y: 76, z: 89 },
-                        { x: 84, y: 79, z: 86 },
-                        { x: 89, y: 74, z: 91 }
+                        { x: 85, y: 75, z: 90 },{x:90,y:80,z:85},{x:82,y:78,z:88},{x:88,y:72,z:92},
+                        {x:92,y:85,z:87},{x:87,y:76,z:89},{x:84,y:79,z:86},{x:89,y:74,z:91}
                     ],
                     medium: [
-                        { x: 55, y: 50, z: 55 },
-                        { x: 60, y: 55, z: 50 },
-                        { x: 52, y: 48, z: 58 },
-                        { x: 58, y: 52, z: 53 },
-                        { x: 62, y: 58, z: 49 },
-                        { x: 57, y: 51, z: 56 },
-                        { x: 53, y: 49, z: 54 },
-                        { x: 61, y: 57, z: 51 }
+                        {x:55,y:50,z:55},{x:60,y:55,z:50},{x:52,y:48,z:58},{x:58,y:52,z:53},
+                        {x:62,y:58,z:49},{x:57,y:51,z:56},{x:53,y:49,z:54},{x:61,y:57,z:51}
                     ],
                     low: [
-                        { x: 25, y: 20, z: 15 },
-                        { x: 30, y: 25, z: 20 },
-                        { x: 22, y: 18, z: 18 },
-                        { x: 28, y: 22, z: 22 },
-                        { x: 32, y: 28, z: 25 },
-                        { x: 27, y: 21, z: 19 },
-                        { x: 23, y: 19, z: 17 },
-                        { x: 31, y: 26, z: 23 }
+                        {x:25,y:20,z:15},{x:30,y:25,z:20},{x:22,y:18,z:18},{x:28,y:22,z:22},
+                        {x:32,y:28,z:25},{x:27,y:21,z:19},{x:23,y:19,z:17},{x:31,y:26,z:23}
                     ]
                 };
 
-                // 归一化函数
-                const normalize = (value, min, max) => {
-                    return (value - min) / (max - min) * 18 - 9; // 将值映射到 -9 到 9 的范围
-                };
+                const normalize = (value, min, max) => (value - min) / (max - min) * 18 - 9;
+                const highValueMaterial = new THREE.MeshPhongMaterial({ color: chartColors.primary, transparent: false, opacity:1.0, shininess:30 });
+                const mediumValueMaterial = new THREE.MeshPhongMaterial({ color: chartColors.quaternary, transparent: false, opacity:1.0, shininess:30 });
+                const lowValueMaterial = new THREE.MeshPhongMaterial({ color: chartColors.accent, transparent: false, opacity:1.0, shininess:30 });
 
-                // 创建点的材质 - 使用不透明材质确保可见性
-                const highValueMaterial = new THREE.MeshPhongMaterial({ 
-                    color: chartColors.primary, 
-                    transparent: false, 
-                    opacity: 1.0,
-                    shininess: 30
-                }); // 青色
-                const mediumValueMaterial = new THREE.MeshPhongMaterial({ 
-                    color: chartColors.quaternary, 
-                    transparent: false, 
-                    opacity: 1.0,
-                    shininess: 30
-                }); // 淡青色
-                const lowValueMaterial = new THREE.MeshPhongMaterial({ 
-                    color: chartColors.accent, 
-                    transparent: false, 
-                    opacity: 1.0,
-                    shininess: 30
-                }); // 橘色
-
-                // 创建条形几何体
                 const createBar = (height, material) => {
                     const geometry = new THREE.BoxGeometry(0.5, height, 0.5);
                     return new THREE.Mesh(geometry, material);
                 };
 
-                // 添加高价值用户条形
                 userData.high.forEach(point => {
-                    const normalizedPoint = {
-                        x: normalize(point.x, 0, 100),
-                        y: normalize(point.y, 0, 100) / 2, // 高度的一半，因为条形从底部开始
-                        z: normalize(point.z, 0, 100)
-                    };
-                    
-                    const bar = createBar(normalizedPoint.y * 2, highValueMaterial); // 完整高度
-                    bar.position.set(normalizedPoint.x, normalizedPoint.y, normalizedPoint.z);
+                    const np = {x:normalize(point.x,0,100),y:normalize(point.y,0,100)/2,z:normalize(point.z,0,100)};
+                    const bar = createBar(np.y*2, highValueMaterial);
+                    bar.position.set(np.x,np.y,np.z);
                     scene.add(bar);
                 });
-
-                // 添加中价值用户条形
                 userData.medium.forEach(point => {
-                    const normalizedPoint = {
-                        x: normalize(point.x, 0, 100),
-                        y: normalize(point.y, 0, 100) / 2, // 高度的一半，因为条形从底部开始
-                        z: normalize(point.z, 0, 100)
-                    };
-                    
-                    const bar = createBar(normalizedPoint.y * 2, mediumValueMaterial); // 完整高度
-                    bar.position.set(normalizedPoint.x, normalizedPoint.y, normalizedPoint.z);
+                    const np = {x:normalize(point.x,0,100),y:normalize(point.y,0,100)/2,z:normalize(point.z,0,100)};
+                    const bar = createBar(np.y*2, mediumValueMaterial);
+                    bar.position.set(np.x,np.y,np.z);
                     scene.add(bar);
                 });
-
-                // 添加低价值用户条形
                 userData.low.forEach(point => {
-                    const normalizedPoint = {
-                        x: normalize(point.x, 0, 100),
-                        y: normalize(point.y, 0, 100) / 2, // 高度的一半，因为条形从底部开始
-                        z: normalize(point.z, 0, 100)
-                    };
-                    
-                    const bar = createBar(normalizedPoint.y * 2, lowValueMaterial); // 完整高度
-                    bar.position.set(normalizedPoint.x, normalizedPoint.y, normalizedPoint.z);
+                    const np = {x:normalize(point.x,0,100),y:normalize(point.y,0,100)/2,z:normalize(point.z,0,100)};
+                    const bar = createBar(np.y*2, lowValueMaterial);
+                    bar.position.set(np.x,np.y,np.z);
                     scene.add(bar);
                 });
 
-                // 添加坐标轴标签
-                const createAxisLabel = (text, position) => {
-                    const canvas = document.createElement('canvas');
-                    const context = canvas.getContext('2d');
-                    canvas.width = 128;
-                    canvas.height = 64;
-                    
-                    context.fillStyle = '#333333';
-                    context.font = 'Bold 20px Arial';
-                    context.textAlign = 'center';
-                    context.textBaseline = 'middle';
-                    context.fillText(text, 64, 32);
-                    
-                    const texture = new THREE.CanvasTexture(canvas);
-                    const material = new THREE.SpriteMaterial({ map: texture });
-                    const sprite = new THREE.Sprite(material);
-                    sprite.position.copy(position);
-                    sprite.scale.set(3, 1.5, 1);
-                    
-                    return sprite;
-                };
-
-                scene.add(createAxisLabel('最近购买时间 (R)', new THREE.Vector3(0, -12, 0)));
-                scene.add(createAxisLabel('购买频率 (F)', new THREE.Vector3(-12, 0, 0)));
-                scene.add(createAxisLabel('消费金额 (M)', new THREE.Vector3(0, 0, 12)));
-                
-                // 添加图表标题
-                scene.add(createAxisLabel('RFM三维用户分群可视化', new THREE.Vector3(0, 12, 0)));
-                
-                // 添加光源以确保物体可见
-                const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+                const ambientLight = new THREE.AmbientLight(0xffffff,0.6);
                 scene.add(ambientLight);
-                
-                const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-                directionalLight.position.set(5, 10, 7.5);
+                const directionalLight = new THREE.DirectionalLight(0xffffff,0.8);
+                directionalLight.position.set(5,10,7.5);
                 scene.add(directionalLight);
-                
-                console.log('光源添加完成');
 
-                // 动画循环
                 const animate = () => {
                     requestAnimationFrame(animate);
-                    if (controls) {
-                        controls.update();
-                    }
-                    renderer.render(scene, camera);
+                    if(controls) controls.update();
+                    renderer.render(scene,camera);
                 };
-                
-                console.log('3D场景初始化完成，开始渲染循环');
+                animate();
 
-                // 响应窗口大小变化
                 window.addEventListener('resize', () => {
-                    const newWidth = container.clientWidth;
-                    const newHeight = container.clientHeight;
-                    
-                    if (newWidth && newHeight) {
-                        camera.aspect = newWidth / newHeight;
+                    const nw = container.clientWidth;
+                    const nh = container.clientHeight;
+                    if(nw&&nh){
+                        camera.aspect = nw/nh;
                         camera.updateProjectionMatrix();
-                        renderer.setSize(newWidth, newHeight);
+                        renderer.setSize(nw,nh);
                     }
                 });
 
-                // 开始动画
-                animate();
-                
                 console.log('3D散点图初始化成功');
-                
-                // 延迟隐藏加载动画，确保渲染完成
-                setTimeout(() => {
-                    window.hideLoading('rfm3DContainer');
-                }, 1000);
-                
-            } catch (error) {
-                console.error('3D散点图初始化失败:', error);
-                // 即使失败也要隐藏加载动画
-                setTimeout(() => {
-                    window.hideLoading('rfm3DContainer');
-                }, 2000);
+                setTimeout(()=>{window.hideLoading('rfm3DContainer');},1000);
+            }catch(error){
+                console.error('3D散点图初始化失败:',error);
+                setTimeout(()=>{window.hideLoading('rfm3DContainer');},2000);
             }
         }
 
@@ -1848,16 +1693,9 @@
         function initCategoryChart(data) {
             try {
                 const categoryCtx = document.getElementById('categoryChart');
-                if (!categoryCtx) {
-                    console.error('categoryChart元素未找到');
-                    return;
-                }
-                
+                if (!categoryCtx) return;
                 const ctx = categoryCtx.getContext('2d');
-                if (!ctx) {
-                    console.error('无法获取canvas上下文');
-                    return;
-                }
+                if (!ctx) return;
                 
                 charts.categoryChart = new Chart(ctx, {
                     type: 'bar',
@@ -1893,7 +1731,6 @@
                         }
                     }
                 });
-                
                 console.log('类别图表初始化成功');
                 window.hideLoading('categoryChart');
             } catch (error) {
@@ -1906,16 +1743,9 @@
         function initPaymentChart(data) {
             try {
                 const paymentCtx = document.getElementById('paymentChart');
-                if (!paymentCtx) {
-                    console.error('paymentChart元素未找到');
-                    return;
-                }
-                
+                if (!paymentCtx) return;
                 const ctx = paymentCtx.getContext('2d');
-                if (!ctx) {
-                    console.error('无法获取canvas上下文');
-                    return;
-                }
+                if (!ctx) return;
                 
                 charts.paymentChart = new Chart(ctx, {
                     type: 'pie',
@@ -1937,7 +1767,6 @@
                         }
                     }
                 });
-                
                 console.log('支付方式图表初始化成功');
                 window.hideLoading('paymentChart');
             } catch (error) {
@@ -1950,16 +1779,9 @@
         function initAgeChart(data) {
             try {
                 const ageCtx = document.getElementById('ageChart');
-                if (!ageCtx) {
-                    console.error('ageChart元素未找到');
-                    return;
-                }
-                
+                if (!ageCtx) return;
                 const ctx = ageCtx.getContext('2d');
-                if (!ctx) {
-                    console.error('无法获取canvas上下文');
-                    return;
-                }
+                if (!ctx) return;
                 
                 charts.ageChart = new Chart(ctx, {
                     type: 'bar',
@@ -1984,7 +1806,6 @@
                         }
                     }
                 });
-                
                 console.log('年龄分布图表初始化成功');
                 window.hideLoading('ageChart');
             } catch (error) {
@@ -1997,16 +1818,9 @@
         function initRegionChart(data) {
             try {
                 const regionCtx = document.getElementById('regionChart');
-                if (!regionCtx) {
-                    console.error('regionChart元素未找到');
-                    return;
-                }
-                
+                if (!regionCtx) return;
                 const ctx = regionCtx.getContext('2d');
-                if (!ctx) {
-                    console.error('无法获取canvas上下文');
-                    return;
-                }
+                if (!ctx) return;
                 
                 charts.regionChart = new Chart(ctx, {
                     type: 'bar',
@@ -2031,7 +1845,6 @@
                         }
                     }
                 });
-                
                 console.log('地区分布图表初始化成功');
                 window.hideLoading('regionChart');
             } catch (error) {
@@ -2044,18 +1857,10 @@
         function initRfmHeatmapChart(data) {
             try {
                 const rfmHeatmapCtx = document.getElementById('rfmHeatmapChart');
-                if (!rfmHeatmapCtx) {
-                    console.error('rfmHeatmapChart元素未找到');
-                    return;
-                }
-                
+                if (!rfmHeatmapCtx) return;
                 const ctx = rfmHeatmapCtx.getContext('2d');
-                if (!ctx) {
-                    console.error('无法获取canvas上下文');
-                    return;
-                }
+                if (!ctx) return;
                 
-                // 创建热力图数据
                 const chartData = [];
                 for (let i = 0; i < data.segments.length; i++) {
                     for (let j = 0; j < data.metrics.length; j++) {
@@ -2076,7 +1881,7 @@
                             backgroundColor: 'rgba(0, 191, 215, 0.1)',
                             borderColor: 'rgba(0, 191, 215, 0.1)',
                             borderWidth: 0,
-                            pointRadius: 0 // 不显示点，因为我们使用插件绘制方块
+                            pointRadius: 0
                         }]
                     },
                     options: {
@@ -2166,7 +1971,7 @@
                         },
                         layout: {
                             padding: {
-                                right: 40 // 为右侧颜色条留出空间
+                                right: 40
                             }
                         }
                     },
@@ -2177,82 +1982,60 @@
                             const chartArea = chart.chartArea;
                             const scales = chart.scales;
                             
-                            // 绘制热力图方块
                             for (let i = 0; i < data.segments.length; i++) {
                                 for (let j = 0; j < data.metrics.length; j++) {
                                     const value = data.values[i][j];
-                                    
-                                    // 计算方块位置和大小
-                                    const x = scales.x.getPixelForValue(j - 0.5);
-                                    const y = scales.y.getPixelForValue(i - 0.5);
-                                    const width = scales.x.getPixelForValue(j + 0.5) - x;
-                                    const height = scales.y.getPixelForValue(i + 0.5) - y;
-                                    
-                                    // 设置颜色 - 使用从青色到橘色的渐变
-                                    let r, g, b;
-                                    if (value < 0.5) {
-                                        // 低值：青色
-                                        const t = value * 2; // 0 到 1
-                                        r = Math.floor(0 + t * (255 - 0));
-                                        g = Math.floor(191 + t * (122 - 191));
-                                        b = Math.floor(215 + t * (69 - 215));
-                                    } else {
-                                        // 高值：橘色
-                                        const t = (value - 0.5) * 2; // 0 到 1
-                                        r = Math.floor(255);
-                                        g = Math.floor(122 + t * (255 - 122));
-                                        b = Math.floor(69 + t * (255 - 69));
+                                    let r,g,b;
+                                    if(value<0.5){
+                                        const t=value*2;
+                                        r=Math.floor(0+t*(255-0));
+                                        g=Math.floor(191+t*(122-191));
+                                        b=Math.floor(215+t*(69-215));
+                                    }else{
+                                        const t=(value-0.5)*2;
+                                        r=255;
+                                        g=Math.floor(122+t*(255-122));
+                                        b=Math.floor(69+t*(255-69));
                                     }
-                                    
-                                    // 绘制方块
-                                    ctx.fillStyle = `rgba(${r}, ${g}, ${b}, 0.9)`;
-                                    ctx.fillRect(x, y, width, height);
-                                    
-                                    // 绘制边框
-                                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
-                                    ctx.lineWidth = 1;
-                                    ctx.strokeRect(x, y, width, height);
-                                    
-                                    // 绘制数值
-                                    ctx.fillStyle = '#333';
-                                    ctx.font = '12px Arial';
-                                    ctx.textAlign = 'center';
-                                    ctx.textBaseline = 'middle';
-                                    ctx.fillText(value.toFixed(2), x + width / 2, y + height / 2);
+                                    const x = scales.x.getPixelForValue(j-0.5);
+                                    const y = scales.y.getPixelForValue(i-0.5);
+                                    const width = scales.x.getPixelForValue(j+0.5)-x;
+                                    const height = scales.y.getPixelForValue(i+0.5)-y;
+                                    ctx.fillStyle=`rgba(${r},${g},${b},0.9)`;
+                                    ctx.fillRect(x,y,width,height);
+                                    ctx.strokeStyle='rgba(255,255,255,0.5)';
+                                    ctx.lineWidth=1;
+                                    ctx.strokeRect(x,y,width,height);
+                                    ctx.fillStyle='#333';
+                                    ctx.font='12px Arial';
+                                    ctx.textAlign='center';
+                                    ctx.textBaseline='middle';
+                                    ctx.fillText(value.toFixed(2),x+width/2,y+height/2);
                                 }
                             }
                             
-                            // 绘制颜色条
-                            const colorBarWidth = 15;
-                            const colorBarHeight = chartArea.height;
-                            const colorBarX = chartArea.right + 20;
-                            const colorBarY = chartArea.top;
-                            
-                            // 绘制渐变色条 - 从青色到橘色
-                            const gradient = ctx.createLinearGradient(0, colorBarY, 0, colorBarY + colorBarHeight);
-                            gradient.addColorStop(0, 'rgba(255, 122, 69, 0.9)'); // 橘色
-                            gradient.addColorStop(0.5, 'rgba(255, 255, 255, 0.9)'); // 白色
-                            gradient.addColorStop(1, 'rgba(0, 191, 215, 0.9)'); // 青色
-                            
-                            ctx.fillStyle = gradient;
-                            ctx.fillRect(colorBarX, colorBarY, colorBarWidth, colorBarHeight);
-                            
-                            // 绘制颜色条边框
-                            ctx.strokeStyle = '#333';
-                            ctx.lineWidth = 1;
-                            ctx.strokeRect(colorBarX, colorBarY, colorBarWidth, colorBarHeight);
-                            
-                            // 绘制颜色条标签
-                            ctx.fillStyle = '#333';
-                            ctx.font = '10px Arial';
-                            ctx.textAlign = 'left';
-                            ctx.textBaseline = 'middle';
-                            ctx.fillText('1.0', colorBarX + colorBarWidth + 5, colorBarY);
-                            ctx.fillText('0.0', colorBarX + colorBarWidth + 5, colorBarY + colorBarHeight);
+                            const colorBarWidth=15;
+                            const colorBarHeight=chartArea.height;
+                            const colorBarX=chartArea.right+20;
+                            const colorBarY=chartArea.top;
+                            const gradient=ctx.createLinearGradient(0,colorBarY,0,colorBarY+colorBarHeight);
+                            gradient.addColorStop(0,'rgba(255,122,69,0.9)');
+                            gradient.addColorStop(0.5,'rgba(255,255,255,0.9)');
+                            gradient.addColorStop(1,'rgba(0,191,215,0.9)');
+                            ctx.fillStyle=gradient;
+                            ctx.fillRect(colorBarX,colorBarY,colorBarWidth,colorBarHeight);
+                            ctx.strokeStyle='#333';
+                            ctx.lineWidth=1;
+                            ctx.strokeRect(colorBarX,colorBarY,colorBarWidth,colorBarHeight);
+                            ctx.fillStyle='#333';
+                            ctx.font='10px Arial';
+                            ctx.textAlign='left';
+                            ctx.textBaseline='middle';
+                            ctx.fillText('1.0',colorBarX+colorBarWidth+5,colorBarY);
+                            ctx.fillText('0.0',colorBarX+colorBarWidth+5,colorBarY+colorBarHeight);
                         }
                     }]
                 });
-                
                 console.log('RFM热力图初始化成功');
                 window.hideLoading('rfmHeatmapChart');
             } catch (error) {
@@ -2262,10 +2045,4 @@
         }
     </script>
 </body>
-
 </html>
-
-
-
-
-
