@@ -517,15 +517,40 @@
 </head>
 <body>
     <header>
-        <div class="nav-container">
-            <a href="index.html" class="logo">
-                <!-- 替换为GitHub RAW logo链接 -->
-                <img src="https://raw.githubusercontent.com/96m274n/96m274n.github.io/58169afbb0d318ac59b20748f8f5c27dd6c07d5c/logo.png" alt="凌越象限" class="logo-image">
-                <span class="logo-text">凌越象限</span>
-                <span class="inline-block">凌越象限</span>
-            </a>
-            <a href="index.html" class="back-home">← 返回首页</a>
-        </div>
+       <!-- 导航栏 - 已替换logo地址，放在<body>标签内最顶部 -->
+<nav class="fixed top-0 left-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-200 shadow-sm transition-all duration-300">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between h-16 items-center">
+      <!-- Logo部分（核心修改处） -->
+      <div class="flex items-center">
+        <a href="index.html" class="flex-shrink-0 flex items-center">
+          <!-- 已替换为你指定的GitHub RAW logo链接 -->
+          <img 
+            src="https://raw.githubusercontent.com/96m274n/96m274n.github.io/58169afbb0d318ac59b20748f8f5c27dd6c07d5c/logo.png" 
+            alt="凌越象限 Logo" 
+            class="h-10 w-auto"  <!-- 尺寸可根据需要调整，保持视觉协调 -->
+          >
+          <span class="ml-2 text-lg font-semibold text-gray-800">凌越象限</span>
+        </a>
+      </div>
+      <!-- 导航菜单（可保留你原有菜单，若无则可删除/补充） -->
+      <div class="hidden sm:flex sm:items-center sm:space-x-8">
+        <a href="index.html" class="text-gray-700 hover:text-[var(--primary)] px-3 py-2 text-sm font-medium transition-colors">首页</a>
+        <a href="#project-detail" class="text-gray-700 hover:text-[var(--primary)] px-3 py-2 text-sm font-medium transition-colors">项目详情</a>
+        <a href="contact.html" class="text-gray-700 hover:text-[var(--primary)] px-3 py-2 text-sm font-medium transition-colors">联系我们</a>
+      </div>
+      <!-- 移动端菜单按钮（可选，保留响应式体验） -->
+      <div class="sm:hidden">
+        <button type="button" class="text-gray-700 hover:text-[var(--primary)] focus:outline-none">
+          <i class="fa fa-bars text-xl"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- 给页面主体加顶部内边距，避免内容被导航栏遮挡 -->
+<div class="pt-16">
     </header>
 
     <div class="container">
@@ -1238,4 +1263,5 @@
 </body>
 
 </html>
+
 
