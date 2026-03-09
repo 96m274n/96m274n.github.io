@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>凌越象限 · 数据分析专家</title>
-    <meta name="description" content="凌越象限专注数据驱动决策：为中小企业、电商运营团队与政府数据部门提供可信、可落地、高颜值的数据分析成果网站。">
+    <title>凌越象限 · 双认证数据服务专家</title>
+    <meta name="description" content="凌越象限由CDA二级+工信部大数据分析师双认证专业团队创立，专注为中小微企业提供数据清洗、深度分析及落地建议，AI提效+人工精析，让数据真正驱动业务。">
     <script src="https://cdn.jsdelivr.net/npm/three@0.140.1/build/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.140.1/examples/js/controls/OrbitControls.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
@@ -92,6 +92,17 @@
             font-size: 0.95rem;
         }
         
+        .certification-badge {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-left: 1rem;
+            display: inline-block;
+        }
+        
         .container { 
             max-width: 1200px; 
             margin: 2rem auto; 
@@ -136,6 +147,59 @@
             height: 4px;
             background: linear-gradient(to right, var(--primary), var(--secondary));
             border-radius: 2px;
+        }
+        
+        /* 核心服务板块 */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .service-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+        }
+        
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+        
+        .service-icon {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .service-card h3 {
+            color: #333;
+            margin-bottom: 0.8rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+        
+        .service-card p {
+            color: #555;
+            font-size: 0.95rem;
+            line-height: 1.6;
         }
         
         .project-grid { 
@@ -276,6 +340,46 @@
         .conclusion-content strong {
             color: var(--primary);
             font-weight: 600;
+        }
+        
+        /* 合作咨询板块 */
+        .contact-section {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2.5rem;
+            border-radius: var(--border-radius);
+            margin: 3rem 0;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+        
+        .contact-section h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+        
+        .contact-section p {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+        }
+        
+        .contact-btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: white;
+            color: var(--primary);
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .contact-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
         }
         
         footer { 
@@ -502,42 +606,62 @@
     <header>
         <div class="nav-container">
             <a href="index.html" class="logo">
-                <img src="https://p26-flow-imagex-download-sign.byteimg.com/tos-cn-i-a9rns2rl98/1eee7c09277a436da76877d105ae04b0.png~tplv-a9rns2rl98-24:720:720.png?lk3s=8e244e95&rcl=20260212105927A111AC0582F18D34BA52&rrcfp=8a172a1a&x-expires=1771469967&x-signature=68jTNcmMSlXF4FvylGepQ%2FlhjoM%3D" alt="凌越象限" class="logo-image">
+                <img src="logo.png" alt="凌越象限" class="logo-image">
                 <span class="logo-text">凌越象限</span>
+                <span class="certification-badge">CDA二级 | 工信部大数据分析师 双认证</span>
             </a>
-            <div class="nav-slogan">数据 · 可信 · 落地</div>
+            <div class="nav-slogan">数据清洗 · 深度分析 · 落地建议</div>
         </div>
     </header>
 
     <div class="container">
-        <h1>凌越象限 · 数据分析专家</h1>
-        <p class="subtitle">我们通过数据洞察，帮助企业发现增长机会，优化运营效率，实现数据驱动决策</p>
+        <h1>凌越象限 · 双认证数据服务专家</h1>
+        <p class="subtitle">我们专注为中小微企业提供专业数据清洗、深度分析及可落地的业务建议，用AI提效+人工精析，让数据真正驱动业务增长</p>
+
+        <h2 class="section-title">核心服务</h2>
+        <div class="services-grid">
+            <div class="service-card">
+                <div class="service-icon">🧹</div>
+                <h3>数据清洗与治理</h3>
+                <p>标准化处理缺失值、异常值、重复值，统一多源数据格式，建立企业数据资产标准化体系，确保数据质量。</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">📊</div>
+                <h3>深度数据分析</h3>
+                <p>基于RFM、ABC分类、漏斗分析等专业模型，提供用户行为、行业趋势、库存管理等定制化分析服务。</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">💡</div>
+                <h3>落地建议与咨询</h3>
+                <p>不只交付分析报告，更提供可执行的业务优化建议，支持策略落地跟踪，确保数据洞察真正转化为业务价值。</p>
+            </div>
+        </div>
 
         <h2 class="section-title">我们的数据分析项目</h2>
         <p style="color:#555; margin-bottom:1.5rem;">点击进入任一项目详情页，查看完整分析过程、交互图表与落地建议</p>
 
         <div class="project-grid">
             <div class="project-card">
-                <h3><span class="icon">📊</span> 社交电商用户购买行为</h3>
-                <p>深度服务社交电商平台，基于千万级用户RFM与聚类分析，精准诊断出"高额沉睡客"误判与零复购增长瓶颈，通过重构价值评估体系与分层运营策略，推动用户生命周期价值（LTV）重塑，守护2.51亿年交易基本盘。</p>
+                <h3><span class="icon">📊</span> 【数据清洗+用户分析】社交电商用户购买行为</h3>
+                <p>先完成千万级用户行为数据标准化清洗（缺失值填充/异常交易剔除/维度统一），再基于清洗后高质量数据开展RFM与聚类分析，精准诊断出"高额沉睡客"误判与零复购增长瓶颈，通过重构价值评估体系与分层运营策略，推动用户生命周期价值（LTV）重塑，助力保障核心交易盘稳定。</p>
                 <a href="project1.html" title="查看社交电商用户购买行为记录详细分析">进入项目</a>
             </div>
 
             <div class="project-card">
-                <h3><span class="icon">🍽️</span> 2019餐饮行业数据分析</h3>
-                <p>系统性诊断全国28省餐饮经营效能，运用四象限矩阵与效能聚类模型，首次揭示行业"规模依赖与效率背离"的深层矛盾，识别效率标杆、规模风险与特殊模式三大区域，为从粗放扩张转向"分类治理、精准提效"的存量增长提供了数据驱动的战略地图。</p>
+                <h3><span class="icon">🍽️</span> 【经典行业分析】2019餐饮行业数据分析</h3>
+                <p>（可基于此模型为本地餐饮中小微企业做定制化轻量分析）系统性诊断全国28省餐饮经营效能，运用四象限矩阵与效能聚类模型，精准挖掘行业"规模依赖与效率背离"的核心矛盾，识别效率标杆、规模风险与特殊模式三大区域，为从粗放扩张转向"分类治理、精准提效"的存量增长提供了数据驱动的战略方向。</p>
                 <a href="project2.html" title="查看2019餐饮行业数据分析详细报告">进入项目</a>
             </div>
 
             <div class="project-card">
-                <h3><span class="icon">📦</span> 全球产品库存数据分析</h3>
-                <p>全面审计全球46.5万SKU库存健康状况，经由ABC分类与库龄分析，暴露出价值高度集中、疑似全库过期与品类结构性积压三大风险，制定从"数量均衡"到"价值驱动"的战略转型及三级闭环管理方案，旨在大幅优化库存周转与资金效率。</p>
+                <h3><span class="icon">📦</span> 【数据清洗+库存分析】全球产品库存数据分析</h3>
+                <p>先完成46.5万SKU库存数据清洗（库龄标准化/异常库存剔除/维度统一），再通过ABC分类与库龄分析，暴露出价值高度集中、疑似全库过期与品类结构性积压三大风险，制定从"数量均衡"到"价值驱动"的战略转型及三级闭环管理方案，旨在大幅优化库存周转与资金效率。</p>
                 <a href="project3.html" title="查看全球产品库存数据分析详细报告">进入项目</a>
             </div>
 
             <div class="project-card">
-                <h3><span class="icon">📱</span> 抖音电商用户特征分析</h3>
-                <p>深度洞察抖音电商全域用户行为，融合RFM、漏斗、聚类与机器学习模型，精准定位"核心价值用户稀缺"与"购买后价值转化腰斩"两大增长天花板，并为占比45%的"重要保持用户"绘制四类精细化画像，构建了以数据驱动个性化触达为核心的用户价值跃迁路径。</p>
+                <h3><span class="icon">📱</span> 【数据清洗+电商分析】抖音电商用户特征分析</h3>
+                <p>先完成抖音电商全域用户行为数据清洗（剔除无效行为/统一数据维度/补全缺失转化数据），融合RFM、漏斗分析及机器学习模型，精准定位「核心价值用户稀缺」「购买后转化腰斩」两大核心问题；为45%的「重要保持用户」绘制4类精细化画像，落地建议：针对不同画像制定个性化触达策略，构建用户价值跃迁路径，助力提升用户复购与转化效率。</p>
                 <a href="project4.html" title="查看抖音电商用户特征数据分析详细报告">进入项目</a>
             </div>
         </div>
@@ -600,16 +724,23 @@
         <div class="conclusion-box">
             <div class="conclusion-title">为什么客户信任凌越象限？</div>
             <div class="conclusion-content">
-                <p>• <strong>数据驱动决策</strong>：我们不只提供数据，更提供可落地的洞察和actionable的建议，帮助企业实现数据驱动的增长。</p>
-                <p>• <strong>全链路分析能力</strong>：从用户行为到库存管理，从单渠道到全域电商，我们拥有覆盖企业运营全链路的数据分析能力。</p>
-                <p>• <strong>可视化呈现</strong>：复杂的数据通过直观的可视化图表呈现，让决策层一目了然，快速理解业务现状。</p>
-                <p>• <strong>持续优化迭代</strong>：我们的分析不是一次性的，而是持续跟踪、优化，确保策略执行效果。</p>
+                <p>• <strong>双认证专业保障</strong>：CDA二级+工信部大数据分析师全程把控，从数据清洗到分析落地，每一步都符合专业标准，避免AI分析的「数据垃圾进、结果垃圾出」问题。</p>
+                <p>• <strong>AI提效+人工精析</strong>：AI自动化完成基础数据清洗、报表生成等重复性工作，人工聚焦深度分析、业务解读与落地建议，效率更高，价值更精准。</p>
+                <p>• <strong>中小微轻量定制</strong>：适配中小微企业数据规模、业务场景与预算，无需自建数据团队，提供「一对一」分析报告解读，拒绝通用化模板报告。</p>
+                <p>• <strong>全链路落地跟踪</strong>：不只交付分析报告，更提供可执行的落地建议，支持后续策略执行的数据分析跟踪，确保数据洞察真正落地到业务。</p>
             </div>
+        </div>
+
+        <div class="contact-section">
+            <h3>需要数据服务支持？</h3>
+            <p>我们提供免费企业数据诊断服务，帮你快速发现数据问题与增长机会</p>
+            <a href="mailto:mmjyzc@163.com" class="contact-btn">立即咨询合作</a>
         </div>
     </div>
 
     <footer>
         <p>© 2026 上海凌越象限文化传播有限公司｜地址：上海市浦东新区｜邮箱：mmjyzc@163.com</p>
+        <p>凌越象限 · 双认证数据服务 | 助力本地中小微企业数字化转型</p>
     </footer>
 
     <script>
@@ -1023,288 +1154,59 @@
                             <tbody>
                                 <tr>
                                     <th class="p-2 border text-center bg-gray-100 font-semibold" style="min-width: 100px; word-break: break-word; font-size: 0.85rem;">营业额(亿元)</th>
-                                    <td class="p-2 border text-center font-medium" style="background-color: #00BFD7; color: #ffffff; font-size: 0.85rem;">100</td>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">012</td>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">020</td>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">032</td>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #5CDBD3; color: #ffffff;">082</td>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">015</td>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">023</td>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #FFF0EB; color: #333333;">-010</td>
+                                    <td class="p-2 border text-center font-medium" style="background-color: #00BFD7; color: #ffffff; font-size: 0.85rem;">1.00</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.12</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.20</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.32</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #5CDBD3; color: #ffffff;">0.82</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.15</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.23</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #FFF0EB; color: #333333;">-0.10</td>
                                 </tr>
                                 <tr>
                                     <th class="p-3 border text-center bg-gray-100 font-semibold" style="min-width: 120px; word-break: break-word;">门店总数</th>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">012</td>
-                                    <td class="p-2 border text-center font-medium" style="background-color: #00BFD7; color: #ffffff; font-size: 0.85rem;">100</td>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">030</td>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">040</td>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">015</td>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #FFF0EB; color: #333333;">-022</td>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #5CDBD3; color: #333333;">052</td>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #FF7A45; color: #ffffff;">-075</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.12</td>
+                                    <td class="p-2 border text-center font-medium" style="background-color: #00BFD7; color: #ffffff; font-size: 0.85rem;">1.00</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.30</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.40</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.15</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #FFF0EB; color: #333333;">-0.22</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #5CDBD3; color: #333333;">0.52</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #FF7A45; color: #ffffff;">-0.75</td>
                                 </tr>
                                 <tr>
                                     <th class="p-3 border text-center bg-gray-100 font-semibold" style="min-width: 120px; word-break: break-word;">年末从业人数(万人)</th>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">020</td>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">030</td>
-                                    <td class="p-2 border text-center font-medium" style="background-color: #00BFD7; color: #ffffff; font-size: 0.85rem;">100</td>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #5CDBD3; color: #ffffff;">070</td>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">025</td>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">032</td>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">042</td>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #FFF0EB; color: #333333;">-020</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.20</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.30</td>
+                                    <td class="p-2 border text-center font-medium" style="background-color: #00BFD7; color: #ffffff; font-size: 0.85rem;">1.00</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #5CDBD3; color: #ffffff;">0.70</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.25</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.32</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.42</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #FFF0EB; color: #333333;">-0.20</td>
                                 </tr>
                                 <tr>
                                     <th class="p-3 border text-center bg-gray-100 font-semibold" style="min-width: 120px; word-break: break-word;">年末餐饮营业面积(万平米)</th>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">032</td>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">040</td>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #5CDBD3; color: #ffffff;">070</td>
-                                    <td class="p-2 border text-center font-medium" style="background-color: #00BFD7; color: #ffffff; font-size: 0.85rem;">100</td>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">042</td>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #5CDBD3; color: #333333;">055</td>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #5CDBD3; color: #333333;">062</td>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #FF9D5C; color: #333333;">-032</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.32</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.40</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #5CDBD3; color: #ffffff;">0.70</td>
+                                    <td class="p-2 border text-center font-medium" style="background-color: #00BFD7; color: #ffffff; font-size: 0.85rem;">1.00</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.42</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #5CDBD3; color: #333333;">0.55</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #5CDBD3; color: #333333;">0.62</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #FF9D5C; color: #333333;">-0.32</td>
                                 </tr>
                                 <tr>
                                     <th class="p-3 border text-center bg-gray-100 font-semibold" style="min-width: 120px; word-break: break-word;">人均营业额(万元/人)</th>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #5CDBD3; color: #ffffff;">082</td>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">015</td>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">025</td>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">042</td>
-                                    <td class="p-2 border text-center font-medium" style="background-color: #00BFD7; color: #ffffff; font-size: 0.85rem;">100</td>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">020</td>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">030</td>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #FFF0EB; color: #333333;">-015</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #5CDBD3; color: #ffffff;">0.82</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.15</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.25</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.42</td>
+                                    <td class="p-2 border text-center font-medium" style="background-color: #00BFD7; color: #ffffff; font-size: 0.85rem;">1.00</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.20</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">0.30</td>
+                                    <td class="p-3 border text-center font-medium" style="background-color: #FFF0EB; color: #333333;">-0.15</td>
                                 </tr>
                                 <tr>
                                     <th class="p-3 border text-center bg-gray-100 font-semibold" style="min-width: 120px; word-break: break-word;">坪效(万元/平米)</th>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">015</td>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #FFF0EB; color: #333333;">-022</td>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">032</td>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #5CDBD3; color: #333333;">055</td>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">020</td>
-                                    <td class="p-2 border text-center font-medium" style="background-color: #00BFD7; color: #ffffff; font-size: 0.85rem;">100</td>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #5CDBD3; color: #333333;">060</td>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">012</td>
-                                </tr>
-                                <tr>
-                                    <th class="p-3 border text-center bg-gray-100 font-semibold" style="min-width: 120px; word-break: break-word;">单店营业额(万元/店)</th>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">023</td>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #5CDBD3; color: #333333;">052</td>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">042</td>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #5CDBD3; color: #333333;">062</td>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">030</td>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #5CDBD3; color: #333333;">060</td>
-                                    <td class="p-2 border text-center font-medium" style="background-color: #00BFD7; color: #ffffff; font-size: 0.85rem;">100</td>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #FF9D5C; color: #333333;">-040</td>
-                                </tr>
-                                <tr>
-                                    <th class="p-3 border text-center bg-gray-100 font-semibold" style="min-width: 120px; word-break: break-word;">统一配送率</th>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #FFF0EB; color: #333333;">-010</td>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #FF7A45; color: #ffffff;">-075</td>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #FFF0EB; color: #333333;">-020</td>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #FF9D5C; color: #333333;">-032</td>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #FFF0EB; color: #333333;">-015</td>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #f0f9ff; color: #333333;">012</td>
-                                    <td class="p-3 border text-center font-medium" style="background-color: #FF9D5C; color: #333333;">-040</td>
-                                    <td class="p-2 border text-center font-medium" style="background-color: #00BFD7; color: #ffffff; font-size: 0.85rem;">100</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <div class="mt-6 text-base text-center text-gray-600 font-medium">
-                            颜色越深表示相关性越强（青色为正相关，橘色为负相关）
-                        </div>
-                    </div>
-                `;
-                
-                console.log('热力图创建成功，使用HTML表格实现');
-                
-                // 隐藏加载动画
-                setTimeout(() => {
-                    document.getElementById('chart3Loading').classList.add('hidden');
-                }, 800);
-            }
-            
-            // 初始化热力图
-            createRefHeatmap();
-            
-            // 1. 用户行为漏斗（各阶段用户数）- 水平条形图
-            const ctx4 = document.getElementById('chart4').getContext('2d');
-            new Chart(ctx4, {
-                type: 'bar',
-                data: {
-                    labels: ['高价值用户', '购买用户', '活跃用户', '浏览用户', '总用户'],
-                    datasets: [{
-                        label: '用户数量',
-                        data: [500, 1000, 1000, 1000, 1000], // 可根据实际数据修改
-                        backgroundColor: 'rgba(0, 191, 215, 0.6)',
-                        borderColor: 'rgba(0, 191, 215, 1)',
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    indexAxis: 'y', // 水平条形图（漏斗样式）
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    // 添加设备检测，为移动设备应用特殊样式
-                    onResize: function(chart) {
-                        const isMobile = window.innerWidth < 768;
-                        if (isMobile) {
-                            // 为移动设备调整配置 - 保持与桌面端一致，左对齐到边框
-                            chart.options.scales.y.ticks.padding = 0;
-                            chart.options.scales.y.ticks.font.size = 11;
-                            chart.options.layout.padding.left = 0;
-                        }
-                    },
-                    layout: {
-                        padding: {
-                            left: 0, // 移除左侧内边距，使标签左对齐到边框
-                            right: 10,
-                            top: 10,
-                            bottom: 20
-                        }
-                    },
-                    plugins: {
-                        title: {
-                            display: true,
-                            text: '用户行为漏斗（各阶段用户数）',
-                            font: { size: 14, weight: 'bold' },
-                            padding: {
-                                bottom: 15
-                            }
-                        },
-                        legend: { display: false }
-                    },
-                    scales: {
-                        x: {
-                            beginAtZero: true,
-                            title: { 
-                                display: true, 
-                                text: '用户数量',
-                                padding: {
-                                    top: 10
-                                }
-                            },
-                            grid: { color: 'rgba(0,0,0,0.05)' },
-                            ticks: { 
-                                color: '#666',
-                                maxRotation: 0 // 防止数字标签旋转
-                            }
-                        },
-                        y: {
-                            title: { 
-                                display: true, 
-                                text: '用户阶段',
-                                padding: {
-                                    left: 10
-                                }
-                            },
-                            grid: { display: false },
-                            ticks: { 
-                                color: '#666',
-                                maxRotation: 0,
-                                autoSkip: false,
-                                font: {
-                                    size: 11, // 调整字体大小
-                                    family: "'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif"
-                                },
-                                lineHeight: 1.4,
-                                padding: 0 // 移除标签内边距，使文本左对齐到边框
-                            },
-                            grid: {
-                                drawOnChartArea: false // 确保网格线不会干扰标签显示
-                            }
-                        }
-                    }
-                }
-            });
-            // 隐藏加载动画
-            document.getElementById('chart4Loading').classList.add('hidden');
-
-            // 2. 各环节转化率 - 折线图
-            const ctx4Line = document.getElementById('chart4Line').getContext('2d');
-            new Chart(ctx4Line, {
-                type: 'line',
-                data: {
-                    labels: ['浏览用户', '活跃用户(有停留)', '购买用户', '高价值用户'],
-                    datasets: [{
-                        label: '转化率',
-                        data: [100, 100, 100, 50], // 可根据实际数据修改
-                        backgroundColor: 'rgba(255, 122, 69, 0.2)',
-                        borderColor: 'rgba(255, 122, 69, 1)',
-                        borderWidth: 2,
-                        pointBackgroundColor: 'rgba(255, 122, 69, 1)',
-                        pointBorderColor: '#fff',
-                        pointBorderWidth: 2,
-                        pointRadius: 5,
-                        pointHoverRadius: 7,
-                        tension: 0.1,
-                        fill: true
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    layout: {
-                        padding: {
-                            left: 20,
-                            right: 20,
-                            top: 10,
-                            bottom: 40 // 增加底部内边距，为旋转的标签提供空间
-                        }
-                    },
-                    plugins: {
-                        title: {
-                            display: true,
-                            text: '各环节转化率',
-                            font: { size: 14, weight: 'bold' },
-                            padding: {
-                                bottom: 15
-                            }
-                        },
-                        legend: { display: false }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            max: 110, // 预留空间显示100%
-                            title: { 
-                                display: true, 
-                                text: '转化率(%)',
-                                padding: {
-                                    top: 10
-                                }
-                            },
-                            grid: { color: 'rgba(0,0,0,0.05)' },
-                            ticks: { 
-                                color: '#666',
-                                callback: (value) => value + '%' // 显示百分比符号
-                            }
-                        },
-                        x: {
-                            title: { 
-                                display: true, 
-                                text: '转化阶段',
-                                padding: {
-                                    top: 10
-                                }
-                            },
-                            grid: { display: false },
-                            ticks: { 
-                                color: '#666', 
-                                maxRotation: 45, 
-                                minRotation: 45,
-                                font: {
-                                    size: 11 // 调整字体大小
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-            // 隐藏加载动画
-            document.getElementById('chart4LineLoading').classList.add('hidden');
-        };
-    </script>
-</body>
-</html>
+                                    <td class="p-3 border text-center font-medium" style
