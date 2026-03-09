@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>叶晨阳 - 数据分析师电子名片</title>
-    <!-- 引入阿里巴巴普惠体（免费商用） -->
-    <link rel="stylesheet" href="https://at.alicdn.com/t/c/font_4444792_9901g59995l.css">
     <!-- Tailwind CSS v3 -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome -->
@@ -16,14 +14,14 @@
             theme: {
                 extend: {
                     colors: {
-                        primary: '#00A0E9', // 蓝色
-                        secondary: '#FF6B00', // 橙色
+                        primary: '#00A0E9', // 蓝色（可统一修改）
+                        secondary: '#FF6B00', // 橙色（可统一修改）
                         dark: '#1A1A2E',
                         'dark-light': '#16213E',
                         'dark-lighter': '#0F3460'
                     },
                     fontFamily: {
-                        sans: ['Alibaba PuHuiTi 2.0', 'Alibaba-PuHuiTi', 'system-ui', 'sans-serif'], // 替换为阿里巴巴普惠体
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
                     },
                     animation: {
                         'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
@@ -85,10 +83,6 @@
                     radial-gradient(circle at 50% 50%, rgba(0, 160, 233, 0.1) 0%, transparent 50%);
             }
         }
-        /* 全局字体兜底，确保所有元素使用普惠体 */
-        body {
-            font-family: 'Alibaba PuHuiTi 2.0', 'Alibaba-PuHuiTi', -apple-system, BlinkMacSystemFont, sans-serif !important;
-        }
     </style>
 </head>
 <body class="min-h-screen bg-gray-50 flex items-center justify-center p-4">
@@ -97,7 +91,7 @@
         // 个人信息配置（修改以下内容即可，无需动下方代码）
         const cardConfig = {
             pageTitle: "叶晨阳 - 数据分析师电子名片", // 页面标题
-            logoUrl: "https://raw.githubusercontent.com/96m274n/96m274n.github.io/58169afbb0d318ac59b20748f8f5c27dd6c07d5c/logo.png" 
+            logoUrl: "https://raw.githubusercontent.com/96m274n/96m274n.github.io/58169afbb0d318ac59b20748f8f5c27dd6c07d5c/logo.png", // 替换后的Logo链接
             fullName: "叶晨阳", // 姓名
             jobTitle: "CDA中级数据分析师、大数据分析师", // 职位
             phone: "16621711304", // 电话
@@ -106,12 +100,9 @@
             projectDesc: "我们通过数据洞察，帮助企业发现增长机会，优化运营效率，实现数据驱动决策", // 核心作品描述
             projectLink: "https://96m274n.github.io/index.html" // 核心作品链接
         };
-        // 自动设置页面标题
-        document.title = cardConfig.pageTitle;
     </script>
 
     <!-- ========== 页面结构（无需修改） ========== -->
-    <!-- 电子名片容器 -->
     <div id="card-container" class="w-full max-w-md">
         <!-- 科技感风格名片 -->
         <div id="tech-card" class="bg-white rounded-xl p-6 card-shadow card-shadow-hover tech-bg">
@@ -171,18 +162,27 @@
 
     <!-- ========== 数据渲染（无需修改） ========== -->
     <script>
-        // 将配置信息渲染到页面
-        document.getElementById('card-logo').src = cardConfig.logoUrl;
-        document.getElementById('card-name').textContent = cardConfig.fullName;
-        document.getElementById('card-job').textContent = cardConfig.jobTitle;
-        document.getElementById('card-phone').textContent = cardConfig.phone;
-        document.getElementById('card-email').textContent = cardConfig.email;
-        document.getElementById('card-project-link').href = cardConfig.projectLink;
-        document.getElementById('card-project-title').textContent = cardConfig.projectTitle;
-        document.getElementById('card-project-desc').textContent = cardConfig.projectDesc;
-        document.getElementById('card-phone-link').href = `tel:${cardConfig.phone}`;
-        document.getElementById('card-email-link').href = `mailto:${cardConfig.email}`;
+        // 等待DOM加载完成后渲染数据（核心修复点）
+        document.addEventListener('DOMContentLoaded', function() {
+            // 设置页面标题
+            document.title = cardConfig.pageTitle;
+            
+            // 渲染基础信息
+            document.getElementById('card-logo').src = cardConfig.logoUrl;
+            document.getElementById('card-name').textContent = cardConfig.fullName;
+            document.getElementById('card-job').textContent = cardConfig.jobTitle;
+            document.getElementById('card-phone').textContent = cardConfig.phone;
+            document.getElementById('card-email').textContent = cardConfig.email;
+            
+            // 渲染核心作品（修复跳转链接）
+            document.getElementById('card-project-link').href = cardConfig.projectLink;
+            document.getElementById('card-project-title').textContent = cardConfig.projectTitle;
+            document.getElementById('card-project-desc').textContent = cardConfig.projectDesc;
+            
+            // 渲染联系按钮链接（修复跳转）
+            document.getElementById('card-phone-link').href = `tel:${cardConfig.phone}`;
+            document.getElementById('card-email-link').href = `mailto:${cardConfig.email}`;
+        });
     </script>
 </body>
 </html>
-
